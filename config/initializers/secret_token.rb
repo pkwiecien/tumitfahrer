@@ -9,4 +9,20 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Tumitfahrer::Application.config.secret_key_base = 'bc632e1da23ea8551931c1ddffb0b559ba050ba9788f97160cd263c6d31a81cf24105344cfe173dfd1d0fa7b8b1a1eb9092090d382b498c5b4f9b5a363d6de87'
+
+require 'securerandom'
+
+def secure_token
+  token_file = Rails.root.join('.secret')
+  if File.exist?(token_file)
+    # Use the existing token.
+    File.read(token_file).chomp
+  else
+    # Generate a new token and store it in token_file.
+    token = SecureRandom.hex(64)
+    File.write(token_file, token)
+    token
+  end
+end
+
+Tumitfahrer::Application.config.secret_key_base = secure_token
