@@ -1,0 +1,66 @@
+@import "bootstrap";
+
+
+/* mixins, variables, etc. */
+
+$grayMediumLight: #eaeaea;
+
+/* universal */
+/* TODO: Potential add extra css elements from tutorial */
+
+textarea {
+  resize: vertical;
+}
+
+.center {
+  text-align: center;
+  h1 {
+    margin-bottom: 10px;
+  }
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.7em;
+}
+
+/* header */
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  font-weight: bold;
+  line-height: 1;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+/* footer */
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid $grayMediumLight;
+  color: #999;
+  a {
+    color: #555;
+    &:hover {
+      color: #222;
+    }
+  }
+  small {
+    float: left;
+  }
+  ul {
+    float: right;
+    list-style: none;
+    li {
+      float: left;
+      margin-left: 10px;
+    }
+  }
+}
