@@ -1,6 +1,5 @@
 @import "bootstrap";
 
-
 /* mixins, variables, etc. */
 
 $grayMediumLight: #eaeaea;
@@ -62,5 +61,22 @@ footer {
       float: left;
       margin-left: 10px;
     }
+  }
+}
+
+/* Sections */
+.main-section {
+  border-radius: 6px;
+  margin: 20px;
+
+  .even-section {
+//    background-color: blue;
+    padding: 20px;
+  }
+
+  .odd-section {
+    padding: 20px;
+    background-color: #F8F8F8;
+    border-radius: 6px;
   }
 }
