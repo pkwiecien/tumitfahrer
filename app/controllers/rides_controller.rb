@@ -2,7 +2,8 @@ class RidesController < ApplicationController
   before_action :signed_in_user, only: [:new, :destroy]
 
   def index
-
+    @rides = Ride.all
+    @users = User.all
   end
 
   def new
@@ -28,6 +29,8 @@ class RidesController < ApplicationController
   end
 
   def destroy
+    @ride.destroy
+    redirect_to root_url
 
   end
 

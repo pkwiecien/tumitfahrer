@@ -14,13 +14,13 @@
       </tr>
       </thead>
       <tbody>
-      <% Ride.all.each do |ride| %>
+      <% @rides.each do |ride| %>
           <tr>
             <td><span><%= ride.departure_place %></span></td>
             <td><span><%= ride.destination %></span></td>
             <td><span><%= ride.departure_time %></span></td>
             <td><span><%= pluralize(ride.free_seats, "seat") %></td>
-            <td><span><%= link_to User.find(ride.user_id).first_name+" " +User.find(ride.user_id).last_name, user_path(ride.user_id) %></td>
+            <td><span><%= gravatar_for @users.find(ride.user_id), size: 30 %><%= link_to @users.find(ride.user_id).first_name+" " +@users.find(ride.user_id).last_name, user_path(ride.user_id) %></td>
           </tr>
       <% end %>
       </tbody>
