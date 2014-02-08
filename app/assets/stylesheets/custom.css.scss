@@ -4,6 +4,12 @@
 
 $grayMediumLight: #eaeaea;
 
+@mixin box_sizing {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 /* universal */
 /* TODO: Potential add extra css elements from tutorial */
 
@@ -21,6 +27,10 @@ textarea {
 p {
   font-size: 1.1em;
   line-height: 1.7em;
+}
+
+h1 {
+  text-align: center;
 }
 
 /* header */
@@ -79,4 +89,52 @@ footer {
     background-color: #F8F8F8;
     border-radius: 6px;
   }
+}
+
+/* miscellaneous */
+
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}
+
+/* sidebar */
+
+aside {
+  section {
+    padding: 10px 0;
+    margin-left: 20px;
+
+  }
+}
+
+.gravatar {
+  float: left;
+  margin-right: 10px;
+}
+
+input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 15px;
+  @include box_sizing;
+}
+
+input {
+  height: auto !important;
+}
+
+#error_explanation {
+  color: #f00;
+  ul {
+    list-style: none;
+    margin: 0 0 18px 0;
+  }
+}
+.field_with_errors {
+  @extend .control-group;
+  @extend .error;
 }

@@ -44,6 +44,8 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'active_model_serializers'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 
