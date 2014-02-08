@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_many :rides
   before_create :create_remember_token
   before_save { self.email = email.downcase }
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}

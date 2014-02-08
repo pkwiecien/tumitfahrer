@@ -1,26 +1,34 @@
-<div class="center jumbotron">
+<div class="center main-section jumbo">
   <h1>TUMitfahrer</h1>
 
   <p>Car sharing platform for students</p>
 
-  <%= link_to 'Sign up now!', signup_path, class: "btn btn-large btn-primary" %>
+  <table class="table table-borderless">
+    <tbody>
+    <tr>
+      <td><%= link_to image_tag("uni_icon.png", height: '170', width: '170', alt: "Drive to Uni"), '#' %></td>
+      <td><%= link_to image_tag("adventure_icon.png", height: '170', width: '170', alt: "Drive for weekend trips"), '#' %></td>
+      <td><%= link_to image_tag("friends_icon.png", height: '170', width: '170', alt: "Meet other students"), '#' %></td>
+    </tr>
+    <tr>
+      <td>Drive to Uni</td>
+      <td>Drive for weekend trips</td>
+      <td>Meet other students</td>
+    </tr>
+    </tbody>
+  </table>
+  <%= link_to 'Sign up now!', signup_path, class: "btn btn-xlarge btn-primary" %>
 </div>
 
-<div class="main-section center">
-  <div class="even-section">
-    <h2>How does it work?</h2>
-    <iframe src="//player.vimeo.com/video/58241549" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-  </div>
-
-
+<div class="even-section center">
+  <h2>How does it work?</h2>
+  <iframe src="//player.vimeo.com/video/58241549" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 </div>
 
-<div class="main-section center">
-  <div class="odd-section">
-    <h2>Download mobile app </h2>
+<div class="odd-section center">
+  <h2>Download mobile app </h2>
 
-    <%= link_to image_tag("App_Store.png", height: '60', width: '170', alt: "App Store"), '#' %>
-    <%= link_to image_tag("Play_Store.png", height: '60', width: '170', alt: "Play Store"), '#' %>
+  <%= link_to image_tag("App_Store.png", height: '60', width: '170', alt: "App Store"), '#' %>
+  <%= link_to image_tag("Play_Store.png", height: '60', width: '170', alt: "Play Store"), '#' %>
 
-  </div>
 </div>

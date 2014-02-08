@@ -1,0 +1,27 @@
+<% provide(:title, "New ride") %>
+<h1>Sign up for great adventures</h1>
+
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <%= form_for(@ride) do |f| %>
+
+        <%= f.label :departure_place %>
+        <%= f.text_field :departure_place %>
+
+        <%= f.label :destination %>
+        <%= f.text_field :destination %>
+
+        <%= f.label :departure_time %>
+        <%= f.text_field :departure_time %>
+
+        <%= f.label :free_seats %>
+        <%= f.text_field :free_seats %>
+
+        <%= f.label :meeting_point%>
+        <%= f.text_field :meeting_point %>
+
+        <%= f.submit "Add new ride", class: "btn btn-large btn-primary" %>
+
+    <% end %>
+  </div>
+</div>

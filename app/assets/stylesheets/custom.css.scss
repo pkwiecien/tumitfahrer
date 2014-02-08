@@ -11,7 +11,6 @@ $grayMediumLight: #eaeaea;
 }
 
 /* universal */
-/* TODO: Potential add extra css elements from tutorial */
 
 textarea {
   resize: vertical;
@@ -49,6 +48,27 @@ h1 {
   }
 }
 
+#navlist li {
+  display: inline;
+  list-style-type: none;
+  padding: 60px;
+}
+
+.btn-xlarge {
+  padding: 18px 28px;
+  font-size: 22px; //change this to your desired size
+  line-height: normal;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  margin-top: 40px;
+}
+
+.table-borderless td,
+.table-borderless th {
+  border: 0 !important
+}
+
 /* footer */
 
 footer {
@@ -76,20 +96,28 @@ footer {
 }
 
 /* Sections */
+
 .main-section {
+  # background: url('/assets/road.png');
+  background-color: $grayMediumLight;
   border-radius: 6px;
   margin: 20px;
+  padding: 20px;
 
-  .even-section {
-//    background-color: blue;
-    padding: 20px;
-  }
+}
 
-  .odd-section {
-    padding: 20px;
-    background-color: #F8F8F8;
-    border-radius: 6px;
-  }
+
+.even-section {
+  padding: 20px;
+  border-radius: 6px;
+  margin: 20px;
+}
+
+.odd-section {
+  border-radius: 6px;
+  margin: 20px;
+  padding: 20px;
+  background-color: #F8F8F8;
 }
 
 /* miscellaneous */
@@ -107,8 +135,24 @@ footer {
 aside {
   section {
     padding: 10px 0;
+    border-top: 1px solid $grayMediumLight;
     margin-left: 20px;
-
+    &:first-child {
+      border: 0;
+      padding-top: 0;
+    }
+    span {
+      display: block;
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+    h1 {
+      font-size: 1.4em;
+      text-align: left;
+      letter-spacing: -1px;
+      margin-bottom: 3px;
+      margin-top: 0px;
+    }
   }
 }
 
@@ -135,6 +179,7 @@ input {
     margin: 0 0 18px 0;
   }
 }
+
 .field_with_errors {
   @extend .control-group;
   @extend .error;

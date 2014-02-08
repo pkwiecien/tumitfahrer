@@ -1,12 +1,38 @@
 <% provide(:title, @user.first_name) %>
 <div class="row">
-  <aside class="span4">
+  <aside class="col-xs-4">
     <section>
       <h1>
         <%= gravatar_for @user %>
         <%= @user.first_name %> <%= @user.last_name %>
-
       </h1>
     </section>
   </aside>
+
+  <% if @user.rides.any? %>
+      <h3>Rides (<%= @user.rides.count %>)</h3>
+
+      <div class="col-xs-8">
+        <table class="table table-condensed table-striped table-hover">
+          <thead>
+          <tr>
+            <th class="col-sm-2">From</th>
+            <th class="col-sm-2">Destination</th>
+            <th class="col-sm-2">Date</th>
+            <th class="col-sm-2">Seats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @user.rides.each do |ride| %>
+              <tr>
+                <td><span><%= ride.departure_place %></span></td>
+                <td><span><%= ride.destination %></span></td>
+                <td><span><%= ride.departure_time %></span></td>
+                <td><span><%= pluralize(ride.free_seats, "seat") %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+  <% end %>
 </div>
