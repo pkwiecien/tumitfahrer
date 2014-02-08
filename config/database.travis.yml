@@ -1,14 +1,31 @@
-development:
-  adapter: postgresql
-  encoding: unicode
-  database: test
-  username: test
+sqlite: &sqlite
+  adapter: sqlite3
+  database: db/<%= Rails.env %>.sqlite3
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
+mysql: &mysql
+  adapter: mysql2
+  username: root
+  password:
+  database: strano_<%= Rails.env %>
+
+postgresql: &postgresql
   adapter: postgresql
-  encoding: unicode
-  database: test
-  username: test
+  username: postgres
+  password:
+  database: strano_<%= Rails.env %>
+  min_messages: ERROR
+
+defaults: &defaults
+  pool: 5
+  timeout: 5000
+  host: localhost
+  <<: *<%= ENV['DB'] || "postgresql" %>
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
