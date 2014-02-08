@@ -28,6 +28,10 @@ class RidesController < ApplicationController
 
   end
 
+  def show
+    @ride = Ride.find(params[:id])
+  end
+
   def destroy
     @ride.destroy
     redirect_to root_url

@@ -15,7 +15,7 @@
       </thead>
       <tbody>
       <% @rides.each do |ride| %>
-          <tr>
+          <tr data-link="<%= ride_path(ride.id) %>" style="cursor:pointer">
             <td><span><%= ride.departure_place %></span></td>
             <td><span><%= ride.destination %></span></td>
             <td><span><%= ride.departure_time %></span></td>
