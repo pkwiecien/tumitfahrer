@@ -17,7 +17,11 @@
     </tr>
     </tbody>
   </table>
-  <%= link_to 'Sign up now!', signup_path, class: "btn btn-xlarge btn-primary" %>
+  <% if signed_in? %>
+      <%= link_to 'See all rides!', rides_path, class: "btn btn-xlarge btn-primary" %>
+  <% else %>
+      <%= link_to 'Sign up now!', signup_path, class: "btn btn-xlarge btn-primary" %>
+  <% end %>
 </div>
 
 <div class="even-section center">
