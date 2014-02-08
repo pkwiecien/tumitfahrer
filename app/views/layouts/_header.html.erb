@@ -18,8 +18,8 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "Home", root_path %></li>
-        <li><%= link_to "Discover places", '#' %></li>
-        <li><%= link_to "Find a ride", '#' %></li>
+        <li><%= link_to "Discover places", discover_path %></li>
+        <li><%= link_to "Find a ride", rides_path %></li>
         <li><%= link_to "Add a ride", new_ride_path %></li>
         <% if signed_in? %>
             <li id="fat-menu" class="dropdown">

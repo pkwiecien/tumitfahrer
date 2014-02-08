@@ -1,9 +1,13 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user, only: [:edit, :update]
+  before_action :signed_in_user, only: [:edit, :update, :show]
   before_action :right_user, only: [:edit, :update]
 
   def new
-    @user = User.new
+    if signed_in?
+      redirect_to current_user
+    else
+      @user = User.new
+    end
   end
 
   def create

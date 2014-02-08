@@ -1,9 +1,10 @@
 <% provide(:title, "New ride") %>
-<h1>Sign up for great adventures</h1>
+<h1>Add a great ride</h1>
 
 <div class="row">
   <div class="col-xs-6 col-xs-offset-3">
     <%= form_for(@ride) do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
 
         <%= f.label :departure_place %>
         <%= f.text_field :departure_place %>
