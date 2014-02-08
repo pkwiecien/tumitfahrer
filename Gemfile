@@ -3,6 +3,9 @@ ruby '2.0.0'
 gem 'rails', '4.0.2'
 gem "bootstrap-sass", "~> 3.1.0.2"
 gem 'bcrypt-ruby', '~> 3.1.2'
+gem "will_paginate", "~> 3.0.5"
+gem "bootstrap-will_paginate", "~> 0.0.10"
+
 
 group :development, :production do
   gem 'pg', '0.15.1'

@@ -139,3 +139,18 @@ input {
   @extend .control-group;
   @extend .error;
 }
+
+/* Rides index */
+
+.rides {
+  list-style: none;
+  margin: 0;
+  li {
+    overflow: auto;
+    padding: 10px 0;
+    border-top: 1px solid $grayMediumLight;
+    &:last-child {
+      border-bottom: 1px solid $grayMediumLight;
+    }
+  }
+}
