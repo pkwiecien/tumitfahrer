@@ -13,9 +13,12 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      sign_in @user
-      flash[:success] = "Welcome to TUMitfahrer!"
-      redirect_to @user
+      respond_to do |format|
+        format.html sign_in @user
+        flash[:success] = "Welcome to TUMitfahrer!"
+        redirect_to @user
+      end
+
     else
       render 'new'
     end
@@ -24,10 +27,6 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @rides = @user.rides.paginate(page: params[:page])
-    respond_to do |format|
-      format.html
-      format.json { render json: @user }
-    end
   end
 
   def edit

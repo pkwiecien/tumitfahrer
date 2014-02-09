@@ -1,4 +1,13 @@
 Tumitfahrer::Application.routes.draw do
+
+  namespace :api, defaults: { :format => 'json' } do
+    namespace :v1 do
+      resources :users
+      resources :rides
+      resource :sessions
+    end
+  end
+
   resources :users
   resources :rides
   resource :sessions, only: [:new, :create, :destroy]
