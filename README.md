@@ -1,4 +1,5 @@
-== README
+TUMitfahrer
+===========
 
 [![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
 
