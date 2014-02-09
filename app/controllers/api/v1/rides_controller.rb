@@ -1,6 +1,6 @@
 class Api::V1::RidesController < ApiController
   respond_to :json, :xml
-  before_action :restrict_access, only: [:create]
+  before_action :restrict_access, only: [:index]
 
   def index
     @rides = Ride.all
@@ -25,7 +25,8 @@ class Api::V1::RidesController < ApiController
   private
 
   def restrict_access
-    api_key = ApiKey.find_by_access_token(params[:access_token])
-    head :unauthorized unless api_key
+    authenticate_or_request_with_http_token do |key, options|
+      User.exists?(api_key: key)
+    end
   end
 end

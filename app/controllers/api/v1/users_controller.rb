@@ -20,7 +20,7 @@ class Api::V1::UsersController < ApiController
   def create
     @user = User.new(user_params)
     if @user.save
-      render json: {:success => "User added to the database", :api_key => @user.remember_token}
+      render json: {:success => "User added to the database", :api_key => @user.api_key}
     else
       render json: {:error => "User couldn't be added to the database"}
     end
@@ -29,7 +29,7 @@ class Api::V1::UsersController < ApiController
 
   private
   def authenticate_user
-    @current_user = User.find_by_authentication_token(params[:token])
+    @current_user = User.find_by_api_key(params[:api_key])
   end
 
   def current_user
