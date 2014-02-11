@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140209125745) do
+ActiveRecord::Schema.define(version: 20140211201657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,57 @@ ActiveRecord::Schema.define(version: 20140209125745) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "gcms", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "host"
+    t.string   "format"
+    t.string   "key"
+  end
+
+  create_table "push_configurations", force: true do |t|
+    t.string   "type",                        null: false
+    t.string   "app",                         null: false
+    t.text     "properties"
+    t.boolean  "enabled",     default: false, null: false
+    t.integer  "connections", default: 1,     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "push_feedback", force: true do |t|
+    t.string   "app",                          null: false
+    t.string   "device",                       null: false
+    t.string   "type",                         null: false
+    t.string   "follow_up",                    null: false
+    t.datetime "failed_at",                    null: false
+    t.boolean  "processed",    default: false, null: false
+    t.datetime "processed_at"
+    t.text     "properties"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "push_feedback", ["processed"], name: "index_push_feedback_on_processed", using: :btree
+
+  create_table "push_messages", force: true do |t|
+    t.string   "app",                               null: false
+    t.string   "device",                            null: false
+    t.string   "type",                              null: false
+    t.text     "properties"
+    t.boolean  "delivered",         default: false, null: false
+    t.datetime "delivered_at"
+    t.boolean  "failed",            default: false, null: false
+    t.datetime "failed_at"
+    t.integer  "error_code"
+    t.string   "error_description"
+    t.datetime "deliver_after"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "push_messages", ["delivered", "failed", "deliver_after"], name: "index_push_messages_on_delivered_and_failed_and_deliver_after", using: :btree
 
   create_table "rides", force: true do |t|
     t.string   "departure_place"

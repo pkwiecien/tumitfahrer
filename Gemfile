@@ -5,7 +5,9 @@ gem "bootstrap-sass", "~> 3.1.0.2"
 gem 'bcrypt-ruby', '~> 3.1.2'
 gem "will_paginate", "~> 3.0.5"
 gem "bootstrap-will_paginate", "~> 0.0.10"
-
+gem 'push-core'
+gem 'push-gcm'
+gem 'gcm', :require => "gcm"
 
 group :development, :production do
   gem 'pg', '0.15.1'
