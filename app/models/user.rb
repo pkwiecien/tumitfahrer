@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   has_many :rides
-  before_create :create_remember_token
+  before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 20}
@@ -17,10 +17,18 @@ class User < ActiveRecord::Base
     Digest::SHA1.hexdigest(token.to_s)
   end
 
+  def User.generate_api_key(user)
+    user.update_attribute(:api_key, SecureRandom.urlsafe_base64)
+  end
+
   private
 
   def create_remember_token
     self.remember_token = User.encrypt(User.new_remember_token)
+  end
+
+  def generate_api_key
+    self.api_key = SecureRandom.urlsafe_base64
   end
 
 end

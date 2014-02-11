@@ -1,5 +1,5 @@
-class UserSerializer < ActiveModel::Serializer
-  [:id, :first_name, :last_name, :department, :car, :api_key].each do |attr|
+class RideSerializer < ActiveModel::Serializer
+  [:id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time].each do |attr|
     # Tell serializer its an attribute
     attribute attr
 
@@ -9,9 +9,5 @@ class UserSerializer < ActiveModel::Serializer
       object.send(attr).to_s
     end
   end
-  has_many :rides
 
-  def full_name
-    "#{object.first_name} #{object.last_name}"
-  end
 end
