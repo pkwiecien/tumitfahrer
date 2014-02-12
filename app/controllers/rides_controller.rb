@@ -13,7 +13,7 @@ class RidesController < ApplicationController
   def create
     @ride = current_user.rides.build(ride_params)
     if @ride.save
-      gcm = GCM.new("AIzaSyAOIFGwYitZ12XJu1-DOXuZAa2UaJk97F8")
+      gcm = GCM.new(ENV["AIzaSyAOIFGwYitZ12XJu1-DOXuZAa2UaJk97F8"])
       registration_ids= ["APA91bGBYGoCJ5T6HSjW5zZ_tuuc5ZERL5QKYBDl8698O-fLrex9u6L0GtOwupkUvUdLnGSJO_SEtbDYgTqVdLhgdSnTLBo0kQ8h2SvxlCNsVSD8_guyLO4-KNGntJzoA4BXbWRnsCEdXIpwC3tp1_fgUfvdoY69Wg"] # an array of one or more client registration IDs
       options = {data: {ride: @ride}, collapse_key: "updated_score"}
       response = gcm.send_notification(registration_ids, options)
