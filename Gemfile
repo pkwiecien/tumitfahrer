@@ -8,10 +8,7 @@ gem "bootstrap-will_paginate", "~> 0.0.10"
 gem 'push-core'
 gem 'push-gcm'
 gem 'gcm', :require => "gcm"
-gem 'houston', :require => 'houston'
-gem 'grocer', :require => 'Grocer'
-
-
+gem 'grocer'
 
 group :development, :production do
   gem 'pg', '0.15.1'
