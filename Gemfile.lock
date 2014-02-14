@@ -50,6 +50,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    commander (4.1.6)
+      highline (~> 1.6.11)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.0.2)
@@ -57,7 +59,12 @@ GEM
     gcm (0.0.6)
       httparty
       json
+    grocer (0.5.0)
+    highline (1.6.20)
     hike (1.2.3)
+    houston (2.0.0)
+      commander (~> 4.1)
+      json
     httparty (0.12.0)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -175,6 +182,8 @@ DEPENDENCIES
   capybara (= 2.1.0)
   coffee-rails (~> 4.0.0)
   gcm
+  grocer
+  houston
   jbuilder (~> 1.2)
   jquery-rails
   pg (= 0.15.1)
