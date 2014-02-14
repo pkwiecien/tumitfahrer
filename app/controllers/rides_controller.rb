@@ -16,7 +16,7 @@ class RidesController < ApplicationController
 
       pusher = Grocer.pusher(certificate: "ck.pem")
       rideInfo = "Ride from " + @ride.departure_place + " to " + @ride.destination + " on " + @ride.departure_time.to_datetime().strftime('%d %b %Y %H:%M:%S') + " o'clock"
-      debugger.log rideInfo
+      logger.debug rideInfo
       note = Grocer::Notification.new(device_token:"f4f382b537d663af6256649e412fc19110cbbdc3d80c04373c090a623810127e", alert: rideInfo,  sound: 'default', badge: 0)
       pusher.push(note)
 
