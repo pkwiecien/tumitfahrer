@@ -41,7 +41,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    childprocess (0.4.0)
+    childprocess (0.4.2)
       ffi (~> 1.0, >= 1.0.11)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -50,16 +50,22 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    commander (4.1.6)
+      highline (~> 1.6.11)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.0.2)
     ffi (1.9.3)
-    gcm (0.0.6)
+    gcm (0.0.7)
       httparty
       json
     grocer (0.5.0)
+    highline (1.6.20)
     hike (1.2.3)
-    httparty (0.12.0)
+    houston (2.0.0)
+      commander (~> 4.1)
+      json
+    httparty (0.13.0)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.6.9)
@@ -177,6 +183,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   gcm
   grocer
+  houston
   jbuilder (~> 1.2)
   jquery-rails
   pg (= 0.15.1)

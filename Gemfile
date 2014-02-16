@@ -9,6 +9,7 @@ gem 'push-core'
 gem 'push-gcm'
 gem 'gcm', :require => "gcm"
 gem 'grocer'
+gem 'houston', :require => 'houston'
 
 group :development, :production do
   gem 'pg', '0.15.1'
