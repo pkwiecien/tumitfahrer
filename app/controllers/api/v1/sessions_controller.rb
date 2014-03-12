@@ -2,10 +2,10 @@ class Api::V1::SessionsController < ApiController
   respond_to :json, :xml
 
   def create
-    @user = User.find_by(email: request.headers['email'].downcase)
-    logger.debug request.headers['email']
-    logger.debug request.headers['password']
-    if @user && @user.authenticate(request.headers['password'])
+    email, password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
+
+    @user = User.find_by(email: email.downcase)
+    if @user && @user.authenticate(password)
       if @user.api_key.nil?
         User.generate_api_key(@user)
       end
