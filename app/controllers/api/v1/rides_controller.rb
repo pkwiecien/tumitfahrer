@@ -1,12 +1,16 @@
 class Api::V1::RidesController < ApiController
   respond_to :json, :xml
-  before_action :restrict_access, only: [:index, :create]
+  # before_action :restrict_access, only: [:index, :create]
 
   def index
     @rides = Ride.all
-    respond_to do |format|
-      format.json { render json: @rides }
-      format.xml { render xml: @rides }
+    if @rides.nil?
+      render json: {:message => "There are no rides"}
+    else
+      respond_to do |format|
+        format.json { render json: @rides }
+        format.xml { render xml: @rides }
+      end
     end
   end
 
