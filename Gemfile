@@ -10,6 +10,7 @@ gem 'push-gcm'
 gem 'gcm', :require => "gcm"
 gem 'grocer'
 gem 'houston', :require => 'houston'
+gem 'actionpack-xml_parser'
 
 group :development, :production do
   gem 'pg', '0.15.1'
