@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApiController
-  respond_to :json, :xml
+  respond_to :xml, :json
 
   def index
     @users = User.all
@@ -45,4 +45,5 @@ class Api::V1::UsersController < ApiController
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :department, :password, :password_confirmation)
   end
+
 end

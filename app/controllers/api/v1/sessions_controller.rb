@@ -9,9 +9,16 @@ class Api::V1::SessionsController < ApiController
       if @user.api_key.nil?
         User.generate_api_key(@user)
       end
-      render json: @user
+      respond_to do |format|
+        format.json { render json: @user }
+        format.xml { render xml: {:attempt => "true", "user_id" => "31"} }
+      end
     else
-      render json: {:message => "User couldn't be added to the database"}
+      respond_to do |format|
+        format.json { render json: {:message => "User couldn't be added to the database"} }
+        format.xml { render xml: {:attempt => "false", :user_id => "0"} }
+      end
+
     end
   end
 end
