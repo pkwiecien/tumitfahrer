@@ -1,4 +1,4 @@
-class Api::V1::UsersController < ApiController
+class Api::V2::UsersController < ApiController
   respond_to :xml, :json
 
   def index
@@ -25,12 +25,15 @@ class Api::V1::UsersController < ApiController
 
       logger.debug "WE ARE HERE : #{email} and #{hashed_password} and #{@user}"
       respond_to do |format|
-        format.json { render json: @user, serializer: LegacyUserSerializer }
-        format.xml { render xml: @user }
+        format.json { render json: @user }
+        format.xml { render xml: {profil: {mail: @user[:email], username: @user[:email], vname: @user[:first_name],
+                                           nname: @user[:last_name], student: "true", fak: "4", fahrten_fahrer: "", fahrzeug: "",
+                                           fahrten_mitfahrer: "", bewertung_ges: "", bewertungen_fahrer: "", bewertungen_mitfahrer: "",
+                                           fahrt_angeboten: "0", fahrt_abgesagt: "1", fahrt_teilgenommen: ""}} }
       end
     else
       respond_to do |format|
-        format.json { render json: @user, serializer: LegacyUserSerializer}
+        format.json { render json: @user }
         format.xml { render xml: {:email => @user[:email]} }
       end
     end

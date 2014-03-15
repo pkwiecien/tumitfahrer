@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140211201657) do
+ActiveRecord::Schema.define(version: 20140315100715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,13 @@ ActiveRecord::Schema.define(version: 20140211201657) do
     t.string   "host"
     t.string   "format"
     t.string   "key"
+  end
+
+  create_table "organized_rides", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "push_configurations", force: true do |t|
@@ -74,6 +81,27 @@ ActiveRecord::Schema.define(version: 20140211201657) do
 
   add_index "push_messages", ["delivered", "failed", "deliver_after"], name: "index_push_messages_on_delivered_and_failed_and_deliver_after", using: :btree
 
+  create_table "ratings", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "from_user"
+    t.integer  "rating_type"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "relationships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.boolean  "is_driving"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "relationships", ["ride_id"], name: "index_relationships_on_ride_id", using: :btree
+  add_index "relationships", ["user_id", "ride_id"], name: "index_relationships_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "relationships", ["user_id"], name: "index_relationships_on_user_id", using: :btree
+
   create_table "rides", force: true do |t|
     t.string   "departure_place"
     t.string   "destination"
@@ -86,6 +114,28 @@ ActiveRecord::Schema.define(version: 20140211201657) do
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
+
+  create_table "rides_as_drivers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rides_as_drivers", ["ride_id"], name: "index_rides_as_drivers_on_ride_id", using: :btree
+  add_index "rides_as_drivers", ["user_id", "ride_id"], name: "index_rides_as_drivers_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "rides_as_drivers", ["user_id"], name: "index_rides_as_drivers_on_user_id", using: :btree
+
+  create_table "rides_as_passengers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rides_as_passengers", ["ride_id"], name: "index_rides_as_passengers_on_ride_id", using: :btree
+  add_index "rides_as_passengers", ["user_id", "ride_id"], name: "index_rides_as_passengers_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "rides_as_passengers", ["user_id"], name: "index_rides_as_passengers_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first_name"
@@ -100,6 +150,10 @@ ActiveRecord::Schema.define(version: 20140211201657) do
     t.string   "remember_token"
     t.boolean  "admin"
     t.string   "api_key"
+    t.boolean  "is_student"
+    t.integer  "rank"
+    t.float    "unbound_contributions"
+    t.integer  "exp"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

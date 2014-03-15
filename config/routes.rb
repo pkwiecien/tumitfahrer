@@ -6,6 +6,17 @@ Tumitfahrer::Application.routes.draw do
       resources :rides
       resource :sessions
     end
+    namespace :v2, :defaults => { :format => 'json' } do
+      resources :users
+      resources :rides
+      resource :sessions
+    end
+  end
+
+  resources :users do
+    member do
+      get :rides
+    end
   end
 
   resources :users
