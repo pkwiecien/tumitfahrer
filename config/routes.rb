@@ -2,7 +2,9 @@ Tumitfahrer::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users
+      resources :users do
+        resources :rides
+      end
       resources :rides
       resource :sessions
     end
@@ -10,12 +12,6 @@ Tumitfahrer::Application.routes.draw do
       resources :users
       resources :rides
       resource :sessions
-    end
-  end
-
-  resources :users do
-    member do
-      get :rides
     end
   end
 
@@ -31,6 +27,9 @@ Tumitfahrer::Application.routes.draw do
   match "/contact", to: "static_pages#contact", via: 'get'
   match "/about", to: "static_pages#about", via: 'get'
   match "/discover", to: "static_pages#discover", via: 'get'
+
+
+  # HOW TO:
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

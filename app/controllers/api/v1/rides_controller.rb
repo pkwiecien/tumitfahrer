@@ -1,9 +1,18 @@
 class Api::V1::RidesController < ApiController
   respond_to :json, :xml
   # before_action :restrict_access, only: [:index, :create]
+  before_filter :load_parent
 
   def index
-    @rides = Ride.all
+
+    if params.has_key?(:user_id)
+      # mapping for url : /api/version/users/1/rides
+      @rides = @parent.rides.all
+    else
+      # mapping for url: /api/version/rides
+      @rides = Ride.all
+    end
+
     if @rides.nil?
       render json: {:message => "There are no rides"}
     else
@@ -45,4 +54,9 @@ class Api::V1::RidesController < ApiController
   def ride_params
     params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point)
   end
+
+  def load_parent
+    @parent = User.find_by(id: params[:user_id])
+  end
+
 end
