@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140315100715) do
+ActiveRecord::Schema.define(version: 20140315141406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,14 @@ ActiveRecord::Schema.define(version: 20140315100715) do
 
   create_table "api_keys", force: true do |t|
     t.string   "access_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contributions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.float    "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -36,6 +44,18 @@ ActiveRecord::Schema.define(version: 20140315100715) do
     t.integer  "ride_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "projects", force: true do |t|
+    t.integer  "phase"
+    t.float    "fundings_target"
+    t.integer  "owner_id"
+    t.string   "description"
+    t.string   "title"
+    t.datetime "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "ride_id"
   end
 
   create_table "push_configurations", force: true do |t|
@@ -111,6 +131,11 @@ ActiveRecord::Schema.define(version: 20140315100715) do
     t.string   "meeting_point"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "realtime_km"
+    t.float    "price"
+    t.datetime "realtime_departure_time"
+    t.float    "duration"
+    t.datetime "realtime_arrival_time"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree

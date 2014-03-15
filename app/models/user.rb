@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   has_many :rides, through: :relationships
 
   has_many :ratings
+  has_many :contributions
+  has_many :projects, through: :contributions
 
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
