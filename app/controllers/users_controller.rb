@@ -1,3 +1,5 @@
+require 'digest/sha2'
+
 class UsersController < ApplicationController
   before_action :signed_in_user, only: [:edit, :update, :show]
   before_action :right_user, only: [:edit, :update]
@@ -11,6 +13,11 @@ class UsersController < ApplicationController
   end
 
   def create
+
+    # todo: add salt to config
+    params[:user][:password] = Digest::SHA512.hexdigest(params[:user][:password]+'toj369sbz1f316sx')
+    params[:user][:password_confirmation] = params[:user][:password]
+
     @user = User.new(user_params)
     if @user.save
         sign_in @user

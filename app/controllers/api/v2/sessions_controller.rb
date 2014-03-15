@@ -1,4 +1,4 @@
-class Api::V1::SessionsController < ApiController
+class Api::V2::SessionsController < ApiController
   respond_to :json, :xml
 
   def create
@@ -13,16 +13,17 @@ class Api::V1::SessionsController < ApiController
         User.generate_api_key(@user)
       end
 
+      logger.debug "logging in user #{@user.to_s}"
       respond_to do |format|
         format.json { render json: @user }
-        format.xml { render xml: {:attempt => "true", "user_id" => @user.id} }
+        format.xml { render xml: {:attempt => "true", "user_id" => "31"} }
       end
     else
       logger.debug "could not log in user #{@user.to_s}"
 
       respond_to do |format|
         format.json { render json: {:message => "User couldn't be added to the database"} }
-        format.xml { render xml: {:attempt => "false", :user_id => "-1"} }
+        format.xml { render xml: {:attempt => "dupa", :user_id => "0"} }
       end
 
     end

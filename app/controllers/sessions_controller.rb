@@ -1,3 +1,4 @@
+require 'digest/sha2'
 class SessionsController < ApplicationController
 
   def new
@@ -6,7 +7,10 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by(email: params[:session][:email].downcase)
-    if user && user.authenticate(params[:session][:password])
+    hashed_password = Digest::SHA512.hexdigest(params[:session][:password]+'toj369sbz1f316sx')
+    logger.debug "Hashed password: #{hashed_password}, authenticate user: #{user.authenticate(hashed_password)}"
+
+    if user && user.authenticate(hashed_password)
       sign_in user
       redirect_back_or user
     else

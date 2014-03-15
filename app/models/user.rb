@@ -1,5 +1,11 @@
+require 'digest/sha2'
 class User < ActiveRecord::Base
-  has_many :rides
+
+  has_many :relationships, foreign_key: :user_id
+  has_many :rides, through: :relationships
+
+  has_many :ratings
+
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
@@ -21,6 +27,10 @@ class User < ActiveRecord::Base
     user.update_attribute(:api_key, SecureRandom.urlsafe_base64)
   end
 
+  def to_s
+    "#{self.first_name} #{self.last_name}, #{self.password_digest}"
+  end
+
   private
 
   def create_remember_token
@@ -30,5 +40,6 @@ class User < ActiveRecord::Base
   def generate_api_key
     self.api_key = SecureRandom.urlsafe_base64
   end
+
 
 end
