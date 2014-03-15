@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
 
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
+  before_save :default_values
+
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 20}
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -33,6 +35,26 @@ class User < ActiveRecord::Base
     "#{self.first_name} #{self.last_name}, #{self.password_digest}"
   end
 
+  def become_passenger!(new_ride_id)
+    self.relationships.create!(ride_id: new_ride_id)
+  end
+
+  def rides_as_passenger
+    result = []
+    self.relationships.where(is_driving: false).to_a.each do |rel|
+      result.append(rel.ride)
+    end
+    result
+  end
+
+  def rides_as_driver
+    result = []
+    self.relationships.where(is_driving: true).to_a.each do |rel|
+      result.append(rel.ride)
+    end
+    result
+  end
+
   private
 
   def create_remember_token
@@ -41,6 +63,13 @@ class User < ActiveRecord::Base
 
   def generate_api_key
     self.api_key = SecureRandom.urlsafe_base64
+  end
+
+  def default_values
+    self.rank ||= 0
+    self.exp ||= 0
+    self.unbound_contributions ||= 0
+    nil
   end
 
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140315141406) do
+ActiveRecord::Schema.define(version: 20140315152436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,15 @@ ActiveRecord::Schema.define(version: 20140315141406) do
   add_index "relationships", ["user_id", "ride_id"], name: "index_relationships_on_user_id_and_ride_id", unique: true, using: :btree
   add_index "relationships", ["user_id"], name: "index_relationships_on_user_id", using: :btree
 
+  create_table "requests", force: true do |t|
+    t.integer  "ride_id"
+    t.integer  "passenger_id"
+    t.string   "requested_from"
+    t.string   "request_to"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "rides", force: true do |t|
     t.string   "departure_place"
     t.string   "destination"
@@ -136,6 +145,8 @@ ActiveRecord::Schema.define(version: 20140315141406) do
     t.datetime "realtime_departure_time"
     t.float    "duration"
     t.datetime "realtime_arrival_time"
+    t.integer  "contribution_mode"
+    t.boolean  "is_paid"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
