@@ -5,6 +5,8 @@ Tumitfahrer::Application.routes.draw do
       resources :users do
         resources :rides
         resources :friends
+        resources :friend_requests
+        resources :contributions
       end
       resources :rides
       resource :sessions

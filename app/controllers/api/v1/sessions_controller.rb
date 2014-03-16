@@ -19,7 +19,6 @@ class Api::V1::SessionsController < ApiController
       end
     else
       logger.debug "could not log in user #{@user.to_s}"
-
       respond_to do |format|
         format.json { render json: {:message => "User couldn't be added to the database"} }
         format.xml { render xml: {:attempt => "false", :user_id => "-1"} }
