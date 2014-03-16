@@ -4,6 +4,7 @@ Tumitfahrer::Application.routes.draw do
     namespace :v1 do
       resources :users do
         resources :rides
+        resources :friends
       end
       resources :rides
       resource :sessions

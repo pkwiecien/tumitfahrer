@@ -8,6 +8,10 @@ class User < ActiveRecord::Base
   has_many :contributions
   has_many :projects, through: :contributions
 
+  has_many :friendships
+  has_many :friend_requests, foreign_key: :to_user_id
+  has_many :pending_friend_requests, foreign_key: :from_user_id, class_name: "FriendRequest"
+
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
   before_save :default_values
@@ -53,6 +57,30 @@ class User < ActiveRecord::Base
       result.append(rel.ride)
     end
     result
+  end
+
+  def friend?(other_user)
+    friendships.find_by(friend_id: other_user.id)
+  end
+
+  def befriend!(other_user)
+    friendships.create!(friend_id: other_user.id)
+  end
+
+  def unfriend!(other_user)
+    friendships.find_by(friend_id: other_user.id).destroy
+  end
+
+  def friends
+    result = []
+    self.friendships.each do |f|
+      result.append(f.friend)
+    end
+    result
+  end
+
+  def send_friend_request!(to_user)
+    self.pending_friend_requests.create!(to_user_id: to_user.id, from_user_id: self.id)
   end
 
   private
