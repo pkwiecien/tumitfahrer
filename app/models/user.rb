@@ -9,8 +9,15 @@ class User < ActiveRecord::Base
   has_many :projects, through: :contributions
 
   has_many :friendships
-  has_many :friend_requests, foreign_key: :to_user_id
-  has_many :pending_friend_requests, foreign_key: :from_user_id, class_name: "FriendRequest"
+  has_many :friends, through: :friendships, source: :friend
+
+  has_many :friendship_requests, foreign_key: :from_user_id
+  has_many :sent_friendship_requests, foreign_key: :from_user_id, class_name: "FriendshipRequest"  # requests received by this user from other users
+  has_many :pending_friends, through: :friendship_requests, source: :from_user
+
+  has_many :reverse_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest"
+  has_many :received_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest" #this user sends a request to another user
+  has_many :requesting_friends, through: :reverse_friendship_requests, source: :to_user
 
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
@@ -71,16 +78,8 @@ class User < ActiveRecord::Base
     friendships.find_by(friend_id: other_user.id).destroy
   end
 
-  def friends
-    result = []
-    self.friendships.each do |f|
-      result.append(f.friend)
-    end
-    result
-  end
-
   def send_friend_request!(to_user)
-    self.pending_friend_requests.create!(to_user_id: to_user.id, from_user_id: self.id)
+    self.pending_friendship_requests.create!(to_user_id: to_user.id, from_user_id: self.id)
   end
 
   private
