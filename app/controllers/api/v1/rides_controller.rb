@@ -32,15 +32,21 @@ class Api::V1::RidesController < ApiController
   end
 
   def create
-    current_user = User.find_by(api_key: request.headers['apiKey'])
-    logger.debug request.headers['apiKey']
-    @ride = current_user.rides.build(ride_params)
-    if @ride.save
-      render json: {:result => "1"}
-    else
-      render json: {:result => "0"}
-    end
+    if params.has_key?(:user_id)
+      current_user = User.find_by(user_id: params[:user_id])
+      @ride = current_user.rides.build(ride_params)
+      @project = Project.find_by(id: params[:project_id])
+      logger.debug "Found project: #{project}"
+      unless @project.nil?
+        @ride.project = @project
+      end
 
+      if @ride.save
+        render json: {:result => "1"}
+      else
+        render json: {:result => "0"}
+      end
+    end
   end
 
   private
@@ -52,7 +58,7 @@ class Api::V1::RidesController < ApiController
   end
 
   def ride_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point)
+    params.require(:ride).permit(:departure_place, :destination, :departure_time, :price, :free_seats, :meeting_point)
   end
 
   def load_parent

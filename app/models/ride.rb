@@ -25,6 +25,10 @@ class Ride < ActiveRecord::Base
     end
   end
 
+  def assign_project(project)
+    self.project = project
+  end
+
   def default_values
     self.is_paid ||= false
     self.price ||= 0

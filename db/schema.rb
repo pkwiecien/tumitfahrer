@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140316090117) do
+ActiveRecord::Schema.define(version: 20140317201154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,15 @@ ActiveRecord::Schema.define(version: 20140316090117) do
     t.string   "host"
     t.string   "format"
     t.string   "key"
+  end
+
+  create_table "messages", force: true do |t|
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_seen"
+    t.string   "content"
   end
 
   create_table "organized_rides", force: true do |t|
