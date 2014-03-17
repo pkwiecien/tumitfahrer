@@ -7,9 +7,13 @@ Tumitfahrer::Application.routes.draw do
         resources :friends
         resources :friend_requests
         resources :contributions
+        resources :projects
+        resources :ratings
+        resources :messages
       end
       resources :rides
       resource :sessions
+      resources :projects
     end
     namespace :v2, :defaults => { :format => 'json' } do
       resources :users
