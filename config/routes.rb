@@ -3,7 +3,11 @@ Tumitfahrer::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users do
-        resources :rides
+        resources :rides do
+          resources :contributions
+          resources :requests
+        end
+        resources :payments
         resources :friends
         resources :friend_requests
         resources :contributions

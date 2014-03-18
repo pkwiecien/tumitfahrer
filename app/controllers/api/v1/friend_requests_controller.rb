@@ -33,7 +33,7 @@ class Api::V1::FriendRequestsController < ApiController
     other_user = User.find_by(id: params[:from_user_id])
 
     user.handle_friend_request(other_user, params[:accept])
-    render json: {:result => "1"}
+    render json: {:status => 200}
 
   end
 

@@ -8,6 +8,9 @@ class Api::V1::RidesController < ApiController
     if params.has_key?(:user_id)
       # mapping for url : /api/version/users/1/rides
       @rides = @parent.rides
+      if params.has_key?(:is_paid)
+        @rides = @rides.where(is_paid: params[:is_paid])
+      end
     else
       # mapping for url: /api/version/rides
       @rides = Ride.all
@@ -54,7 +57,6 @@ class Api::V1::RidesController < ApiController
     end
   end
 
-
   def update
     if params.has_key?(:user_id)
       current_user = User.find_by(id: params[:user_id])
@@ -68,7 +70,19 @@ class Api::V1::RidesController < ApiController
     end
   end
 
-  def delete
+  def destroy
+    if params.has_key?(:user_id)
+      current_user = User.find_by(id: params[:user_id])
+      ride = current_user.rides.find_by(id: params[:id])
+      unless ride.nil?
+        ride.destroy!
+        render json: {:status => 200}
+      else
+        render json: {:status => 400}
+      end
+    else
+      render json: {:status => 400}
+    end
 
   end
 
@@ -87,7 +101,7 @@ class Api::V1::RidesController < ApiController
 
   def update_ride_params
     params.require(:ride).permit(:departure_place, :destination, :price, :free_seats, :meeting_point, :departure_time,
-                                 :project_id)
+                                 :project_id, :is_finished)
   end
 
   def load_parent
