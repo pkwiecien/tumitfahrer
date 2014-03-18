@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140317220622) do
+ActiveRecord::Schema.define(version: 20140318144700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,8 +129,8 @@ ActiveRecord::Schema.define(version: 20140317220622) do
   add_index "push_messages", ["delivered", "failed", "deliver_after"], name: "index_push_messages_on_delivered_and_failed_and_deliver_after", using: :btree
 
   create_table "ratings", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "from_user"
+    t.integer  "to_user_id"
+    t.integer  "from_user_id"
     t.integer  "rating_type"
     t.integer  "ride_id"
     t.datetime "created_at"
@@ -174,6 +174,7 @@ ActiveRecord::Schema.define(version: 20140317220622) do
     t.datetime "realtime_arrival_time"
     t.integer  "contribution_mode"
     t.boolean  "is_paid"
+    t.boolean  "is_finished"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
@@ -217,6 +218,10 @@ ActiveRecord::Schema.define(version: 20140317220622) do
     t.integer  "rank"
     t.float    "unbound_contributions"
     t.integer  "exp"
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

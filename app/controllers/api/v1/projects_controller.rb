@@ -28,7 +28,7 @@ class Api::V1::ProjectsController < ApiController
   def create
     user = User.find_by(id: params[:user_id])
     project = user.projects.create!(title: params[:title], owner_id: user.id, description: params[:description],
-                         fundings_target: params[:fundings_target])
+                                    fundings_target: params[:fundings_target])
     unless project.nil?
       respond_to do |format|
         format.json { render json: project }
@@ -37,14 +37,27 @@ class Api::V1::ProjectsController < ApiController
     else
       render json: {:result => "0"}
     end
+  end
 
+  def update
+    project = Project.find_by(id: params[:id])
 
+    if project.nil?
+      render json: {:status => 400}
+    end
+
+    project.update_attributes(project_params)
+    render json: {:status => 200}
   end
 
   private
 
   def load_parent
     @parent = User.find_by(id: params[:user_id])
+  end
+
+  def project_params
+    params.require("project").permit(:title, :description, :phase)
   end
 
 end

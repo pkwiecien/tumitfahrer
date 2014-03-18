@@ -8,7 +8,9 @@ class User < ActiveRecord::Base
   has_many :rides_as_passenger, -> { where(relationships: {is_driving: 'false'})},
            through: :relationships, source: :ride
 
-  has_many :ratings
+  has_many :ratings_given, foreign_key: :from_user_id, class_name: "Rating"
+  has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
+
   has_many :contributions
   has_many :projects, through: :contributions
 
@@ -26,6 +28,10 @@ class User < ActiveRecord::Base
   has_many :messages
   has_many :sent_messages, foreign_key: :sender_id, class_name: "Message"
   has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
+
+  ## https://github.com/thoughtbot/paperclip
+  #has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
+  #validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
@@ -83,6 +89,10 @@ class User < ActiveRecord::Base
       self.befriend!(other_user)
     end
     self.friendship_requests.find_by(from_user_id: other_user.id).destroy
+  end
+
+  def pending_payments
+    self.rides_as_passenger.where(is_paid: false)
   end
 
   private

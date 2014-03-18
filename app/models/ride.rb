@@ -1,7 +1,7 @@
 class Ride < ActiveRecord::Base
 
   has_many :relationships, dependent: :delete_all
-  has_many :passengers,  -> { where(relationships: {is_driving: 'false'})}, :through => :relationships, source: :user
+  has_many :passengers, -> { where(relationships: {is_driving: 'false'}) }, :through => :relationships, source: :user
 
   has_many :users, through: :relationships
   has_one :project
@@ -12,16 +12,6 @@ class Ride < ActiveRecord::Base
 
   default_scope -> { order ('departure_time ASC') }
   validates :departure_place, :departure_time, :meeting_point, :free_seats, presence: true
-
-  #def passengers(is_driver = false)
-  #  results = []
-  #  self.relationships.each do |r|
-  #    if r[:is_driving] == is_driver
-  #      results.append(r.user)
-  #    end
-  #  end
-  #  results
-  #end
 
   def driver # should return only one row
     result = passengers(true)
@@ -40,6 +30,7 @@ class Ride < ActiveRecord::Base
     self.realtime_km ||= 0
     self.duration ||= 0
     self.contribution_mode ||= 0
+    self.is_finished ||= false
     nil
   end
 
