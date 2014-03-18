@@ -54,6 +54,25 @@ class Api::V1::RidesController < ApiController
     end
   end
 
+
+  def update
+    if params.has_key?(:user_id)
+      current_user = User.find_by(id: params[:user_id])
+      requested_ride = current_user.rides.find_by(id: params[:id])
+      unless requested_ride.nil?
+        requested_ride.update_attributes(ride_params)
+        render json: {:status => 200}
+      end
+    else
+      render json: {:status => 400}
+    end
+  end
+
+  def delete
+
+  end
+
+
   private
 
   def restrict_access
@@ -64,6 +83,11 @@ class Api::V1::RidesController < ApiController
 
   def ride_params
     params.require(:ride).permit(:departure_place, :destination, :price, :free_seats, :meeting_point, :departure_time)
+  end
+
+  def update_ride_params
+    params.require(:ride).permit(:departure_place, :destination, :price, :free_seats, :meeting_point, :departure_time,
+                                 :project_id)
   end
 
   def load_parent
