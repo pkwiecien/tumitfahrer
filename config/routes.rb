@@ -11,7 +11,9 @@ Tumitfahrer::Application.routes.draw do
         resources :ratings
         resources :messages
       end
-      resources :rides
+      resources :rides do
+        resources :passengers
+      end
       resource :sessions
       resources :projects
     end

@@ -2,7 +2,11 @@ require 'digest/sha2'
 class User < ActiveRecord::Base
 
   has_many :relationships, foreign_key: :user_id
-  has_many :rides, through: :relationships
+  has_many :rides, through: :relationships, dependent: :delete_all
+  has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'})},
+           through: :relationships, source: :ride
+  has_many :rides_as_passenger, -> { where(relationships: {is_driving: 'false'})},
+           through: :relationships, source: :ride
 
   has_many :ratings
   has_many :contributions
@@ -56,22 +60,6 @@ class User < ActiveRecord::Base
 
   def become_passenger!(new_ride_id)
     self.relationships.create!(ride_id: new_ride_id)
-  end
-
-  def rides_as_passenger
-    result = []
-    self.relationships.where(is_driving: false).to_a.each do |rel|
-      result.append(rel.ride)
-    end
-    result
-  end
-
-  def rides_as_driver
-    result = []
-    self.relationships.where(is_driving: true).to_a.each do |rel|
-      result.append(rel.ride)
-    end
-    result
   end
 
   def friend?(other_user)
