@@ -46,8 +46,8 @@ class User < ActiveRecord::Base
     user.update_attribute(:api_key, SecureRandom.urlsafe_base64)
   end
 
-  def create_message!(other_user)
-    self.messages.create!(user_id: self.id, receiver_id: other_user.id)
+  def send_message!(other_user)
+    self.sent_messages.create!(sender_id: self.id, receiver_id: other_user.id)
   end
 
   def to_s

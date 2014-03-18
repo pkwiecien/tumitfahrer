@@ -1,17 +1,7 @@
 class RideSerializer < ActiveModel::Serializer
-  [:id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time,
+  attributes :id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time,
    :project_id, :price, :realtime_departure_time, :realtime_km, :driver_id, :requests, :passengers,
-   :contribution_mode, :is_paid, :duration, :pending_payments].each do |attr|
-    # Tell serializer its an attribute
-    attribute attr
-
-    # Define a method with the same name as the attribute that calls the
-    # underlying object and to_s on the result
-    define_method attr do
-      object.send(attr).to_s
-    end
-  end
-
+   :contribution_mode, :is_paid, :duration, :pending_payments
 
   def project_id
     unless object.project.nil?
@@ -25,7 +15,7 @@ class RideSerializer < ActiveModel::Serializer
     unless object.driver.nil?
       object.driver.id
     else
-      ""
+      -1
     end
   end
 

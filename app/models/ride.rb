@@ -32,6 +32,9 @@ class Ride < ActiveRecord::Base
   def default_values
     self.is_paid ||= false
     self.price ||= 0
+    self.realtime_km ||= 0
+    self.duration ||= 0
+    self.contribution_mode ||= 0
     nil
   end
 

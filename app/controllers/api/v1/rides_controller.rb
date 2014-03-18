@@ -7,7 +7,7 @@ class Api::V1::RidesController < ApiController
 
     if params.has_key?(:user_id)
       # mapping for url : /api/version/users/1/rides
-      @rides = @parent.rides.all
+      @rides = @parent.rides
     else
       # mapping for url: /api/version/rides
       @rides = Ride.all
@@ -33,19 +33,24 @@ class Api::V1::RidesController < ApiController
 
   def create
     if params.has_key?(:user_id)
-      current_user = User.find_by(user_id: params[:user_id])
-      @ride = current_user.rides.build(ride_params)
-      @project = Project.find_by(id: params[:project_id])
-      logger.debug "Found project: #{project}"
+      current_user = User.find_by(id: params[:user_id])
+      @ride = current_user.rides.create!(ride_params)
+      current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
+
+      @project = Project.find_by(id: params[:ride][:project_id])
+      logger.debug "Found project: #{@project}"
       unless @project.nil?
         @ride.project = @project
       end
 
       if @ride.save
-        render json: {:result => "1"}
+        logger.debug "Ride saved!!!"
+        render json: {:status => 200}
       else
-        render json: {:result => "0"}
+        render json: {:status => 400}
       end
+    else
+      render json: {:status => 400}
     end
   end
 
@@ -58,7 +63,7 @@ class Api::V1::RidesController < ApiController
   end
 
   def ride_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :price, :free_seats, :meeting_point)
+    params.require(:ride).permit(:departure_place, :destination, :price, :free_seats, :meeting_point, :departure_time)
   end
 
   def load_parent

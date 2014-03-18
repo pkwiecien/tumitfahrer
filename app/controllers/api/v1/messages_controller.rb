@@ -40,6 +40,22 @@ class Api::V1::MessagesController < ApiController
   end
 
   def create
+    user = User.find_by(id: params[:user_id])
+    other_user = User.find_by(id: params[:receiver_id])
+    user.send_message!(other_user)
+
+    respond_to do |format|
+      format.json { render json: {:status => 200} }
+      format.xml { render xml: {:status => 200} }
+    end
+  end
+
+  def update
+    Message.find_by(id: params[:message_id]).update_attribute(:is_seen, params[:is_seen])
+    respond_to do |format|
+      format.json { render json: {:status => 200} }
+      format.xml { render xml: {:status => 200} }
+    end
   end
 
 end
