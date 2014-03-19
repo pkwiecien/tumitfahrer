@@ -7,7 +7,7 @@ class Api::V1::RidesController < ApiController
 
     if params.has_key?(:user_id)
       # mapping for url : /api/version/users/1/rides
-      @rides = @parent.rides
+      @rides = @parent.rides_as_driver + @parent.rides_as_passenger
       if params.has_key?(:is_paid)
         @rides = @rides.where(is_paid: params[:is_paid])
       end
@@ -37,7 +37,7 @@ class Api::V1::RidesController < ApiController
   def create
     if params.has_key?(:user_id)
       current_user = User.find_by(id: params[:user_id])
-      @ride = current_user.rides.create!(ride_params)
+      @ride = current_user.rides_as_driver.create!(ride_params)
       current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
 
       @project = Project.find_by(id: params[:ride][:project_id])
@@ -60,7 +60,7 @@ class Api::V1::RidesController < ApiController
   def update
     if params.has_key?(:user_id)
       current_user = User.find_by(id: params[:user_id])
-      requested_ride = current_user.rides.find_by(id: params[:id])
+      requested_ride = current_user.rides_as_driver.find_by(id: params[:id])
       unless requested_ride.nil?
         requested_ride.update_attributes(ride_params)
         render json: {:status => 200}
@@ -73,7 +73,7 @@ class Api::V1::RidesController < ApiController
   def destroy
     if params.has_key?(:user_id)
       current_user = User.find_by(id: params[:user_id])
-      ride = current_user.rides.find_by(id: params[:id])
+      ride = current_user.rides_as_driver.find_by(id: params[:id])
       unless ride.nil?
         ride.destroy!
         render json: {:status => 200}

@@ -38,8 +38,8 @@ class Api::V1::RatingsController < ApiController
 
   def create
     user = User.find_by(id: params[:user_id])
-    from_user = User.find_by(id: params[:from_user_id])
-    result = user.ratings_given.create!(from_user_id: from_user.id, to_user_id: user.id,
+    from_user = User.find_by(id: user.id)
+    result = user.ratings_given.create!(from_user_id: params[:user_id], to_user_id: params[:to_user_id],
                                         ride_id: params[:ride_id], rating_type: params[:rating_type])
 
     unless result.nil?

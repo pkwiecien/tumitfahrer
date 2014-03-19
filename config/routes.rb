@@ -2,6 +2,8 @@ Tumitfahrer::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+
+      resource :search
       resources :users do
         resources :rides do
           resources :contributions

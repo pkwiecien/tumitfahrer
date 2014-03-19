@@ -64,25 +64,22 @@ class Api::V1::UsersController < ApiController
   end
 
   def update
-    if params.has_key?(:password)
-      if params[:password] != params[:password_confirmation]
-        render json: {:result => "0"}
-      end
-      User.find_by(id: params[:id]).update_attribute(:password, params[:password])
-      User.find_by(id: params[:id]).update_attribute(:password_confirmation, params[:password_confirmation])
-      respond_to do |format|
-        format.json { render json: @rides }
-        format.xml { render xml: {:aenderung => true}}
-      end
-
+    user = User.find_by(id: params[:id])
+    if user.nil?
+      render json: {:status => 400}
     else
-      User.find_by(id: params[:id]).update_column(:phone_number, params[:user][:phone_number])
-      User.find_by(id: params[:id]).update_column(:rank, params[:user][:rank])
-      User.find_by(id: params[:id]).update_column(:exp, params[:user][:exp])
-      User.find_by(id: params[:id]).update_column(:car, params[:user][:car])
-      User.find_by(id: params[:id]).update_column(:unbound_contributions, params[:user][:unbound_contributions])
-
-      render json: {:result => "1"}
+      user.update_attributes(update_params)
+      if user.save
+        respond_to do |format|
+          format.json { render json: {:status => 200} }
+          format.xml { render xml: {:aenderung => true} }
+        end
+      else
+        respond_to do |format|
+          format.json { render json: {:status => 400} }
+          format.xml { render xml: {:aenderung => true} }
+        end
+      end
     end
   end
 
@@ -100,7 +97,8 @@ class Api::V1::UsersController < ApiController
   end
 
   def update_params
-    params.require(:user).permit(:id, :phone_number, :rank, :exp, :car, :unbound_contributions)
+    params.require(:user).permit(:id, :phone_number, :rank, :exp, :car, :unbound_contributions, :department,
+                                 :password, :password_confirmation, :gamification)
   end
 
 end
