@@ -17,14 +17,15 @@ class Api::V1::ContributionsController < ApiController
   end
 
   def create
-    if params.has_key?(:amount)
+    if params[:contribution] && params[:contribution][:amount]
       user = User.find_by(id: params[:user_id])
       if user.nil?
         render json: {:status => 400}
       end
 
-      owner_id = Project.find_by(id: params[:id]).owner_id
-      user.contributions.create!(project_id: params[:id], amount: params[:contribution][:amount], owner_id: owner_id)
+      owner_id = Project.find_by(id: params[:contribution][:project_id]).owner_id
+      user.contributions.create!(project_id: params[:contribution][:project_id], amount: params[:contribution][:amount],
+                                 user_id: params[:user_id])
       render json: {:status => 200}
     else
       user = User.find_by(id: params[:user_id])

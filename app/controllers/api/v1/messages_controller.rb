@@ -6,7 +6,7 @@ class Api::V1::MessagesController < ApiController
     senders = Message.select(:sender_id).where(receiver_id:user.id).map(&:sender_id).uniq
     receivers = Message.select(:receiver_id).where(sender_id:user.id).map(&:receiver_id).uniq
 
-    partner_ids = senders + receivers
+    partner_ids = (senders + receivers).uniq
     results = []
     partner_ids.each do |partner_id|
       sent = Message.where(sender_id:user.id, receiver_id: partner_id).order("created_at").last
@@ -42,7 +42,7 @@ class Api::V1::MessagesController < ApiController
   def create
     user = User.find_by(id: params[:user_id])
     other_user = User.find_by(id: params[:receiver_id])
-    user.send_message!(other_user)
+    user.send_message!(other_user, params[:content])
 
     respond_to do |format|
       format.json { render json: {:status => 200} }

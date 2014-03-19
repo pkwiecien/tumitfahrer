@@ -1,6 +1,6 @@
 class LegacyUserSerializer < ActiveModel::Serializer
   attributes :id, :first_name, :last_name, :department, :car, :api_key, :phone_number, :ride_count, :exp, :ratings,
-   :unbound_contributions, :rank, :email, :is_student
+   :unbound_contributions, :rank, :email, :is_student, :gamification
 
   def ride_count
     object.rides.count
@@ -8,9 +8,10 @@ class LegacyUserSerializer < ActiveModel::Serializer
 
   def ratings
     ar = []
-    ar.append(:star => object.ratings.all(conditions: ["rating_type = ?", 0]).count)
-    ar.append(:positive => object.ratings.all(conditions: ["rating_type = ?", 1]).count)
-    ar.append(:negative => object.ratings.all(conditions: ["rating_type = ?", 2]).count)
+    ratings = object.ratings_received + object.ratings_given
+    ar.append(:star => ratings.select{|rating_type| rating_type == 0}.size)
+    ar.append(:positive => ratings.select{|rating_type| rating_type == 1}.size)
+    ar.append(:negative => ratings.select{|rating_type| rating_type == 2}.size)
   end
 
 end

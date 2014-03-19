@@ -2,9 +2,9 @@ require 'digest/sha2'
 class User < ActiveRecord::Base
 
   has_many :relationships, foreign_key: :user_id
-  has_many :rides, through: :relationships, dependent: :delete_all
+  has_many :rides, through: :relationships, source: :ride, class_name: "Ride", dependent: :delete_all
   has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'})},
-           through: :relationships, source: :ride
+           through: :relationships, source: :ride, dependent: :delete_all
   has_many :rides_as_passenger, -> { where(relationships: {is_driving: 'false'})},
            through: :relationships, source: :ride
 
@@ -12,7 +12,8 @@ class User < ActiveRecord::Base
   has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
 
   has_many :contributions
-  has_many :projects, through: :contributions
+  has_many :offered_projects, foreign_key: :owner_id, class_name: "Project"
+  has_many :contributed_projects, through: :contributions, class_name: "Project", source: :project
 
   has_many :friendships
   has_many :friends, through: :friendships, source: :friend
@@ -28,6 +29,8 @@ class User < ActiveRecord::Base
   has_many :messages
   has_many :sent_messages, foreign_key: :sender_id, class_name: "Message"
   has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
+
+  has_many :devices
 
   ## https://github.com/thoughtbot/paperclip
   #has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
@@ -56,8 +59,8 @@ class User < ActiveRecord::Base
     user.update_attribute(:api_key, SecureRandom.urlsafe_base64)
   end
 
-  def send_message!(other_user)
-    self.sent_messages.create!(sender_id: self.id, receiver_id: other_user.id)
+  def send_message!(other_user, content)
+    self.sent_messages.create!(sender_id: self.id, receiver_id: other_user.id, content: content)
   end
 
   def to_s
@@ -95,6 +98,14 @@ class User < ActiveRecord::Base
     self.rides_as_passenger.where(is_paid: false)
   end
 
+  def new_project()
+    Project.create(owner_id: self.id, )
+  end
+
+  def request_ride!(ride, from, to)
+    ride.requests.create!(ride_id: ride.id, passenger_id: self.id, requested_from: from, request_to: to)
+  end
+
   private
 
   def create_remember_token
@@ -109,6 +120,7 @@ class User < ActiveRecord::Base
     self.rank ||= 0
     self.exp ||= 0
     self.unbound_contributions ||= 0
+    self.gamification ||= true
     nil
   end
 
