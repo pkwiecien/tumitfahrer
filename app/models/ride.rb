@@ -14,10 +14,11 @@ class Ride < ActiveRecord::Base
   validates :departure_place, :departure_time, :meeting_point, :free_seats, presence: true
 
   def driver # should return only one row
-    result = passengers(true)
+    result = self.relationships.find_by(ride_id: self.id, is_driving: true)
     unless result.nil?
-      result.first
+      result = User.find_by(id: result[:user_id])
     end
+    result
   end
 
   def assign_project(project)

@@ -1,4 +1,27 @@
 require 'digest/sha2'
+
+# Schema Information
+# Table name: users
+#  id                     :integer          not null, primary key
+#  user_id                :integer
+#  first_name             :string
+#  last_name              :boolean          default(TRUE)
+#  email                  :string
+#  phone_number           :string
+#  department             :integer
+#  car                    :string
+#  password_digest        :string
+#  remember_token         :string
+#  is_admin               :boolean
+#  is_student             :boolean
+#  api_key                :string
+#  rank                   :integer
+#  unbound_contributions  :integer
+#  exp                    :float
+#  gamification           :boolean
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+
 class User < ActiveRecord::Base
 
   has_many :relationships, foreign_key: :user_id
@@ -121,6 +144,7 @@ class User < ActiveRecord::Base
     self.exp ||= 0
     self.unbound_contributions ||= 0
     self.gamification ||= true
+    self.is_student ||= true
     nil
   end
 

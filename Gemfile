@@ -11,7 +11,8 @@ gem 'gcm', :require => "gcm"
 gem 'grocer'
 gem 'houston', :require => 'houston'
 gem 'actionpack-xml_parser'
-gem "paperclip", "~> 4.1"
+#gem "paperclip", "~> 4.1"
+gem "httparty", "~> 0.13.0"
 
 group :development, :production do
   gem 'pg', '0.15.1'
