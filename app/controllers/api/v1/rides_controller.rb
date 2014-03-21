@@ -16,6 +16,12 @@ class Api::V1::RidesController < ApiController
       @rides = Ride.all
     end
 
+    @rides.each do |r|
+      unless r.driver.nil?
+        r.update_attribute(:free_seats, r.driver.rides.find_by(id: r.id).free_seats)
+      end
+    end
+
     if @rides.nil?
       render json: {:message => "There are no rides"}
     else
@@ -46,7 +52,6 @@ class Api::V1::RidesController < ApiController
     if params.has_key?(:user_id)
       current_user = User.find_by(id: params[:user_id])
       @ride = current_user.rides_as_driver.create!(ride_params)
-      @ride.update_attribute(:driver_id, current_user.id)
       unless params[:ride][:project_id].nil?
         @ride.assign_project(Project.find_by(id: params[:ride][:project_id]))
       end
