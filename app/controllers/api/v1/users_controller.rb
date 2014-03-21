@@ -93,7 +93,8 @@ class Api::V1::UsersController < ApiController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :department, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :last_name, :email, :department, :password,
+                                 :password_confirmation, :is_student)
   end
 
   def update_params

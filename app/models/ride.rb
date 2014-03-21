@@ -36,13 +36,17 @@ class Ride < ActiveRecord::Base
     nil
   end
 
+  def request!(passenger, requested_from, request_to)
+    self.requests.create!(passenger_id: passenger.id, requested_from: requested_from, request_to: request_to)
+  end
+
   def pending_payments
     result = []
     self.relationships.where(is_driving: false).each do |r|
       if r.ride[:is_paid] == false
         payment = {}
         payment[:ride_id] = self.id
-        payment[:driver_id] = r[:driver_id]
+        payment[:driver_id] = r.driver.id
         result.append(payment)
       end
     end

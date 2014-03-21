@@ -1,25 +1,39 @@
 source 'https://rubygems.org'
 ruby '2.0.0'
+
+# gem for the development and production environment.
 gem 'rails', '4.0.2'
+# contains custom css elements
 gem "bootstrap-sass", "~> 3.1.0.2"
+# used to encrypt passwords
 gem 'bcrypt-ruby', '~> 3.1.2'
+# paginates large results
 gem "will_paginate", "~> 3.0.5"
+# paginates large results with bootstrap style
 gem "bootstrap-will_paginate", "~> 0.0.10"
+# gem for sending push notifications to iOS devices
 gem 'push-core'
+# gem for push notificaitons to Android devices
 gem 'push-gcm'
+# gem for push notificaitons to Android devices
 gem 'gcm', :require => "gcm"
+# gem for push notificaitons to iOS devices
 gem 'grocer'
+# gem for push notificaitons to iOS devices
 gem 'houston', :require => 'houston'
+# used for parsing xml requests
 gem 'actionpack-xml_parser'
 #gem "paperclip", "~> 4.1"
 gem "httparty", "~> 0.13.0"
 
 group :development, :production do
+  # postgres database
   gem 'pg', '0.15.1'
   gem 'rails_12factor', '0.0.2'
 end
 
 group :development do
+  # test framework used for TDD
   gem 'rspec-rails', '2.13.1'
 end
 

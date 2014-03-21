@@ -194,7 +194,6 @@ ActiveRecord::Schema.define(version: 20140321071854) do
     t.boolean  "is_paid"
     t.boolean  "is_finished"
     t.float    "distance"
-    t.integer  "driver_id"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree

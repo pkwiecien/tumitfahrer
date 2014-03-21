@@ -17,6 +17,7 @@ class Api::V1::SearchesController < ApiController
       #if duration < ride[:duration]/10 && (ride_date-ride[:departure_time])/3600<24
         ride_attributes = ride.attributes
         ride_attributes[:detour] = duration
+        ride_attributes[:driver_id] = ride.driver.id
         results.append(ride_attributes)
       #end
     end

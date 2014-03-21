@@ -1,6 +1,7 @@
 class Api::V1::ContributionsController < ApiController
   respond_to :xml, :json
 
+  # GET /api/v1/users/:user_id/contributions
   def index
     @user = User.find_by(id: params[:user_id])
     @contributions = @user.contributions
@@ -9,30 +10,20 @@ class Api::V1::ContributionsController < ApiController
       format.json { render json: {:contributions => @contributions} }
       format.xml { render xml: @contributions }
     end
-
   end
 
+  # GET /api/v1/users/:user_id/contributions/:id
   def show
 
   end
 
-  def create
-    if params[:contribution] && params[:contribution][:amount]
-      user = User.find_by(id: params[:user_id])
-      if user.nil?
-        render json: {:status => 400}
-      end
-
-      owner_id = Project.find_by(id: params[:contribution][:project_id]).owner_id
-      user.contributions.create!(project_id: params[:contribution][:project_id], amount: params[:contribution][:amount],
-                                 user_id: params[:user_id])
-      render json: {:status => 200}
-    else
+  # POST /api/v1/users/:user_id/rides/:ride_id/contributions
+  def contribute_to_ride
+    begin
       user = User.find_by(id: params[:user_id])
       ride = Ride.find_by(id: params[:ride_id])
       price = ride[:price]
       distance = user.rides.find_by(id: params[:ride_id])[:realtime_km]
-      driver_id = ride[:driver_id]
       project_id = ride.project[:id]
 
       contribution_amount = price*distance
@@ -40,9 +31,35 @@ class Api::V1::ContributionsController < ApiController
       user.contributions.update_attributes(amount: contribution_amount, project_id: project_id)
       user.rides.find_by(id: ride.id).update_attribute(:is_paid, true)
       render json: {:status => 200}
+    rescue
+      render json: {:status => 400}
+    end
+
+  end
+
+  def get_ride_contributions
+    render :json => "we are here!"
+  end
+
+  def final_test
+    render :json => "hell yeah!"
+  end
+
+# POST /api/v1/users/:user_id/contributions
+  def create
+    if params[:contribution] && params[:contribution][:amount]
+      user = User.find_by(id: params[:user_id])
+      if user.nil?
+        render json: {:status => 400}
+      end
+
+      user.contributions.create!(project_id: params[:contribution][:project_id], amount: params[:contribution][:amount],
+                                 user_id: params[:user_id])
+      render json: {:status => 200}
     end
   end
 
+# PUT /api/v1/users/:user_id/contributions
   def update
     user = User.find_by(id: params[:user_id])
     if user.nil?
@@ -54,6 +71,7 @@ class Api::V1::ContributionsController < ApiController
 
   end
 
+# DELETE /api/v1/users/:user_id/contributions
   def destroy
     user = User.find_by(id: params[:user_id])
     contribution = user.contributions.find_by(project_id: params[:contribution][:project_id], user_id: user.id)
@@ -64,7 +82,7 @@ class Api::V1::ContributionsController < ApiController
 
   private
 
-
+# checks post parameters
   def contribution_params
     params.require(:contribution).permit(:amount)
   end
