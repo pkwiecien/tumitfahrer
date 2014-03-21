@@ -13,12 +13,10 @@ class Api::V1::SearchesController < ApiController
     results = []
     Ride.all.each do |ride|
       duration = extra_duration(ride[:departure_place], ride[:destination], start_carpool, end_carpool)
-      #if duration < ride[:duration]/10 # && (ride_date-ride[:departure_time])/3600<24
+      # logger.debug "Duration: #{duration}, ride duration: #{ride[:duration]}, computed date: #{ride_date} and new date: #{ride[:departure_time]}"
+      #if duration < ride[:duration]/10 && (ride_date-ride[:departure_time])/3600<24
         ride_attributes = ride.attributes
-
-      logger.debug "RESULT1: #{ride_attributes}"
         ride_attributes[:detour] = duration
-        ride_attributes[:driver_id] = ride.driver.id
         results.append(ride_attributes)
       #end
     end
@@ -34,7 +32,6 @@ class Api::V1::SearchesController < ApiController
   private
 
   def extra_duration(start_point, end_point, start_carpool, end_carpool)
-    logger.debug "Preparing result"
     result = prepare_url(start_point, end_point, start_carpool, end_carpool)
     return result["routes"].first["legs"].first["duration"]["value"]/60
   end

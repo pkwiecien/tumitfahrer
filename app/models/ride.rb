@@ -32,6 +32,7 @@ class Ride < ActiveRecord::Base
     self.duration ||= 0
     self.contribution_mode ||= 0
     self.is_finished ||= false
+    self.distance ||= 0
     nil
   end
 

@@ -30,7 +30,7 @@ class Api::V1::FriendRequestsController < ApiController
 
   def update
     user = User.find_by(id: params[:user_id])
-    other_user = User.find_by(id: params[:from_user_id])
+    other_user = User.find_by(id: params[:id])
 
     user.handle_friend_request(other_user, params[:accept])
     render json: {:status => 200}
