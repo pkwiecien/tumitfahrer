@@ -8,10 +8,10 @@ class Api::V1::RatingsController < ApiController
     # generate pending ratings
     if params.has_key?(:pending)
       user.rides_as_passenger.each do |ride|
-        if Rating.find_by(from_user_id: user.id, to_user_id: ride.driver.id, ride_id: ride.id).nil?
+        if Rating.find_by(from_user_id: user.id, to_user_id: ride[:driver_id], ride_id: ride.id).nil?
           pending_rating = {}
           pending_rating[:from_user_id] = user.id
-          pending_rating[:to_user_id] = ride.driver.id
+          pending_rating[:to_user_id] = ride[:driver_id]
           pending_rating[:ride_id] = ride.id
           result.append(pending_rating)
         end
@@ -37,15 +37,13 @@ class Api::V1::RatingsController < ApiController
   end
 
   def create
-    user = User.find_by(id: params[:user_id])
-    from_user = User.find_by(id: user.id)
-    result = user.ratings_given.create!(from_user_id: params[:user_id], to_user_id: params[:to_user_id],
+    rating = Rating.create(from_user_id: params[:user_id], to_user_id: params[:to_user_id],
                                         ride_id: params[:ride_id], rating_type: params[:rating_type])
 
-    unless result.nil?
-      render json: {:result => "1"}
+    if rating.save
+      render json: {:status => 200}
     else
-      render json: {:result => "0"}
+      render json: {:status => 400}
     end
   end
 

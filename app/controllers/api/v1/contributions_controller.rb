@@ -32,7 +32,7 @@ class Api::V1::ContributionsController < ApiController
       ride = Ride.find_by(id: params[:ride_id])
       price = ride[:price]
       distance = user.rides.find_by(id: params[:ride_id])[:realtime_km]
-      driver_id = ride.driver[:id]
+      driver_id = ride[:driver_id]
       project_id = ride.project[:id]
 
       contribution_amount = price*distance

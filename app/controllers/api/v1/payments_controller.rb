@@ -18,14 +18,14 @@ class Api::V1::PaymentsController < ApiController
   end
 
   def create
-    user = User.find_by(id: params[:user_id])
+    to_user = User.find_by(id: params[:user_id])
     from_user = User.find_by(id: params[:from_user_id])
-    result = user.ratings.create!(from_user: from_user.id, ride_id: params[:ride_id], rating_type: params[:rating_type])
+    payment = Payment.create!(from_user_id: from_user.id, to_user_id: to_user.id, ride_id: params[:ride_id], amount: params[:amount])
 
-    unless result.nil?
-      render json: {:result => "1"}
+    if payment.save
+      render json: {:status => 200}
     else
-      render json: {:result => "0"}
+      render json: {:result => 400}
     end
   end
 

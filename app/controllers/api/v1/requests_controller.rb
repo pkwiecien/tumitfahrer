@@ -21,7 +21,6 @@ class Api::V1::RequestsController < ApiController
       ride = Ride.find_by(id: params[:ride_id])
       price = ride[:price]
       distance = user.rides.find_by(id: params[:ride_id])[:realtime_km]
-      driver_id = ride.driver[:id]
       project_id = ride.project[:id]
 
       contribution_amount = price*distance
@@ -45,9 +44,10 @@ class Api::V1::RequestsController < ApiController
     ride = Ride.find_by(id: params[:ride_id])
     passenger = User.find_by(id: params[:passenger_id])
 
+    logger.debug "Request from #{passenger.id} for a ride #{ride.id}"
     request = ride.requests.find_by(ride_id: ride.id, passenger_id: passenger.id)
     if params[:id]
-      passenger.rides_as_passenger.create!(departure_place: params[:departure_place], destination: params[:destination],
+      ride = passenger.rides_as_passenger.create!(departure_place: params[:departure_place], destination: params[:destination],
                                            meeting_point: ride[:meeting_point], departure_time: ride[:departure_time])
     end
     request.destroy

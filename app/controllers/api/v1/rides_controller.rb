@@ -46,12 +46,11 @@ class Api::V1::RidesController < ApiController
     if params.has_key?(:user_id)
       current_user = User.find_by(id: params[:user_id])
       @ride = current_user.rides_as_driver.create!(ride_params)
+      @ride.update_attribute(:driver_id, current_user.id)
       unless params[:ride][:project_id].nil?
         @ride.assign_project(Project.find_by(id: params[:ride][:project_id]))
       end
       current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
-      @ride.update_attributes(distance: distance(@ride[:departure_place], @ride[:destination]))
-      @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
 
       if @ride.save
         logger.debug "Ride saved!!!"
@@ -59,6 +58,10 @@ class Api::V1::RidesController < ApiController
       else
         render json: {:status => 400}
       end
+
+      # update distance and duration after returning to the client
+      @ride.update_attributes(distance: distance(@ride[:departure_place], @ride[:destination]))
+      @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
     else
       render json: {:status => 400}
     end

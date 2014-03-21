@@ -26,13 +26,16 @@ class User < ActiveRecord::Base
 
   has_many :relationships, foreign_key: :user_id
   has_many :rides, through: :relationships, source: :ride, class_name: "Ride", dependent: :delete_all
-  has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'})},
+  has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'}) },
            through: :relationships, source: :ride, dependent: :delete_all
-  has_many :rides_as_passenger, -> { where(relationships: {is_driving: 'false'})},
+  has_many :rides_as_passenger, -> { where(relationships: {is_driving: 'false'}) },
            through: :relationships, source: :ride
 
   has_many :ratings_given, foreign_key: :from_user_id, class_name: "Rating"
   has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
+
+  has_many :payments_given, foreign_key: :from_user_id, class_name: "Payment"
+  has_many :payments_received, foreign_key: :to_user_id, class_name: "Payment"
 
   has_many :contributions
   has_many :offered_projects, foreign_key: :owner_id, class_name: "Project"
@@ -111,10 +114,14 @@ class User < ActiveRecord::Base
   end
 
   def handle_friend_request(other_user, shouldAccept)
-    if shouldAccept
+    logger.debug "Accepting friendship from #{self.id} to other user: #{other_user.id}"
+    if shouldAccept == true
       self.befriend!(other_user)
     end
-    self.friendship_requests.find_by(from_user_id: other_user.id).destroy
+    friendship = FriendshipRequest.find_by(from_user_id: other_user.id, to_user_id: self.id)
+    unless friendship.nil?
+      friendship.destroy
+    end
   end
 
   def pending_payments
@@ -122,11 +129,23 @@ class User < ActiveRecord::Base
   end
 
   def new_project()
-    Project.create(owner_id: self.id, )
+    Project.create(owner_id: self.id,)
   end
 
   def request_ride!(ride, from, to)
     ride.requests.create!(ride_id: ride.id, passenger_id: self.id, requested_from: from, request_to: to)
+  end
+
+  def create_ride!(departure_point, destination, meeting_point, departure_time, free_seats, driver_id)
+    if driver_id == self.id
+      user.rides_as_driver.create!(departure_point: departure_point, destination: destination,
+                                   meeting_point: meeting_point, departure_time: departure_time,
+                                   free_seats: free_seats, driver_id: self.id)
+    else
+      user.rides_as_passenger.create!(departure_point: departure_point, destination: destination,
+                                      meeting_point: meeting_point, departure_time: departure_time,
+                                      free_seats: free_seats, driver_id: driver_id)
+    end
   end
 
   private

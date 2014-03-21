@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140319182111) do
+ActiveRecord::Schema.define(version: 20140321071854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,15 @@ ActiveRecord::Schema.define(version: 20140319182111) do
   create_table "organized_rides", force: true do |t|
     t.integer  "user_id"
     t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "payments", force: true do |t|
+    t.integer  "from_user_id"
+    t.integer  "to_user_id"
+    t.integer  "ride_id"
+    t.float    "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -185,6 +194,7 @@ ActiveRecord::Schema.define(version: 20140319182111) do
     t.boolean  "is_paid"
     t.boolean  "is_finished"
     t.float    "distance"
+    t.integer  "driver_id"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
