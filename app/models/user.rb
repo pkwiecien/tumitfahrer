@@ -136,6 +136,14 @@ class User < ActiveRecord::Base
     ride.requests.create!(ride_id: ride.id, passenger_id: self.id, requested_from: from, request_to: to)
   end
 
+  def register_device!(token, is_enabled, platform)
+    self.devices.create!(token: token, enabled: is_enabled, platform: platform)
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   private
 
   def create_remember_token

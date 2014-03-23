@@ -9,6 +9,7 @@ Tumitfahrer::Application.routes.draw do
           resources :contributions
           resources :requests
         end
+        resources :devices
         resources :payments
         resources :friends
         resources :friend_requests
