@@ -34,32 +34,22 @@ class Api::V1::ContributionsController < ApiController
     rescue
       render json: {:status => 400}
     end
-
   end
 
-  def get_ride_contributions
-    render :json => "we are here!"
-  end
-
-  def final_test
-    render :json => "hell yeah!"
-  end
-
-# POST /api/v1/users/:user_id/contributions
+  # POST /api/v1/users/:user_id/contributions
   def create
     if params[:contribution] && params[:contribution][:amount]
       user = User.find_by(id: params[:user_id])
       if user.nil?
         render json: {:status => 400}
       end
-
       user.contributions.create!(project_id: params[:contribution][:project_id], amount: params[:contribution][:amount],
                                  user_id: params[:user_id])
       render json: {:status => 200}
     end
   end
 
-# PUT /api/v1/users/:user_id/contributions
+  # PUT /api/v1/users/:user_id/contributions
   def update
     user = User.find_by(id: params[:user_id])
     if user.nil?
@@ -71,7 +61,7 @@ class Api::V1::ContributionsController < ApiController
 
   end
 
-# DELETE /api/v1/users/:user_id/contributions
+  # DELETE /api/v1/users/:user_id/contributions
   def destroy
     user = User.find_by(id: params[:user_id])
     contribution = user.contributions.find_by(project_id: params[:contribution][:project_id], user_id: user.id)
@@ -82,7 +72,7 @@ class Api::V1::ContributionsController < ApiController
 
   private
 
-# checks post parameters
+  # validate post parameters
   def contribution_params
     params.require(:contribution).permit(:amount)
   end
