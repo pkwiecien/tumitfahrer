@@ -22,6 +22,10 @@ class Api::V1::RidesController < ApiController
       end
     end
 
+    @rides.each do |r|
+      logger.debug "Returning: #{r.to_s}"
+    end
+
     if @rides.nil?
       render json: {:message => "There are no rides"}
     else

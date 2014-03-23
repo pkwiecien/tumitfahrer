@@ -53,6 +53,9 @@ class Ride < ActiveRecord::Base
     result
   end
 
+  def to_s
+    "Ride id: #{self.id}, from: #{departure_place}, to: #{destination}"
+  end
 
 end
 

@@ -47,8 +47,10 @@ class Api::V1::RequestsController < ApiController
     logger.debug "Request from #{passenger.id} for a ride #{ride.id}"
     request = ride.requests.find_by(ride_id: ride.id, passenger_id: passenger.id)
     if params[:id]
-      ride = passenger.rides_as_passenger.create!(departure_place: params[:departure_place], destination: params[:destination],
-                                           meeting_point: ride[:meeting_point], departure_time: ride[:departure_time])
+      new_ride = passenger.rides_as_passenger.create!(departure_place: params[:departure_place], destination: params[:destination],
+                                           meeting_point: ride[:meeting_point], departure_time: ride[:departure_time],
+                                           free_seats: ride[:free_seats])
+      Relationship.find_by(ride_id: new_ride.id).update_attributes(driver_ride_id: ride.id)
     end
     request.destroy
     render json: {:status => 200}

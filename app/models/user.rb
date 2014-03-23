@@ -46,11 +46,11 @@ class User < ActiveRecord::Base
 
   has_many :friendship_requests, foreign_key: :from_user_id
   has_many :sent_friendship_requests, foreign_key: :from_user_id, class_name: "FriendshipRequest" # requests received by this user from other users
-  has_many :pending_friends, through: :friendship_requests, source: :from_user
+  has_many :pending_friends, through: :friendship_requests, source: :to_user, class_name: "User"
 
   has_many :reverse_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest"
   has_many :received_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest" #this user sends a request to another user
-  has_many :requesting_friends, through: :reverse_friendship_requests, source: :to_user
+  has_many :requesting_friends, through: :reverse_friendship_requests, source: :from_user
 
   has_many :messages
   has_many :sent_messages, foreign_key: :sender_id, class_name: "Message"

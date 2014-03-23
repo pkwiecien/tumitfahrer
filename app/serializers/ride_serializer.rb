@@ -24,15 +24,16 @@ class RideSerializer < ActiveModel::Serializer
   end
 
   def passengers
+    relationships = Relationship.where(driver_ride_id: object.id, is_driving: false)
     results = []
-    object.passengers.each do |r|
+    relationships.each do |r|
+      ride = Ride.find_by(id: r.ride_id)
       passenger = {}
-      # todo: make sure if we need to include a param with user id
-      passenger[:id] = r.id
-      passenger[:realtime_km] = r.rides.find_by(id: object.id).realtime_km
-      passenger[:departure_place] =  r.rides.find_by(id: object.id).departure_place
-      passenger[:destination] = r.rides.find_by(id: object.id).destination
-      passenger[:contribution_mode] = self.contribution_mode
+      passenger[:id] = r.user_id
+      passenger[:realtime_km] = ride.realtime_km
+      passenger[:departure_place] =  ride.departure_place
+      passenger[:destination] = ride.destination
+      passenger[:contribution_mode] = ride.contribution_mode
       results.append(passenger)
     end
     results

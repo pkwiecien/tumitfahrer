@@ -45,8 +45,10 @@ class Api::V1::PassengersController < ApiController
       if passenger.nil?
         render json: {:status => 400}
       end
-
-      passenger.rides.find_by(id: params[:ride_id]).update_attributes(user_params)
+      relationship = Relationship.find_by(user_id: passenger.id, is_driving: false, driver_ride_id: params[:ride_id])
+      ride = Ride.find_by(id: relationship.ride_id)
+      logger.debug "RIde: #{ride.to_s} and param: #{params} and last one #{params[:passenger][:realtime_km]}"
+      ride.update_attributes(user_params)
       render json: {:status => 200}
     else
       render json: {:result => 400}
