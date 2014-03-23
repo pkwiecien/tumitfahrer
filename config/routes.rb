@@ -1,11 +1,11 @@
 Tumitfahrer::Application.routes.draw do
 
-
-
   namespace :api do
     namespace :v1 do
 
       match '/users/:user_id/rides/:ride_id/contributions', to: 'contributions#contribute_to_ride', via: [:post]
+      # example of custom path (the position of route in routes.rb is important):
+      #match '/users/:user_id/test/:test_id/team/:id', to: 'contributions#this_is_test', via: [:get]
 
       resource :search
       resources :users do
