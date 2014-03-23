@@ -63,11 +63,15 @@ class Api::V1::ContributionsController < ApiController
 
   # DELETE /api/v1/users/:user_id/contributions
   def destroy
-    user = User.find_by(id: params[:user_id])
-    contribution = user.contributions.find_by(project_id: params[:contribution][:project_id], user_id: user.id)
-    user.update_attribute(:unbound_contributions, user[:unbound_contributions]+contribution.amount)
-    contribution.destroy
-    render json: {:status => 200}
+    begin
+      user = User.find_by(id: params[:user_id])
+      contribution = user.contributions.find_by(project_id: params[:id], user_id: user.id)
+      user.update_attribute(:unbound_contributions, user[:unbound_contributions]+contribution.amount)
+      contribution.destroy
+      render json: {:status => 200}
+    rescue
+      render json: {:status => 400}
+    end
   end
 
   private

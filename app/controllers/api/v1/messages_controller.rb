@@ -12,7 +12,7 @@ class Api::V1::MessagesController < ApiController
       sent = Message.where(sender_id:user.id, receiver_id: partner_id).order("created_at").last
       received = Message.where(sender_id:partner_id, receiver_id: user.id).order("created_at").last
 
-      if !received.nil? && !sent.nil? && sent[:created_at]>received[:created_at]
+      if received.nil? || (!sent.nil? && sent[:created_at]>received[:created_at])
         results.append(sent)
       else
         results.append(received)

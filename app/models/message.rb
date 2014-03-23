@@ -8,4 +8,8 @@ class Message < ActiveRecord::Base
     self.is_seen ||= false
     nil
   end
+
+  def to_s
+    "Message (id: #{id}), content: #{content}"
+  end
 end
