@@ -46,7 +46,7 @@ class Ride < ActiveRecord::Base
       if r.ride[:is_paid] == false
         payment = {}
         payment[:ride_id] = self.id
-        payment[:driver_id] = r.driver.id
+        payment[:driver_id] = r.ride.driver.id
         result.append(payment)
       end
     end
