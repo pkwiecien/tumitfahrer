@@ -1,7 +1,7 @@
 class Api::V1::SessionsController < ApiController
-  respond_to :json, :xml
 
   def create
+
     email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
 
     @user = User.find_by(email: email.downcase)
@@ -20,7 +20,7 @@ class Api::V1::SessionsController < ApiController
     else
       logger.debug "could not log in user #{@user.to_s}"
       respond_to do |format|
-        format.json { render json: {:message => "User couldn't be added to the database"} }
+        format.json { render json: {:status => 400, :message => "User couldn't be added to the database"} }
         format.xml { render xml: {:attempt => "false", :user_id => "-1"} }
       end
 

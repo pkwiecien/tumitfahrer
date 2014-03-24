@@ -4,9 +4,7 @@ class Api::V1::PassengersController < ApiController
   def index
     if params.has_key?(:ride_id)
       ride = Ride.find_by(id: params[:ride_id])
-      if ride.nil?
-        return render json: {:status => 400}
-      end
+      return respond_with :status => 400 if ride.nil?
       passengers = ride.passengers
       result_passengers = []
       passengers.each do |p|
@@ -14,12 +12,9 @@ class Api::V1::PassengersController < ApiController
         exported_passenger[:contribution_mode] = ride[:contribution_mode]
         result_passengers.append(exported_passenger)
       end
-      respond_to do |format|
-        format.json { render json: {:passengers => result_passengers} }
-        format.xml { render xml: {:passengers => result_passengers} }
-      end
+      respond_with :passengers => result_passengers
     else
-      render json: {:status => 400}
+      respond_with :status => 400
     end
   end
 
@@ -28,33 +23,30 @@ class Api::V1::PassengersController < ApiController
   end
 
   def create
-    user = User.find_by(id: params[:user_id])
-    from_user = User.find_by(id: params[:from_user_id])
-    result = user.ratings.create!(from_user: from_user.id, ride_id: params[:ride_id], rating_type: params[:rating_type])
-
-    unless result.nil?
-      render json: {:status => 200}
-    else
-      render json: {:status => 400}
+    begin
+      user = User.find_by(id: params[:user_id])
+      from_user = User.find_by(id: params[:from_user_id])
+      result = user.ratings.create!(from_user: from_user.id, ride_id: params[:ride_id], rating_type: params[:rating_type])
+      respond_with :status => 200
+    rescue
+      respond_with :status => 400
     end
   end
 
   def update
     if params.has_key?(:ride_id)
       passenger = User.find_by(id: params[:id])
-      if passenger.nil?
-        render json: {:status => 400}
-      end
+      return respond_with :status => 400 if passenger.nil?
+
       relationship = Relationship.find_by(user_id: passenger.id, is_driving: false, driver_ride_id: params[:ride_id])
       ride = Ride.find_by(id: relationship.ride_id)
       logger.debug "RIde: #{ride.to_s} and param: #{params} and last one #{params[:passenger][:realtime_km]}"
       ride.update_attributes(user_params)
-      render json: {:status => 200}
+      respond_with :status => 200
     else
-      render json: {:result => 400}
+      respond_with :status => 400
     end
   end
-
 
   private
 

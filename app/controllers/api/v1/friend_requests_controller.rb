@@ -3,13 +3,10 @@ class Api::V1::FriendRequestsController < ApiController
 
   def index
     @user = User.find_by(id: params[:user_id])
+    return respond_with :status => 400 if @user.nil?
+
     @friends_requests = @user.requesting_friends
-
-    respond_to do |format|
-      format.json { render json: @friends_requests, :each_serializer => LegacyUserSerializer }
-      format.xml { render xml: @friends_requests }
-    end
-
+    respond_with @friends_requests, :each_serializer => LegacyUserSerializer
   end
 
   def show
@@ -17,24 +14,27 @@ class Api::V1::FriendRequestsController < ApiController
   end
 
   def create
-    user = User.find_by(id: params[:user_id])
-    other_user = User.find_by(id: params[:to_user_id])
-    result = user.send_friend_request!(other_user)
+    begin
+      user = User.find_by(id: params[:user_id])
+      other_user = User.find_by(id: params[:to_user_id])
+      result = user.send_friend_request!(other_user)
 
-    # todo: render OK
-    respond_to do |format|
-      format.json { render json: result }
-      format.xml { render xml: result }
+      respond_with result
+    rescue
+      respond_with :status => 400
     end
   end
 
   def update
-    user = User.find_by(id: params[:user_id])
-    other_user = User.find_by(id: params[:id])
+    begin
+      user = User.find_by(id: params[:user_id])
+      other_user = User.find_by(id: params[:id])
 
-    user.handle_friend_request(other_user, params[:accept])
-    render json: {:status => 200}
-
+      user.handle_friend_request(other_user, params[:accept])
+      respond_with :status => 200
+    rescue
+      respond_with :status => 400
+    end
   end
 
 

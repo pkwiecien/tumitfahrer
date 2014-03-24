@@ -26,28 +26,15 @@ class Api::V1::RidesController < ApiController
       logger.debug "Returning: #{r.to_s}"
     end
 
-    if @rides.nil?
-      render json: {:message => "There are no rides"}
-    else
-      respond_to do |format|
-        format.json { render json: @rides }
-        format.xml { render xml: @rides }
-      end
-    end
+    respond_with @rides
   end
 
   def show
     @ride = Ride.find_by(id: params[:id])
     if @ride.nil?
-      respond_to do |format|
-        format.json { render json: {:status => 400} }
-        format.xml { render xml: {:status => 400} }
-      end
+      respond_with :status => 400
     else
-      respond_to do |format|
-        format.json { render json: @ride }
-        format.xml { render xml: @ride }
-      end
+      respond_with @ride
     end
 
   end
@@ -62,17 +49,16 @@ class Api::V1::RidesController < ApiController
       current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
 
       if @ride.save
-        logger.debug "Ride saved!!!"
-        render json: {:status => 200}
+        respond_with :status => 200
       else
-        render json: {:status => 400}
+        respond_with :status => 400
       end
 
       # update distance and duration after returning to the client
       @ride.update_attributes(distance: distance(@ride[:departure_place], @ride[:destination]))
       @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
     else
-      render json: {:status => 400}
+      respond_with :status => 400
     end
   end
 
@@ -82,10 +68,10 @@ class Api::V1::RidesController < ApiController
       requested_ride = current_user.rides_as_driver.find_by(id: params[:id])
       unless requested_ride.nil?
         requested_ride.update_attributes(ride_params)
-        render json: {:status => 200}
+        respond_with :status => 200
       end
     else
-      render json: {:status => 400}
+      respond_with :status => 400
     end
   end
 
@@ -99,12 +85,12 @@ class Api::V1::RidesController < ApiController
         unless project.nil?
           project[:ride_id] = nil
         end
-        render json: {:status => 200}
+        respond_with :status => 200
       else
-        render json: {:status => 400}
+        respond_with :status => 400
       end
     else
-      render json: {:status => 400}
+      respond_with :status => 400
     end
 
   end

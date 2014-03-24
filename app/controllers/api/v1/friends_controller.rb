@@ -3,12 +3,10 @@ class Api::V1::FriendsController < ApiController
 
   def index
     @user = User.find_by(id: params[:user_id])
-    @friends = @user.friends
-    respond_to do |format|
-      format.json { render json: @friends, :each_serializer => LegacyUserSerializer }
-      format.xml { render xml: @friends }
-    end
+    return respond_with :status => 400 if @user.nil?
 
+    @friends = @user.friends
+    respond_with @friends, :each_serializer => LegacyUserSerializer
   end
 
   def show

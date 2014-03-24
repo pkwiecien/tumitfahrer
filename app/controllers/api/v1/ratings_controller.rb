@@ -16,7 +16,7 @@ class Api::V1::RatingsController < ApiController
           result.append(pending_rating)
         end
       end
-      render json: {:ratings => result}
+      respond_with :ratings => result
     else
     #generate ratings given
       ratings = user.ratings_given + user.ratings_received
@@ -28,7 +28,7 @@ class Api::V1::RatingsController < ApiController
         rating[:ride_id] = r[:ride_id]
         result.append(rating)
       end
-      render json: {:ratings => result}
+      respond_with :ratings => result
     end
   end
 
@@ -42,9 +42,9 @@ class Api::V1::RatingsController < ApiController
                                         ride_id: params[:ride_id], rating_type: params[:rating_type])
 
     if rating.save
-      render json: {:status => 200}
+      respond_with :status => 200
     else
-      render json: {:status => 400}
+      respond_with :status => 400
     end
   end
 

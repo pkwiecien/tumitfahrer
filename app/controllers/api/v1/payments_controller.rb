@@ -10,7 +10,7 @@ class Api::V1::PaymentsController < ApiController
     else
       result = payments(paid=true, user)
     end
-    render json: {:payments => result}
+    respond_with :payments => result
   end
 
   def show
@@ -23,9 +23,9 @@ class Api::V1::PaymentsController < ApiController
     payment = Payment.create!(from_user_id: from_user.id, to_user_id: to_user.id, ride_id: params[:ride_id], amount: params[:amount])
 
     if payment.save
-      render json: {:status => 200}
+      respond_with :status => 200
     else
-      render json: {:result => 400}
+      respond_with :status => 400
     end
   end
 

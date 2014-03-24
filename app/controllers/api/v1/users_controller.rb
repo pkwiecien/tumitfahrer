@@ -2,26 +2,21 @@ class Api::V1::UsersController < ApiController
   respond_to :xml, :json
 
   def index
-
     unless params[:email].nil?
       # todo: check if it should be here. URL is users?username=abc
       @user = User.find_by(email: params[:email])
-      respond_to do |format|
-        format.json { render json: @user, serializer: LegacyUserSerializer }
-        format.xml { render xml: @user }
-      end
-
+      respond_with @user, serializer: LegacyUserSerializer
     else
       @users = User.all
-      respond_to do |format|
-        format.json { render json: @users }
-        format.xml { render xml: @users }
-      end
+      respond_with @users, each_serializer: LegacyUserSerializer
     end
   end
 
-  def show
+  def show_user_for_email
+    respond_with :status => "working"
+  end
 
+  def show
     # check if there an authentication header, if so consume it and return more
     if !request.headers[:Authorization].nil?
       email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
@@ -32,12 +27,7 @@ class Api::V1::UsersController < ApiController
     end
 
     if @user && !email.nil? && !hashed_password.nil? && @user.authenticate(hashed_password)
-
-      logger.debug "WE ARE HERE : #{email} and #{hashed_password} and #{@user}"
-      respond_to do |format|
-        format.json { render json: @user, serializer: LegacyUserSerializer }
-        format.xml { render xml: @user }
-      end
+      respond_with @user, serializer: LegacyUserSerializer
     else
       respond_to do |format|
         format.json { render json: @user, serializer: LegacyUserSerializer }
@@ -60,30 +50,23 @@ class Api::V1::UsersController < ApiController
         format.xml { render xml: {:username => "false", :mail => "false"} }
       end
     end
-
   end
 
   def update
     user = User.find_by(id: params[:id])
-    if user.nil?
-      render json: {:status => 400}
+
+    respond_with :status => 400 if user.nil?
+
+    user.update_attributes(update_params)
+    if user.save
+      respond_with :aenderung => true
     else
-      user.update_attributes(update_params)
-      if user.save
-        respond_to do |format|
-          format.json { render json: {:status => 200} }
-          format.xml { render xml: {:aenderung => true} }
-        end
-      else
-        respond_to do |format|
-          format.json { render json: {:status => 400} }
-          format.xml { render xml: {:aenderung => true} }
-        end
-      end
+      respond_with :aenderung => false
     end
   end
 
   private
+
   def authenticate_user
     @current_user = User.find_by_api_key(params[:api_key])
   end
