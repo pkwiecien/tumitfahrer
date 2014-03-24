@@ -14,24 +14,15 @@ class Api::V1::ProjectsController < ApiController
       @projects = Project.all
     end
 
-    respond_to do |format|
-      format.json { render json: @projects, :each_serializer => ProjectSerializer }
-      format.xml { render xml: @projects }
-    end
+    respond_with @projects, :each_serializer => ProjectSerializer
   end
 
   def show
     project = Project.find_by(id: params[:id])
     if project.nil?
-      respond_to do |format|
-        format.json { render json: {:status => 400} }
-        format.xml { render xml: {:status => 400} }
-      end
+      respond_with :status => 400
     else
-      respond_to do |format|
-        format.json { render json: project }
-        format.xml { render xml: project }
-      end
+      respond_with project
     end
   end
 
@@ -40,12 +31,9 @@ class Api::V1::ProjectsController < ApiController
     project = user.offered_projects.create!(title: params[:title], owner_id: user.id, description: params[:description],
                                             fundings_target: params[:fundings_target])
     unless project.nil?
-      respond_to do |format|
-        format.json { render json: project }
-        format.xml { render xml: project }
-      end
+      respond_with project
     else
-      render json: {:result => "0"}
+      respond_with :status => 400
     end
   end
 
@@ -53,11 +41,11 @@ class Api::V1::ProjectsController < ApiController
     project = Project.find_by(id: params[:id])
 
     if project.nil?
-      render json: {:status => 400}
+      respond_with :status => 400
     end
 
     project.update_attributes(project_params)
-    render json: {:status => 200}
+    respond_with :status => 200
   end
 
   private

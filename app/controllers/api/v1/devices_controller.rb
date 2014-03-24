@@ -3,26 +3,27 @@ class Api::V1::DevicesController < ApplicationController
   respond_to :xml, :json
   protect_from_forgery with: :null_session, :if => Proc.new { |c| c.request.format == 'application/json' }
 
+  # GET /api/v1/users/:user_id/devices
   def index
     user = User.find_by(id: params[:user_id])
-
-    respond_to do |format|
-      format.json { render json: {devices: user.devices} }
-      format.xml { render xml: {devices: user.devices} }
+    if user.nil?
+      return respond_with :status => 400
+    else
+      respond_with devices: user.devices
     end
-
   end
 
+  # POST /api/v1/users/:user_id/devices
   def create
     user = User.find_by(id: params[:user_id])
     begin
       if user.devices.find_by(token: params[:device][:token]).nil?
         user.register_device!(params[:device][:token], params[:device][:enabled], params[:device][:platform])
       end
-      render json: {:status => 200}
+      respond_with :status => 200
     rescue
-      logger.debug "Could not register device for user #{user.id}"
-      render json: {:status => 400}
+      logger.debug "Could not register device for user #{params[:user_id]}"
+      respond_with :status => 400
     end
   end
 

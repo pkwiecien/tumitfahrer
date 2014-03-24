@@ -22,12 +22,7 @@ class Api::V1::SearchesController < ApiController
       #end
     end
 
-    logger.debug "RESULT: #{results.to_s}"
-
-    respond_to do |format|
-      format.json { render json: {:rides => results} }
-      format.xml { render xml: {:rides => results} }
-    end
+    respond_with :rides => results
   end
 
   private

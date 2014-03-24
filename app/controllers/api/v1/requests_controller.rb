@@ -4,11 +4,7 @@ class Api::V1::RequestsController < ApiController
   def index
     user = User.find_by(id: params[:user_id])
     contributions = user.contributions
-
-    respond_to do |format|
-      format.json { render json: {:contributions => contributions} }
-      format.xml { render xml: contributions }
-    end
+    respond_with :contributions => contributions
   end
 
   def show
@@ -32,10 +28,7 @@ class Api::V1::RequestsController < ApiController
       ride = Ride.find_by(id: params[:ride_id])
       ride.requests.create!(passenger_id: params[:user_id], requested_from: params[:requested_from],
                             request_to: params[:requested_to])
-      respond_to do |format|
-        format.json { render json: {:anfrage => true} }
-        format.xml { render xml: {:anfrage => true} }
-      end
+      respond_with :anfrage => true
     end
   end
 
@@ -55,11 +48,10 @@ class Api::V1::RequestsController < ApiController
         send_android_push(:akzeptierung, new_ride)
       end
     else
-      send_android_push(new_ride)
-
+      send_android_push(:absage, new_ride)
     end
     request.destroy
-    render json: {:status => 200}
+    respond_with :status => 200
   end
 
   def destroy
