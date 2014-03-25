@@ -4,13 +4,9 @@ class Api::V1::ContributionsController < ApiController
   # GET /api/v1/users/:user_id/contributions
   def index
     @user = User.find_by(id: params[:user_id])
+    return respond_with :contributions => [] if @user.nil?
     @contributions = @user.contributions
     respond_with :contributions => @contributions
-  end
-
-  # GET /api/v1/users/:user_id/contributions/:id
-  def show
-
   end
 
   # POST /api/v1/users/:user_id/rides/:ride_id/contributions
@@ -36,7 +32,7 @@ class Api::V1::ContributionsController < ApiController
   def create
     if params[:contribution] && params[:contribution][:amount]
       user = User.find_by(id: params[:user_id])
-      respond_with :status => 400 if user.nil?
+      return respond_with :status => 400 if user.nil?
       user.contributions.create!(project_id: params[:contribution][:project_id], amount: params[:contribution][:amount],
                                  user_id: params[:user_id])
       respond_with :status => 200
@@ -46,7 +42,7 @@ class Api::V1::ContributionsController < ApiController
   # PUT /api/v1/users/:user_id/contributions
   def update
     user = User.find_by(id: params[:user_id])
-    respond_with :status => 400 if user.nil?
+    return respond_with :status => 400 if user.nil?
 
     user.contributions.find_by(project_id: params[:id]).update_attributes(contribution_params)
 

@@ -1,12 +1,7 @@
 class Api::V1::SearchesController < ApiController
   respond_to :json, :xml
 
-  # GET /api/v1/search/:id
-  def show
-    render json: {:status => :ok}
-  end
-
-  #  POST /api/v1/search?start_carpool=X&end_carpool=Y&ride_date=Z
+  # POST /api/v1/search?start_carpool=X&end_carpool=Y&ride_date=Z
   # create new search query
   def create
     begin
@@ -26,9 +21,9 @@ class Api::V1::SearchesController < ApiController
         #end
       end
 
-      respond_with :rides => results
+      respond_with :rides => results, status: :ok
     rescue
-      respond_with :status => 400
+      respond_with :rides => [], status: :bad_request
     end
   end
 
@@ -40,6 +35,7 @@ class Api::V1::SearchesController < ApiController
     return result["routes"].first["legs"].first["duration"]["value"]/60
   end
 
+  # call google api to get the duration
   def prepare_url(start_point, end_point, start_carpool, end_carpool)
     url = URI.parse(URI.encode("http://maps.googleapis.com/maps/api/directions/json?origin=\"#{start_point}\"&destination=\"#{end_point}\"&waypoints=\"#{start_carpool}\"|\"#{end_carpool}\"&region=de&&sensor=false"))
     req = Net::HTTP::Get.new(url.to_s)

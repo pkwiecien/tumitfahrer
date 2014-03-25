@@ -1,8 +1,10 @@
 class Api::V1::PaymentsController < ApiController
   respond_to :xml, :json
 
+  # GET /api/v1/users/:user_id/payments
   def index
     user = User.find_by(id: params[:user_id])
+    return respond_with payments: [], status: :bad_request if user.nil?
 
     result = []
     if params.has_key?(:pending)
@@ -10,22 +12,21 @@ class Api::V1::PaymentsController < ApiController
     else
       result = payments(paid=true, user)
     end
-    respond_with :payments => result
+
+    respond_with payments: result, status: :ok
   end
 
-  def show
-
-  end
-
+  # GET /api/v1/users/:user_id/payments?from_user_id=X&ride_id=Y&amount=Z
   def create
     to_user = User.find_by(id: params[:user_id])
     from_user = User.find_by(id: params[:from_user_id])
-    payment = Payment.create!(from_user_id: from_user.id, to_user_id: to_user.id, ride_id: params[:ride_id], amount: params[:amount])
+    payment = to_user.payments_received.create!(from_user_id: from_user.id,
+                                                ride_id: params[:ride_id], amount: params[:amount])
 
-    if payment.save
-      respond_with :status => 200
+    unless payment.nil?
+      respond_with payment, status: :ok
     else
-      respond_with :status => 400
+      respond_with payment, status: :bad_request
     end
   end
 

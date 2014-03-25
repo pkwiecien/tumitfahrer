@@ -1,72 +1,84 @@
 class Api::V1::MessagesController < ApiController
   respond_to :xml, :json
 
+  # GET /api/v1/users/:user_id/messages
   def index
-    begin
-      user = User.find_by(id: params[:user_id])
-      senders = Message.select(:sender_id).where(receiver_id: user.id).map(&:sender_id).uniq
-      receivers = Message.select(:receiver_id).where(sender_id: user.id).map(&:receiver_id).uniq
+    user = User.find_by(id: params[:user_id])
+    return respond_with conversations: [], status: :bad_request if user.nil?
+    senders = Message.select(:sender_id).where(receiver_id: user.id).map(&:sender_id).uniq
+    receivers = Message.select(:receiver_id).where(sender_id: user.id).map(&:receiver_id).uniq
 
-      partner_ids = (senders + receivers).uniq
-      results = []
-      partner_ids.each do |partner_id|
-        sent = Message.where(sender_id: user.id, receiver_id: partner_id).order("created_at").last
-        received = Message.where(sender_id: partner_id, receiver_id: user.id).order("created_at").last
+    partner_ids = (senders + receivers).uniq
+    results = []
+    partner_ids.each do |partner_id|
+      sent = Message.where(sender_id: user.id, receiver_id: partner_id).order("created_at").last
+      received = Message.where(sender_id: partner_id, receiver_id: user.id).order("created_at").last
 
-        if received.nil? || (!sent.nil? && sent[:created_at]>received[:created_at])
-          results.append(sent)
-        else
-          results.append(received)
-        end
+      if received.nil? || (!sent.nil? && sent[:created_at]>received[:created_at])
+        results.append(sent)
+      else
+        results.append(received)
       end
-      respond_with :conversations => results
-    rescue
-      respond_with :status => 400
     end
+    respond_with conversations: results, status: :ok
   end
 
+  # GET /api/v1/users/:user_id/messages/:id
   def show
-    begin
-      user = User.find_by(id: params[:user_id])
-      other_user = User.find_by(id: params[:id])
-      sent_messages = user.sent_messages.where(receiver_id: other_user.id)
-      received_messages = user.received_messages.where(sender_id: other_user.id)
-      messages = sent_messages + received_messages
+    user = User.find_by(id: params[:user_id])
+    other_user = User.find_by(id: params[:id])
+    return respond_with messages: [], status: :bad_request if user.nil? || other_user.nil?
 
-      respond_with :messages => messages
-    rescue
-      respond_with :status => 400
-    end
+    sent_messages = user.sent_messages.where(receiver_id: other_user.id)
+    received_messages = user.received_messages.where(sender_id: other_user.id)
+    messages = sent_messages + received_messages
+
+    respond_with :messages => messages, status: :ok
   end
 
+  # POST /api/v1/users/:user_id/messages
   def create
-    begin
-      user = User.find_by(id: params[:user_id])
-      other_user = User.find_by(id: params[:receiver_id])
-      message = user.send_message!(other_user, params[:content])
-      unless message.nil?
-        send_android_push(message)
-      end
-      respond_with :status => 200
-    rescue
-      respond_with :status => 400
-    end
+    user = User.find_by(id: params[:user_id])
+    other_user = User.find_by(id: params[:receiver_id])
+    return render :status => :bad_request if user.nil? || other_user.nil?
 
+    message = user.send_message!(other_user, params[:content])
+    unless message.nil?
+      send_android_push(message)
+      respond_to do |format|
+        format.xml { render xml: {:status => :ok} }
+        format.any { render json: {:status => :ok} }
+      end
+    else
+      respond_to do |format|
+        format.xml { render xml: {:status => :bad_request} }
+        format.any { render json: {:status => :bad_request} }
+      end
+    end
   end
 
+  # PUT /api/v1messages/:id
   def update
     message = Message.find_by(id: params[:message_id])
-    return respond_with :status => 400 if message.nil?
+    if message.nil?
+      return respond_to do |format|
+        format.xml { render xml: {:status => :bad_request} }
+        format.any { render json: {:status => :bad_request} }
+      end
+    end
 
     message.update_attribute(:is_seen, params[:is_seen])
-    respond_with :status => 200
+    respond_to do |format|
+      format.xml { render xml: {:status => :ok} }
+      format.any { render json: {:status => :ok} }
+    end
   end
 
   private
 
   def send_android_push(message)
     begin
-      devices = User.find_by(id: message[:receiver_id]).devices.where(platform: "android")
+      devices = User.find_by(id: message[:sender_id]).devices.where(platform: "android")
       registration_ids = []
       devices.each do |d|
         registration_ids.append(d[:token])

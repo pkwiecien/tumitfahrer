@@ -4,8 +4,9 @@ Tumitfahrer::Application.routes.draw do
     namespace :v1, :defaults => { :format => 'json' } do
       resource :search
       resources :users do
+        match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
-          match '/contributions', to: 'contributions#contribute_to_ride', via: [:post]
+          match '/contributions', to: 'contributions#contribute_to_ride', via: :post
           resources :contributions
           resources :requests
         end

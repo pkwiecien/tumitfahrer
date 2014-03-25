@@ -1,41 +1,46 @@
 class Api::V1::FriendRequestsController < ApiController
   respond_to :xml, :json
 
+  # GET /api/v1/users/:user_id/friend_requests
   def index
     @user = User.find_by(id: params[:user_id])
-    return respond_with :status => 400 if @user.nil?
+    return respond_with friends_requests: [], status: :bad_request if @user.nil?
 
     @friends_requests = @user.requesting_friends
     respond_with @friends_requests, :each_serializer => LegacyUserSerializer
   end
 
-  def show
-
-  end
-
+  # POST /api/v1/users/:user_id/friend_requests
   def create
     begin
       user = User.find_by(id: params[:user_id])
       other_user = User.find_by(id: params[:to_user_id])
       result = user.send_friend_request!(other_user)
 
-      respond_with result
+      respond_with result, status: :ok
     rescue
-      respond_with :status => 400
+      respond_with :result => [], status: :bad_request
     end
   end
 
+  # PUT /api/v1/users/:user_id/friend_requests
   def update
     begin
       user = User.find_by(id: params[:user_id])
       other_user = User.find_by(id: params[:id])
 
       user.handle_friend_request(other_user, params[:accept])
-      respond_with :status => 200
+
+      respond_to do |format|
+        format.xml { render xml: {:status => :ok} }
+        format.any { render json: {:status => :ok} }
+      end
     rescue
-      respond_with :status => 400
+      respond_to do |format|
+        format.xml { render xml: {:status => :bad_request} }
+        format.any { render json: {:status => :bad_request} }
+      end
     end
   end
-
 
 end
