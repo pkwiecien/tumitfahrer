@@ -1,6 +1,7 @@
 class Api::V1::UsersController < ApiController
   respond_to :xml, :json
 
+  # GET /api/v1/users/
   def index
     unless params[:email].nil?
       # todo: check if it should be here. URL is users?username=abc
@@ -12,10 +13,7 @@ class Api::V1::UsersController < ApiController
     end
   end
 
-  def show_user_for_email
-    respond_with :status => "working"
-  end
-
+  # GET /api/v1/users/:id
   def show
     # check if there an authentication header, if so consume it and return more
     if !request.headers[:Authorization].nil?
@@ -36,6 +34,7 @@ class Api::V1::UsersController < ApiController
     end
   end
 
+  # POST /api/v1/users
   def create
     logger.debug "Creating user for params: #{user_params}"
     @user = User.new(user_params)
@@ -52,6 +51,7 @@ class Api::V1::UsersController < ApiController
     end
   end
 
+  # PUT /api/v1/users/:id
   def update
     user = User.find_by(id: params[:id])
 

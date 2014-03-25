@@ -1,7 +1,7 @@
 class Api::V1::DevicesController < ApplicationController
   include GcmUtils
+  skip_before_filter :verify_authenticity_token
   respond_to :xml, :json
-  protect_from_forgery with: :null_session, :if => Proc.new { |c| c.request.format == 'application/json' }
 
   # GET /api/v1/users/:user_id/devices
   def index
@@ -16,17 +16,13 @@ class Api::V1::DevicesController < ApplicationController
   # POST /api/v1/users/:user_id/devices
   def create
     user = User.find_by(id: params[:user_id])
-    begin
-      if user.devices.find_by(token: params[:device][:token]).nil?
-        user.register_device!(params[:device][:token], params[:device][:enabled], params[:device][:platform])
-      end
-      respond_with :status => 200
-    rescue
-      logger.debug "Could not register device for user #{params[:user_id]}"
-      respond_with :status => 400
-    end
-  end
+    logger.debug "we are here and the user is : #{user.id} and params are: #{params} and #{user.devices}"
 
+    if user.devices.find_by(token: params[:device][:token]).nil?
+      user.devices.create!(params[:device][:token], params[:device][:enabled], params[:device][:platform])
+    end
+    render json: {:status => 200}
+  end
 
   private
 
