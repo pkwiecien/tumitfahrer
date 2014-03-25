@@ -25,6 +25,9 @@ gem 'houston', :require => 'houston'
 gem 'actionpack-xml_parser'
 #gem "paperclip", "~> 4.1"
 gem "httparty", "~> 0.13.0"
+# for application monitoring
+gem 'newrelic_rpm'
+
 
 group :development, :production do
   # postgres database
