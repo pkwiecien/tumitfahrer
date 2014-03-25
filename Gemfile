@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 
 # gem for the development and production environment.
-gem 'rails', '4.0.2'
+gem 'rails', '~> 4.0.4'
 # contains custom css elements
 gem "bootstrap-sass", "~> 3.1.0.2"
 # used to encrypt passwords
@@ -11,8 +11,6 @@ gem 'bcrypt-ruby', '~> 3.1.2'
 gem "will_paginate", "~> 3.0.5"
 # paginates large results with bootstrap style
 gem "bootstrap-will_paginate", "~> 0.0.10"
-# gem for sending push notifications to iOS devices
-gem 'push-core'
 # gem for push notificaitons to Android devices
 gem 'push-gcm'
 # gem for push notificaitons to Android devices
