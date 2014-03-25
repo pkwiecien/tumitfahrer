@@ -1,16 +1,16 @@
 class Api::V1::RequestsController < ApiController
   respond_to :xml, :json
 
+  # GET /api/v1/users/1/requests
   def index
     user = User.find_by(id: params[:user_id])
+    return respond_with contributions: [], status: :bad_request if user.nil?
     contributions = user.contributions
-    respond_with :contributions => contributions
+    respond_with contributions: contributions, status: :ok
   end
 
-  def show
-
-  end
-
+  # todo: refactor
+  # POST /api/v1/rides/:ride_id/requests
   def create
     if params.has_key?(:unbound_contributions)
       user = User.find_by(id: params[:user_id])
@@ -26,18 +26,28 @@ class Api::V1::RequestsController < ApiController
       render json: {:status => 200}
     else
       ride = Ride.find_by(id: params[:ride_id])
-      ride.requests.create!(passenger_id: params[:user_id], requested_from: params[:requested_from],
-                            request_to: params[:requested_to])
-      respond_with :anfrage => true
+      new_ride = ride.requests.create!(passenger_id: params[:user_id], requested_from: params[:requested_from],
+                                       request_to: params[:requested_to])
+      unless new_ride.nil?
+        respond_with ride: new_ride, anfrage: true, status: :ok
+      else
+        respond_with ride: new_ride, anfrage: false, status: :bad_request
+      end
     end
   end
 
+  # PUT /api/v1/rides/:ride_id/requests?passenger_id=X&departure_place=Y&destination=Z
   def update
     # if driver confirmed a ride then add a new passenger, if not then just delete the request
     ride = Ride.find_by(id: params[:ride_id])
     passenger = User.find_by(id: params[:passenger_id])
+    if ride.nil? || passenger.nil?
+      respond_to do |format|
+        format.xml { render xml: {:status => :bad_request} }
+        format.any { render json: {:status => :bad_request} }
+      end
+    end
 
-    logger.debug "Request from #{passenger.id} for a ride #{ride.id}"
     request = ride.requests.find_by(ride_id: ride.id, passenger_id: passenger.id)
     if params[:id] && params[:confirmed] == true
       new_ride = passenger.rides_as_passenger.create!(departure_place: params[:departure_place], destination: params[:destination],
@@ -51,13 +61,12 @@ class Api::V1::RequestsController < ApiController
       send_android_push(:absage, new_ride)
     end
     request.destroy
-    respond_with :status => 200
+
+    respond_to do |format|
+      format.xml { render xml: {:status => :ok} }
+      format.any { render json: {:status => :ok} }
+    end
   end
-
-  def destroy
-
-  end
-
 
   private
 
