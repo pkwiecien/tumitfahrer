@@ -1,32 +1,40 @@
 class Api::V1::SearchesController < ApiController
   respond_to :json, :xml
 
+  # GET /api/v1/search/:id
   def show
     render json: {:status => :ok}
   end
 
+  #  POST /api/v1/search?start_carpool=X&end_carpool=Y&ride_date=Z
+  # create new search query
   def create
-    start_carpool = params[:start_carpool]
-    end_carpool = params[:end_carpool]
-    ride_date = params[:ride_date]
+    begin
+      start_carpool = params[:start_carpool]
+      end_carpool = params[:end_carpool]
+      ride_date = params[:ride_date]
 
-    results = []
-    Ride.all.each do |ride|
-      duration = extra_duration(ride[:departure_place], ride[:destination], start_carpool, end_carpool)
-      # logger.debug "Duration: #{duration}, ride duration: #{ride[:duration]}, computed date: #{ride_date} and new date: #{ride[:departure_time]}"
-      #if duration < ride[:duration]/10 && (ride_date-ride[:departure_time])/3600<24
+      results = []
+      Ride.all.each do |ride|
+        duration = extra_duration(ride[:departure_place], ride[:destination], start_carpool, end_carpool)
+        # logger.debug "Duration: #{duration}, ride duration: #{ride[:duration]}, computed date: #{ride_date} and new date: #{ride[:departure_time]}"
+        #if duration < ride[:duration]/10 && (ride_date-ride[:departure_time])/3600<24
         ride_attributes = ride.attributes
         ride_attributes[:detour] = duration
         ride_attributes[:driver_id] = ride.driver.id
         results.append(ride_attributes)
-      #end
-    end
+        #end
+      end
 
-    respond_with :rides => results
+      respond_with :rides => results
+    rescue
+      respond_with :status => 400
+    end
   end
 
   private
 
+  # get the duration of the ride
   def extra_duration(start_point, end_point, start_carpool, end_carpool)
     result = prepare_url(start_point, end_point, start_carpool, end_carpool)
     return result["routes"].first["legs"].first["duration"]["value"]/60

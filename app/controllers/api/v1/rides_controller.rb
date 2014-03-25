@@ -4,7 +4,6 @@ class Api::V1::RidesController < ApiController
   before_filter :load_parent
 
   def index
-
     if params.has_key?(:user_id)
       # mapping for url : /api/version/users/1/rides
       @rides = @parent.rides_as_driver + @parent.rides_as_passenger
@@ -29,14 +28,14 @@ class Api::V1::RidesController < ApiController
     respond_with @rides
   end
 
+  # GET /api/v1/rides/:id
   def show
     @ride = Ride.find_by(id: params[:id])
-    if @ride.nil?
+    if @ride.nil? then
       respond_with :status => 400
     else
       respond_with @ride
     end
-
   end
 
   def create

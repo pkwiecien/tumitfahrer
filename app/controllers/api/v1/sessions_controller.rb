@@ -1,7 +1,8 @@
 class Api::V1::SessionsController < ApiController
 
+  # POST /api/v1/sessions/
+  # authenticate user
   def create
-
     email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
 
     @user = User.find_by(email: email.downcase)
