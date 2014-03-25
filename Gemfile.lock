@@ -88,6 +88,7 @@ GEM
     minitest (4.7.5)
     multi_json (1.9.2)
     multi_xml (0.5.5)
+    newrelic_rpm (3.7.3.204)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     pg (0.15.1)
@@ -193,6 +194,7 @@ DEPENDENCIES
   httparty (~> 0.13.0)
   jbuilder (~> 1.2)
   jquery-rails
+  newrelic_rpm
   pg (= 0.15.1)
   push-core
   push-gcm
