@@ -18,7 +18,7 @@ deploy:
     secure: Ow7CHRkDOz7sE4KaCcMn8McKMgCOWwGyjDzw96qe+a7lH/caHxmYY6DIw7ntURdlfIXfFT9Bp0SAXSDdBQop2RuYoUfD2JcQ664d7dwRNoDd+nP9H5mfQKZErXCxnrGPa+zlI/0uyWCf1QCanOxVhNcfySIHg0yErKb/eq2AOHU=
   app:
     master: tumitfahrer
-    develop: tumitfahrer-staging
+    develop: tumitfahrer
   run:
     - "rake db:migrate"
 notifications:
