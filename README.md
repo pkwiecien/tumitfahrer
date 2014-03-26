@@ -1,10 +1,10 @@
 TUMitfahrer
 ===========
 
-[![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
+<!--[![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)-->
 
 New backend for TUMitfahrer App build with Ruby on Rails.
-Any endpoint such as apps for Android, iOS, Pebble can commnunicate via JSON format. 
+Any endpoint for different apps such as Android, iOS, Pebble. 
 
 
 Architecture of TUMitfahrer
