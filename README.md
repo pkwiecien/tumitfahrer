@@ -33,6 +33,8 @@ Type | URI | Explanation
 
 #### Users
 
+http://www.tumitfahrer.de/api/v1/users
+
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/users` | get all users
@@ -42,6 +44,8 @@ Type | URI | Explanation
 
 
 #### Rides
+
+http://www.tumitfahrer.de/api/v1/rides
 
 Type | URI | Explanation
 --- | --- | ---
