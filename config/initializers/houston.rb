@@ -1,2 +1,2 @@
 APN = Houston::Client.production
-APN.certificate = File.read("ck.pem")
+#APN.certificate = File.read("ck.pem")
