@@ -4,7 +4,7 @@ class Api::V1::PaymentsController < ApiController
   # GET /api/v1/users/:user_id/payments
   def index
     user = User.find_by(id: params[:user_id])
-    return respond_with payments: [], status: :bad_request if user.nil?
+    return respond_with payments: [], status: :not_found if user.nil?
 
     result = []
     if params.has_key?(:pending)
@@ -20,6 +20,7 @@ class Api::V1::PaymentsController < ApiController
   def create
     to_user = User.find_by(id: params[:user_id])
     from_user = User.find_by(id: params[:from_user_id])
+    return respond_with payment: [], status: :not_found if to_user.nil? || from_user.nil?
     payment = to_user.payments_received.create!(from_user_id: from_user.id,
                                                 ride_id: params[:ride_id], amount: params[:amount])
 

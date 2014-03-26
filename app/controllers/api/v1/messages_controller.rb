@@ -4,7 +4,7 @@ class Api::V1::MessagesController < ApiController
   # GET /api/v1/users/:user_id/messages
   def index
     user = User.find_by(id: params[:user_id])
-    return respond_with conversations: [], status: :bad_request if user.nil?
+    return respond_with conversations: [], status: :not_found if user.nil?
     senders = Message.select(:sender_id).where(receiver_id: user.id).map(&:sender_id).uniq
     receivers = Message.select(:receiver_id).where(sender_id: user.id).map(&:receiver_id).uniq
 
@@ -40,14 +40,14 @@ class Api::V1::MessagesController < ApiController
   def create
     user = User.find_by(id: params[:user_id])
     other_user = User.find_by(id: params[:receiver_id])
-    return render :status => :bad_request if user.nil? || other_user.nil?
+    return render :status => :not_found if user.nil? || other_user.nil?
 
     message = user.send_message!(other_user, params[:content])
     unless message.nil?
       send_android_push(message)
       respond_to do |format|
-        format.xml { render xml: {:status => :ok} }
-        format.any { render json: {:status => :ok} }
+        format.xml { render xml: {:status => :created} }
+        format.any { render json: {:status => :created} }
       end
     else
       respond_to do |format|
@@ -62,8 +62,8 @@ class Api::V1::MessagesController < ApiController
     message = Message.find_by(id: params[:message_id])
     if message.nil?
       return respond_to do |format|
-        format.xml { render xml: {:status => :bad_request} }
-        format.any { render json: {:status => :bad_request} }
+        format.xml { render xml: {:status => :not_found} }
+        format.any { render json: {:status => :not_found} }
       end
     end
 

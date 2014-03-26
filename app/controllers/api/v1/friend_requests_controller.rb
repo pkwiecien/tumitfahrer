@@ -4,7 +4,7 @@ class Api::V1::FriendRequestsController < ApiController
   # GET /api/v1/users/:user_id/friend_requests
   def index
     @user = User.find_by(id: params[:user_id])
-    return respond_with friends_requests: [], status: :bad_request if @user.nil?
+    return respond_with friends_requests: [], status: :not_found if @user.nil?
 
     @friends_requests = @user.requesting_friends
     respond_with @friends_requests, :each_serializer => LegacyUserSerializer
@@ -17,7 +17,7 @@ class Api::V1::FriendRequestsController < ApiController
       other_user = User.find_by(id: params[:to_user_id])
       result = user.send_friend_request!(other_user)
 
-      respond_with result, status: :ok
+      respond_with result, status: :created
     rescue
       respond_with :result => [], status: :bad_request
     end
