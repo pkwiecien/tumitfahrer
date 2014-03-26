@@ -4,7 +4,7 @@ class Api::V1::RequestsController < ApiController
   # GET /api/v1/users/1/requests
   def index
     user = User.find_by(id: params[:user_id])
-    return respond_with contributions: [], status: :bad_request if user.nil?
+    return respond_with contributions: [], status: :not_found if user.nil?
     contributions = user.contributions
     respond_with contributions: contributions, status: :ok
   end
@@ -29,7 +29,7 @@ class Api::V1::RequestsController < ApiController
       new_ride = ride.requests.create!(passenger_id: params[:user_id], requested_from: params[:requested_from],
                                        request_to: params[:requested_to])
       unless new_ride.nil?
-        respond_with ride: new_ride, anfrage: true, status: :ok
+        respond_with ride: new_ride, anfrage: true, status: :created
       else
         respond_with ride: new_ride, anfrage: false, status: :bad_request
       end
@@ -43,8 +43,8 @@ class Api::V1::RequestsController < ApiController
     passenger = User.find_by(id: params[:passenger_id])
     if ride.nil? || passenger.nil?
       respond_to do |format|
-        format.xml { render xml: {:status => :bad_request} }
-        format.any { render json: {:status => :bad_request} }
+        format.xml { render xml: {:status => :not_found} }
+        format.any { render json: {:status => :not_found} }
       end
     end
 

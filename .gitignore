@@ -24,3 +24,4 @@ doc/
 .DS_Store
 .idea
 .secret
+/config/initializers/app_env_vars.rb

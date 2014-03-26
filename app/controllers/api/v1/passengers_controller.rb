@@ -5,7 +5,7 @@ class Api::V1::PassengersController < ApiController
   def index
     if params.has_key?(:ride_id)
       ride = Ride.find_by(id: params[:ride_id])
-      return respond_with passengers: [], status: 400 if ride.nil?
+      return respond_with passengers: [], status: :not_found if ride.nil?
 
       passengers = ride.passengers
       result_passengers = []
@@ -27,8 +27,8 @@ class Api::V1::PassengersController < ApiController
 
     if passenger.nil? || ride.nil?
       respond_to do |format|
-        format.xml { render xml: {:status => :bad_request} }
-        format.any { render json: {:status => :bad_request} }
+        format.xml { render xml: {:status => :not_found} }
+        format.any { render json: {:status => :not_found} }
       end
     end
 

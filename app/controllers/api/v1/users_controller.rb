@@ -36,9 +36,13 @@ class Api::V1::UsersController < ApiController
 
   # POST /api/v1/users
   def create
-    logger.debug "Creating user for params: #{user_params}"
-    @user = User.new(user_params)
+    new_password = User.generate_new_password
+    hashed_password = User.generate_hashed_password(new_password)
+    @user = User.new(user_params.merge(password: hashed_password, password_confirmation: hashed_password))
+
     if @user.save
+      UserMailer.welcome_email(@user, new_password).deliver
+
       respond_to do |format|
         format.json { render json: {:message => "User added to the database", :api_key => @user.api_key, :id => @user.id} }
         format.xml { render xml: {:username => "true", :mail => "true", :id => @user.id} }
@@ -76,8 +80,7 @@ class Api::V1::UsersController < ApiController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :department, :password,
-                                 :password_confirmation, :is_student)
+    params.require(:user).permit(:first_name, :last_name, :email, :department, :is_student)
   end
 
   def update_params

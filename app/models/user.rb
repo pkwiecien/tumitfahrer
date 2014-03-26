@@ -1,4 +1,5 @@
 require 'digest/sha2'
+require 'securerandom'
 
 # Schema Information
 # Table name: users
@@ -83,6 +84,14 @@ class User < ActiveRecord::Base
 
   def User.generate_api_key(user)
     user.update_attribute(:api_key, SecureRandom.urlsafe_base64)
+  end
+
+  def User.generate_new_password
+    SecureRandom.hex(4)
+  end
+
+  def User.generate_hashed_password(password)
+    Digest::SHA512.hexdigest(password+Tumitfahrer::Application::SALT)
   end
 
   def send_message!(other_user, content)

@@ -20,7 +20,7 @@ class Api::V1::ProjectsController < ApiController
   def show
     project = Project.find_by(id: params[:id])
     if project.nil?
-      respond_with project, status: :bad_request
+      respond_with project, status: :not_found
     else
       respond_with project, status: :ok
     end
@@ -29,12 +29,12 @@ class Api::V1::ProjectsController < ApiController
   # POST /api/v1/users/:user_id/projects
   def create
     user = User.find_by(id: params[:user_id])
-    return :project => {}, status: :bad_request if user.nil?
+    return :project => {}, status: :not_found if user.nil?
 
     project = user.offered_projects.create!(title: params[:title], owner_id: user.id, description: params[:description],
                                             fundings_target: params[:fundings_target])
     unless project.nil?
-      respond_with project, status: :ok
+      respond_with project, status: :created
     else
       respond_with project, status: :bad_request
     end
@@ -45,7 +45,7 @@ class Api::V1::ProjectsController < ApiController
     project = Project.find_by(id: params[:id])
 
     if project.nil?
-      respond_with project, status: :bad_request
+      respond_with project, status: :not_found
     end
 
     project.update_attributes(project_params)

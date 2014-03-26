@@ -5,7 +5,7 @@ class Api::V1::RatingsController < ApiController
   # optionally GET /api/v1/users/:user_id/ratings?pending
   def index
     user = User.find_by(id: params[:user_id])
-    return :ratings => [], :status => :bad_request if user.nil?
+    return :ratings => [], :status => :not_found if user.nil?
 
     result = []
     # generate pending ratings
@@ -38,6 +38,7 @@ class Api::V1::RatingsController < ApiController
   # POST /api/v1/users/:user_id/ratings?to_user_id=X&ride_id=Y&rating_type=Z
   def create
     user = User.find_by(id: params[:user_id])
+    return respond_with rating: [], status: :not_found if user.nil?
     rating = user.ratings_given.create!(to_user_id: params[:to_user_id], ride_id: params[:ride_id],
                                         rating_type: params[:rating_type])
 

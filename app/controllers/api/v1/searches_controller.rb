@@ -21,7 +21,7 @@ class Api::V1::SearchesController < ApiController
         #end
       end
 
-      respond_with :rides => results, status: :ok
+      respond_with :rides => results, status: :created
     rescue
       respond_with :rides => [], status: :bad_request
     end

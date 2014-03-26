@@ -12,7 +12,7 @@ class Api::V1::RidesController < ApiController
   # optional @param is_paid=true/false - get rides of the user that are paid or not
   def get_user_rides
     user = User.find_by(id: params[:user_id])
-    return respond_with :rides => [], :status => :bad_request if user.nil?
+    return respond_with :rides => [], :status => :not_found if user.nil?
 
     @rides = user.rides_as_driver + user.rides_as_passenger
     if params.has_key?(:is_paid)
@@ -25,7 +25,7 @@ class Api::V1::RidesController < ApiController
   def show
     @ride = Ride.find_by(id: params[:id])
     if @ride.nil?
-      respond_with @ride => [], :status => :bad_request
+      respond_with @ride => [], :status => :not_found
     else
       respond_with @ride, status: :ok
     end
@@ -46,7 +46,7 @@ class Api::V1::RidesController < ApiController
       @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
 
       unless @ride.nil?
-        respond_with ride: @ride, status: :ok
+        respond_with ride: @ride, status: :created
       else
         respond_with ride: {}, status: :bad_request
       end
