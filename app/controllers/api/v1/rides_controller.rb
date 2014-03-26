@@ -76,7 +76,7 @@ class Api::V1::RidesController < ApiController
   end
 
   # todo: refactor
-  # DELETE /api/v1/users/:user_id/rides
+  # DELETE /api/v1/users/:user_id/rides/2
   def destroy
     begin
       current_user = User.find_by(id: params[:user_id])

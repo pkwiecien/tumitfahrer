@@ -57,7 +57,7 @@ class Api::V1::MessagesController < ApiController
     end
   end
 
-  # PUT /api/v1messages/:id
+  # PUT /api/v1/messages/:id
   def update
     message = Message.find_by(id: params[:message_id])
     if message.nil?

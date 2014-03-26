@@ -16,7 +16,7 @@ class Api::V1::PaymentsController < ApiController
     respond_with payments: result, status: :ok
   end
 
-  # GET /api/v1/users/:user_id/payments?from_user_id=X&ride_id=Y&amount=Z
+  # POST /api/v1/users/:user_id/payments?from_user_id=X&ride_id=Y&amount=Z
   def create
     to_user = User.find_by(id: params[:user_id])
     from_user = User.find_by(id: params[:from_user_id])

@@ -2,6 +2,7 @@ class Api::V1::RequestsController < ApiController
   respond_to :xml, :json
 
   # GET /api/v1/users/1/requests
+  # todo: check if really needed
   def index
     user = User.find_by(id: params[:user_id])
     return respond_with contributions: [], status: :not_found if user.nil?
