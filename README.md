@@ -1,10 +1,10 @@
 TUMitfahrer
 ===========
 
-[![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
+<!--[![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)-->
 
 New backend for TUMitfahrer App build with Ruby on Rails.
-Any endpoint such as apps for Android, iOS, Pebble can commnunicate via JSON format. 
+Any endpoint such as Android, iOS, Pebble apps can communicate with the backend via JSON format.
 
 
 Architecture of TUMitfahrer
@@ -33,6 +33,8 @@ Type | URI | Explanation
 
 #### Users
 
+http://www.tumitfahrer.de/api/v1/users
+
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/users` | get all users
@@ -42,6 +44,8 @@ Type | URI | Explanation
 
 
 #### Rides
+
+http://www.tumitfahrer.de/api/v1/rides
 
 Type | URI | Explanation
 --- | --- | ---
