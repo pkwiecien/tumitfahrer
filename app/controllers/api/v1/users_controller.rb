@@ -58,14 +58,13 @@ class Api::V1::UsersController < ApiController
   # PUT /api/v1/users/:id
   def update
     user = User.find_by(id: params[:id])
-
-    respond_with :status => 400 if user.nil?
+    return respond_with :aenderung => false, :status => :not_found if user.nil?
 
     user.update_attributes(update_params)
     if user.save
-      respond_with :aenderung => true
+      respond_with :aenderung => true, status: :ok
     else
-      respond_with :aenderung => false
+      respond_with :aenderung => false, status: :ok
     end
   end
 

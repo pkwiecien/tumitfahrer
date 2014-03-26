@@ -55,7 +55,7 @@ class Api::V1::ContributionsController < ApiController
     respond_with :status => :ok
   end
 
-  # DELETE /api/v1/users/:user_id/contributions
+  # DELETE /api/v1/users/:user_id/contributions/:id
   def destroy
     begin
       user = User.find_by(id: params[:user_id])

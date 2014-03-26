@@ -23,7 +23,7 @@ class Api::V1::FriendRequestsController < ApiController
     end
   end
 
-  # PUT /api/v1/users/:user_id/friend_requests
+  # PUT /api/v1/users/:user_id/friend_requests/2
   def update
     begin
       user = User.find_by(id: params[:user_id])

@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   has_many :payments_received, foreign_key: :to_user_id, class_name: "Payment"
 
   has_many :contributions
-  has_many :offered_projects, foreign_key: :owner_id, class_name: "Project"
+  has_many :offered_projects, foreign_key: :owner_id, class_name: "Project", source: :project
   has_many :contributed_projects, through: :contributions, class_name: "Project", source: :project
 
   has_many :friendships
@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
 
   has_many :reverse_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest"
   has_many :received_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest" #this user sends a request to another user
-  has_many :requesting_friends, through: :reverse_friendship_requests, source: :from_user
+  has_many :requesting_friends, through: :reverse_friendship_requests, source: :from_user, class_name: "User"
 
   has_many :messages
   has_many :sent_messages, foreign_key: :sender_id, class_name: "Message"
