@@ -4,23 +4,26 @@ TUMitfahrer
 [![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
 
 New backend for TUMitfahrer App build with Ruby on Rails.
-Any endpoint such as apps for Android, iOS, Pebble can commnunicate via JSON format. Full documentation will be available until 30 March 2014.
+Any endpoint such as apps for Android, iOS, Pebble can commnunicate via JSON format. 
+
 
 Architecture of TUMitfahrer
-===========================
+---------------------------
 
-architecture coming soon
-
-Domain Model
-============
-
-Domain model is shown on the class diagram below (click to zoom):
-![Alt text](https://github.com/pkwiecien/tumitfahrer/raw/master/public/ClassDiagram.png
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/develop/public/architecture.png
 "Domain model of TUMitfahrer showing all classes and relationships between them")
 
 
+Domain Model
+------------
+
+Domain model is shown on the class diagram below (click to zoom):
+![Alt text](https://github.com/pkwiecien/tumitfahrer/raw/master/public/ClassDiagram.png
+"High level architecture diagram of TUMitfahrer")
+
+
 API Reference
-=============
+-------------
 
 #### Sessions
 
@@ -132,4 +135,15 @@ Type | URI | Explanation
 Type | URI | Explanation
 --- | --- | ---
 *POST* | `/search` | search for a ride. Parameters `start_carpool (string), end_carpool (string), ride_date (datetime)`
+
+
+Contributions
+-------------
+
+In the architecture diagram I used following icon licensed under Creative Commons Attribution that should be attributed:
+* Smart Phone by Emily Haasch from The Noun Project
+* Code by buzzyrobot from The Noun Project
+* Database by Stefan Parnarov from The Noun Project
+* Application by Brian Gonzalez from The Noun Project
+* User by Rémy Médard from The Noun Project
 
