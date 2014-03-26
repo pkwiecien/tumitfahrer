@@ -9,6 +9,7 @@ Any endpoint such as apps for Android, iOS, Pebble can commnunicate via JSON for
 Architecture of TUMitfahrer
 ===========================
 
+architecture coming soon
 
 Domain Model
 ============
