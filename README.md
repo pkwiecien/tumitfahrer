@@ -10,7 +10,7 @@ Any endpoint such as apps for Android, iOS, Pebble can commnunicate via JSON for
 Architecture of TUMitfahrer
 ---------------------------
 
-![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/develop/public/architecture.png
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/architecture.png
 "Domain model of TUMitfahrer showing all classes and relationships between them")
 
 
