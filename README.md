@@ -1,10 +1,10 @@
 TUMitfahrer
 ===========
 
-<!--[![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)-->
+[![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
 
 New backend for TUMitfahrer App build with Ruby on Rails.
-Any endpoint such as Android, iOS, Pebble apps can communicate with the backend via JSON format.
+Any endpoint such as Android, iOS, Pebble apps can communicate with this backend via JSON or XML format.
 
 
 Architecture of TUMitfahrer
@@ -20,6 +20,19 @@ Domain Model
 Domain model is shown on the class diagram below (click to zoom):
 ![Alt text](https://github.com/pkwiecien/tumitfahrer/raw/master/public/ClassDiagram.png
 "High level architecture diagram of TUMitfahrer")
+
+Roadmap 
+-------
+
+#### Done
+* backend in Rails (Pawel)
+* integration of backend with existing Android app (Pawel)
+
+#### To be done
+* new iOS app with new features (Pawel)
+* web app in AngularJS/Backbone/similar that uses Rails backend (tba)
+* Android app polish, refactoring and new features (tba)
+* other cool ideas such as Pebble app
 
 
 API Reference
