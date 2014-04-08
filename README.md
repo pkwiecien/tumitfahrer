@@ -137,6 +137,25 @@ Type | URI | Explanation
 *POST* | `/search` | search for a ride. Parameters `start_carpool (string), end_carpool (string), ride_date (datetime)`
 
 
+API v2
+
+#### Users
+
+Type | URI | Explanation
+--- | --- | ---
+*GET* | /users | get all users
+*GET* | /users/:id | get user with id 1
+*POST* | /users | create new user
+*PUT* | /users/:id | update user with id 1
+*DELETE* | /users/:id | delete user with id 1
+
+#### Rides
+
+Type | URI | Explanation
+--- | --- | ---
+
+
+
 Contributions
 -------------
 

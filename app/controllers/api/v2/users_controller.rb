@@ -3,8 +3,9 @@ class Api::V2::UsersController < ApiController
 
   def index
     @users = User.all
-    respond_to do |format|
-      format.json { render json: @users }
+
+   respond_to do |format|
+      format.json { render json: @users}
       format.xml { render xml: @users }
     end
   end
