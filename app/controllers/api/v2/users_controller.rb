@@ -40,7 +40,7 @@ class Api::V2::UsersController < ApiController
     end
   end
 
-  # POST /api/v1/users
+  # POST /api/v2/users
   def create
     new_password = User.generate_new_password
     hashed_password = User.generate_hashed_password(new_password)
