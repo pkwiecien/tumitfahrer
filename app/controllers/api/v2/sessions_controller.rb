@@ -3,10 +3,9 @@ class Api::V2::SessionsController < ApiController
 
   def create
     email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
+    logger.debug "authenticating user for #{email} and #{hashed_password}"
 
     @user = User.find_by(email: email.downcase)
-
-    logger.debug "authenticating user for #{email} and #{hashed_password}"
 
     if @user && @user.authenticate(hashed_password)
       if @user.api_key.nil?
@@ -15,7 +14,7 @@ class Api::V2::SessionsController < ApiController
 
       logger.debug "logging in user #{@user.to_s}"
       respond_to do |format|
-        format.json { render json: @user }
+        format.json { render json: @user, serializer: UserSerializer }
         format.xml { render xml: {:attempt => "true", "user_id" => "31"} }
       end
     else
