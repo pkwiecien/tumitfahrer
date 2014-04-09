@@ -1,7 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :first_name, :last_name, :department, :car, :api_key
+  attributes :id, :first_name, :last_name, :email, :phone_number,
+             :department, :car, :is_student, :api_key, :created_at, :updated_at
 
-  def full_name
-    "#{object.first_name} #{object.last_name}"
-  end
 end

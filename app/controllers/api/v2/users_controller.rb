@@ -3,8 +3,9 @@ class Api::V2::UsersController < ApiController
 
   def index
     @users = User.all
-    respond_to do |format|
-      format.json { render json: @users }
+
+   respond_to do |format|
+      format.json { render json: @users}
       format.xml { render xml: @users }
     end
   end
@@ -39,21 +40,25 @@ class Api::V2::UsersController < ApiController
     end
   end
 
+  # POST /api/v2/users
   def create
-    logger.debug "Creating user for params: #{user_params}"
-    @user = User.new(user_params)
+    new_password = User.generate_new_password
+    hashed_password = User.generate_hashed_password(new_password)
+    @user = User.new(user_params.merge(password: hashed_password, password_confirmation: hashed_password))
+
     if @user.save
+      UserMailer.welcome_email(@user, new_password).deliver
+
       respond_to do |format|
-        format.json { render json: {:message => "User added to the database", :api_key => @user.api_key, :id => @user.id} }
-        format.xml { render xml: {:username => "true", :mail => "true", :id => @user.id} }
+        format.json { render json: {:status => :created, :message => "User created"} }
+        format.xml { render xml: {:status => :created, :message => "User created" } }
       end
     else
       respond_to do |format|
-        format.json { render json: {:message => "User couldn't be added to the database"} }
-        format.xml { render xml: {:username => "false", :mail => "false"} }
+        format.json { render json: {:status => :bad_request, :message => "Could not create the user"} }
+        format.xml { render xml: {:status => :bad_request, :message => "Could not create the user"} }
       end
     end
-
   end
 
   private
@@ -66,7 +71,7 @@ class Api::V2::UsersController < ApiController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :department, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :last_name, :email, :department, :is_student)
   end
 
 end
