@@ -2,36 +2,33 @@ class Api::V2::RidesController < ApiController
   respond_to :json, :xml
   # before_action :restrict_access, only: [:index, :create]
 
+  # GET /api/v1/rides
   def index
     @rides = Ride.all
-    if @rides.nil?
-      render json: {:message => "There are no rides"}
-    else
-      respond_to do |format|
-        format.json { render json: @rides }
-        format.xml { render xml: @rides }
-      end
-    end
+    respond_with @rides, status: :ok
+    # todo: potentially check if there are rides at all, and if not then respond with status code :no_content
   end
 
+  # GET /api/v1/rides/:id
   def show
     @ride = Ride.find(params[:id])
-    respond_to do |format|
-      format.json { render json: @ride }
-      format.xml { render xml: @ride }
+    if @ride.nil?
+      respond_with @ride, status: :not_found
+    else
+      respond_with @ride, status: :ok
     end
   end
 
+  # POST /api/v1/rides/
   def create
     current_user = User.find_by(api_key: request.headers['apiKey'])
     logger.debug request.headers['apiKey']
     @ride = current_user.rides.build(ride_params)
     if @ride.save
-      render json: {:result => "1"}
+      respond_with @ride, status: :created
     else
-      render json: {:result => "0"}
+      respond_with @ride, status: :bad_request
     end
-
   end
 
   private
