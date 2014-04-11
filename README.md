@@ -4,13 +4,13 @@ TUMitfahrer
 [![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
 
 New backend for TUMitfahrer App build with Ruby on Rails.
-Any endpoint such as apps for Android, iOS, Pebble can commnunicate via JSON format. 
+Any endpoint such as Android, iOS, Pebble apps can communicate with this backend via JSON or XML format.
 
 
 Architecture of TUMitfahrer
 ---------------------------
 
-![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/develop/public/architecture.png
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/architecture.png
 "Domain model of TUMitfahrer showing all classes and relationships between them")
 
 
@@ -20,6 +20,19 @@ Domain Model
 Domain model is shown on the class diagram below (click to zoom):
 ![Alt text](https://github.com/pkwiecien/tumitfahrer/raw/master/public/ClassDiagram.png
 "High level architecture diagram of TUMitfahrer")
+
+Roadmap 
+-------
+
+#### Done
+* backend in Rails (Pawel)
+* integration of backend with existing Android app (Pawel)
+
+#### To be done
+* new iOS app with new features (Pawel)
+* web app in AngularJS/Backbone/similar that uses Rails backend (tba)
+* Android app polish, refactoring and new features (tba)
+* other cool ideas such as Pebble app
 
 
 API Reference
@@ -33,6 +46,8 @@ Type | URI | Explanation
 
 #### Users
 
+http://www.tumitfahrer.de/api/v1/users
+
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/users` | get all users
@@ -42,6 +57,8 @@ Type | URI | Explanation
 
 
 #### Rides
+
+http://www.tumitfahrer.de/api/v1/rides
 
 Type | URI | Explanation
 --- | --- | ---
