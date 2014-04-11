@@ -1,3 +1,16 @@
+# Schema Information
+# Table name: projects
+#  id                      :integer          not null, primary key
+#  fundings_target         :integer
+#  phase                   :integer
+#  owner_id                :integer
+#  description             :string
+#  title                   :string
+#  date                    :datetime
+#  ride_id                 :integer
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+
 class Project < ActiveRecord::Base
   belongs_to :ride
   belongs_to :user
