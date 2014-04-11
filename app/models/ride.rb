@@ -1,3 +1,24 @@
+# Schema Information
+# Table name: rides
+#  id                      :integer          not null, primary key
+#  ride_id                 :integer
+#  departure_place         :string
+#  destination             :string
+#  departure_time          :datetime
+#  meeting_point           :string
+#  free_seats              :string
+#  department              :integer
+#  realtime_km             :string
+#  realtime_departure_time :datetime
+#  realtime_arrival_time   :datetime
+#  duration                :float
+#  distance                :float
+#  is_paid                 :boolean
+#  is_finished             :boolean
+#  contribution_mode       :integer          # for gamification
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+
 class Ride < ActiveRecord::Base
 
   has_many :relationships, dependent: :delete_all
