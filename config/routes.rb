@@ -1,6 +1,7 @@
 Tumitfahrer::Application.routes.draw do
 
   namespace :api do
+    # API v1 Routes
     namespace :v1, :defaults => { :format => 'json' } do
       resource :search
       resources :users do
@@ -25,6 +26,7 @@ Tumitfahrer::Application.routes.draw do
       resource :sessions
       resources :projects
     end
+    # API v2 Routes
     namespace :v2, :defaults => { :format => 'json' } do
       resources :users
       resources :rides
@@ -32,11 +34,14 @@ Tumitfahrer::Application.routes.draw do
     end
   end
 
+  # Web app routes
   resources :users
   resources :rides
   resource :sessions, only: [:new, :create, :destroy]
 
+  # Start page route
   root "static_pages#home"
+  # Static pages routes
   match "/signup", to: "users#new", via: 'get'
   match "/signin", to: "sessions#new", via: 'get'
   match "/signout", to: "sessions#destroy", via: 'delete'

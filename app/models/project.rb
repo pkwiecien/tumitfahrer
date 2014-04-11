@@ -12,12 +12,17 @@
 #  updated_at              :datetime         not null
 
 class Project < ActiveRecord::Base
+
+  # Active Record relationships
   belongs_to :ride
   belongs_to :user
   has_many :contributions
   has_many :users, through: :contributions
 
+  # filters
   before_save :default_values
+
+  private
 
   def default_values
     self.fundings_target ||= 0

@@ -9,5 +9,6 @@
 #  updated_at              :datetime         not null
 
 class Request < ActiveRecord::Base
+  # Active Record relationships
   belongs_to :ride
 end
