@@ -1,6 +1,6 @@
 class RideSerializer < ActiveModel::Serializer
   attributes :id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time,
-   :project_id, :price, :realtime_departure_time, :realtime_km, :driver_id, :requests, :passengers,
+   :project_id, :price, :realtime_departure_time, :realtime_km, :driver, :requests, :passengers,
    :contribution_mode, :is_paid, :duration, :pending_payments, :distance, :created_at, :updated_at
 
   def project_id
@@ -11,11 +11,11 @@ class RideSerializer < ActiveModel::Serializer
     end
   end
 
-  def driver_id
+  def driver
     unless object.driver.nil?
-      object.driver.id
+      object.driver
     else
-      -1
+      nil
     end
   end
 

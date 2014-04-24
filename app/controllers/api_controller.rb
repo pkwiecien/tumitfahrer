@@ -26,4 +26,6 @@ class ApiController < ActionController::Base
   # needed to wrap the parameters correctly eg # { "person": { "name": "Zack", "email": "sakchai@artellectual.com", "twitter": "@artellectual" }}
   wrap_parameters format: [:json]
 
+  # add restrict access here like on: http://www.amberbit.com/blog/2014/2/19/building-and-documenting-api-in-rails/
+
 end
