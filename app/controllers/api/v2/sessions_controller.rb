@@ -4,7 +4,7 @@ class Api::V2::SessionsController < ApiController
   # POST /api/v2/sessions
   # create new session for the user
   def create
-    # retreive encrypted credentials
+    # retrieve encrypted credentials
     email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
     logger.debug "authenticating user for #{email} and #{hashed_password}"
 

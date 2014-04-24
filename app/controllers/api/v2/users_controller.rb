@@ -40,7 +40,7 @@ class Api::V2::UsersController < ApiController
       UserMailer.welcome_email(@user, new_password).deliver
 
       respond_to do |format|
-        format.json { render json: {:status => :created, :message => "User created"} }
+        format.json { render json: {:message => "User created"}, status: :created }
         format.xml { render xml: {:status => :created, :message => "User created" } }
       end
     else
