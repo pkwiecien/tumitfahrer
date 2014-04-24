@@ -18,7 +18,7 @@ gem 'gcm', :require => "gcm"
 # gem for push notificaitons to iOS devices
 gem 'grocer'
 # gem for push notificaitons to iOS devices
-gem 'houston', :require => 'houston'
+gem 'houston', '~> 2.0.2', :require => 'houston'
 # used for parsing xml requests
 gem 'actionpack-xml_parser'
 #gem "paperclip", "~> 4.1"
