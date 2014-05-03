@@ -193,9 +193,9 @@ ActiveRecord::Schema.define(version: 20140503104942) do
     t.datetime "realtime_arrival_time"
     t.integer  "contribution_mode"
     t.boolean  "is_paid"
+    t.integer  "rideType"
     t.boolean  "is_finished"
     t.float    "distance"
-    t.integer  "ride_type"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
