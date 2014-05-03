@@ -159,6 +159,15 @@ class User < ActiveRecord::Base
     "#{self.first_name} #{self.last_name}, #{self.password_digest}"
   end
 
+  def compute_avg_rating
+    num_all_rating = self.ratings_received.count
+    if num_all_rating == 0
+      0
+    else
+      self.ratings_received.where('rating_type=?', 1)/num_all_rating
+    end
+  end
+
   private
 
   def create_remember_token
@@ -175,6 +184,7 @@ class User < ActiveRecord::Base
     self.unbound_contributions ||= 0
     self.gamification ||= true
     self.is_student ||= true
+    self.rating_avg ||= 0.0
     nil
   end
 

@@ -16,6 +16,7 @@
 #  is_paid                 :boolean
 #  is_finished             :boolean
 #  contribution_mode       :integer          # for gamification
+#  ride_type               :integer          # 0 - campus ride, 1 - activity ride, 2 - ride request
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 
@@ -55,7 +56,7 @@ class Ride < ActiveRecord::Base
 
   def pending_payments
     result = []
-    self.relationships.where(is_driving: false).each do |r|
+    self.relationships.where('driver_ride_id=?', self.id).each do |r|
       if r.ride[:is_paid] == false
         payment = {}
         payment[:ride_id] = self.id
@@ -64,6 +65,28 @@ class Ride < ActiveRecord::Base
       end
     end
     result
+  end
+
+  def passengers_of_ride
+    relationships = Relationship.where(driver_ride_id: self.id, is_driving: false)
+    results = []
+    relationships.each do |r|
+      user = User.find_by(id: r.user)
+      results.append(user)
+    end
+    results
+  end
+
+
+  def self.rides_of_drivers
+    rides = []
+    #check if the driver for a ride is not null, if is null, then it's a passenger
+    Ride.all.each do |ride|
+      unless ride.driver.nil?
+        rides.append(ride)
+      end
+    end
+    return rides
   end
 
   def to_s
@@ -80,6 +103,7 @@ class Ride < ActiveRecord::Base
     self.contribution_mode ||= 0
     self.is_finished ||= false
     self.distance ||= 0
+    self.ride_type ||= 0
     nil
   end
 
