@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323075144) do
+ActiveRecord::Schema.define(version: 20140503104942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,6 +195,7 @@ ActiveRecord::Schema.define(version: 20140323075144) do
     t.boolean  "is_paid"
     t.boolean  "is_finished"
     t.float    "distance"
+    t.integer  "ride_type"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
@@ -243,6 +244,7 @@ ActiveRecord::Schema.define(version: 20140323075144) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.boolean  "gamification"
+    t.float    "rating_avg"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

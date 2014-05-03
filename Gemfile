@@ -22,7 +22,7 @@ gem 'houston', '~> 2.0.2', :require => 'houston'
 # used for parsing xml requests
 gem 'actionpack-xml_parser'
 #gem "paperclip", "~> 4.1"
-gem "httparty", "~> 0.13.0"
+gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
 

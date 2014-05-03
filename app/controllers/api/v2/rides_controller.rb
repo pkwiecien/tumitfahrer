@@ -4,7 +4,8 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v1/rides
   def index
-    @rides = Ride.all
+
+    @rides = Ride.rides_of_drivers
     respond_with @rides, status: :ok
     # todo: potentially check if there are rides at all, and if not then respond with status code :no_content
   end
@@ -50,7 +51,7 @@ class Api::V2::RidesController < ApiController
         render json: {:ride => nil}, status: :bad_request
       end
     rescue
-      return render json: {:ride => nil}, status: :bad_request
+      return respond_with json: {:ride => nil}, status: :bad_request
     end
   end
 
@@ -63,7 +64,7 @@ class Api::V2::RidesController < ApiController
   end
 
   def ride_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point)
+    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type)
   end
 
   # get distance of the ride from google api
