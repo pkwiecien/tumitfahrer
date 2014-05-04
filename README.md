@@ -38,8 +38,8 @@ Roadmap
 API Reference
 -------------
 
-To use API, use for now `www.tumitfahrer-staging.de`.
-Each API call starts with `/api/v2` and is followed by a specific verb, e.g. `www.tumitfahrer-staging.de/api/v2/rides`
+To use API, use for now `http://tumitfahrer-staging.herokuapp.com/`.
+Each API call starts with `/api/v2` and is followed by a specific verb, e.g. `http://tumitfahrer-staging.herokuapp.com/api/v2/rides`
 
 #### Sessions
 
