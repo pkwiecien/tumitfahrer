@@ -10,7 +10,7 @@ Any endpoint such as Android, iOS, Pebble apps can communicate with this backend
 Architecture of TUMitfahrer
 ---------------------------
 
-![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/architecture.png
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/architecture2.png
 "Domain model of TUMitfahrer showing all classes and relationships between them")
 
 
