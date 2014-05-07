@@ -38,8 +38,10 @@ Roadmap
 API Reference
 -------------
 
-To use API, use for now `http://tumitfahrer-staging.herokuapp.com/`.
-Each API call starts with `/api/v2` and is followed by a specific verb, e.g. `http://tumitfahrer-staging.herokuapp.com/api/v2/rides`
+To use API, use for now http://tumitfahrer-staging.herokuapp.com/.
+Each API call starts with `/api/v2` and is followed by a specific verb, e.g. http://tumitfahrer-staging.herokuapp.com/api/v2/rides.
+
+If it's not clear what should be e.g. format of parameters, check out how is the API implemented and try to reverse engineer it. The API functions are [HERE](https://github.com/pkwiecien/tumitfahrer/tree/develop/app/controllers/api/v2). The output of API controllers is defined in serializers [HERE](https://github.com/pkwiecien/tumitfahrer/tree/develop/app/serializers).
 
 #### Sessions
 
@@ -57,7 +59,7 @@ Type | URI | Explanation
 
 #### Users
 
-http://www.tumitfahrer-staging.de/api/v2/users
+http://tumitfahrer-staging.herokuapp.com/api/v2/users
 
 To create a new user, create a POST request to `/users`
 
@@ -71,7 +73,7 @@ Type | URI | Explanation
 
 #### Rides
 
-http://www.tumitfahrer-staging.de/api/v2/rides
+http://tumitfahrer-staging.herokuapp.com/api/v2/rides
 
 Type | URI | Explanation
 --- | --- | ---
