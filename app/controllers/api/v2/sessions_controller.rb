@@ -11,7 +11,7 @@ class Api::V2::SessionsController < ApiController
     @user = User.find_by(email: email.downcase)
 
     if @user && @user.authenticate(hashed_password)
-      logger.debug "logging in user #{@user.to_s}"
+      logger.debug "logging in user #{@user.to_s} with pass digest: #{@user[:password_digest]}"
       if @user.api_key.nil?
         User.generate_api_key(@user)
       end

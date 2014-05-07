@@ -50,6 +50,22 @@ class Api::V2::RequestsController < ApiController
     end
   end
 
+  def destroy
+    begin
+      request = Request.find_by(id: params[:id]).destroy
+      respond_to do |format|
+        format.xml { render xml: {:status => :ok} }
+        format.any { render json: {:status => :ok} }
+      end
+    rescue
+      respond_to do |format|
+        format.xml { render xml: {:status => :not_found} }
+        format.any { render json: {:status => :not_found} }
+      end
+    end
+  end
+
+
   private
 
   def send_android_push(type, new_ride)

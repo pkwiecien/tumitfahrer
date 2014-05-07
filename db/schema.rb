@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140503104942) do
+ActiveRecord::Schema.define(version: 20140504070538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -193,7 +193,7 @@ ActiveRecord::Schema.define(version: 20140503104942) do
     t.datetime "realtime_arrival_time"
     t.integer  "contribution_mode"
     t.boolean  "is_paid"
-    t.integer  "rideType"
+    t.integer  "ride_type"
     t.boolean  "is_finished"
     t.float    "distance"
   end
