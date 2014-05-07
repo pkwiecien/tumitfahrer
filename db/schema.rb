@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140504070538) do
+ActiveRecord::Schema.define(version: 20140507061506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -193,9 +193,10 @@ ActiveRecord::Schema.define(version: 20140504070538) do
     t.datetime "realtime_arrival_time"
     t.integer  "contribution_mode"
     t.boolean  "is_paid"
-    t.integer  "ride_type"
+    t.integer  "rideType"
     t.boolean  "is_finished"
     t.float    "distance"
+    t.integer  "ride_type"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
