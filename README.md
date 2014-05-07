@@ -38,27 +38,42 @@ Roadmap
 API Reference
 -------------
 
+To use API, use for now http://tumitfahrer-staging.herokuapp.com/.
+Each API call starts with `/api/v2` and is followed by a specific verb, e.g. http://tumitfahrer-staging.herokuapp.com/api/v2/rides.
+
+If it's not clear what should be e.g. format of parameters, check out how is the API implemented and try to reverse engineer it. The API functions are [HERE](https://github.com/pkwiecien/tumitfahrer/tree/develop/app/controllers/api/v2). The output of API controllers is defined in serializers [HERE](https://github.com/pkwiecien/tumitfahrer/tree/develop/app/serializers).
+
 #### Sessions
+
+TUMitfahrer has existing user base of over 1000 users. Their passwords are obviously encrypted and cannot be read. The idea is to create a authentication system that will enable old users as well as new ones to login in. Therefore the authentication mechanism is a bit complex.
+
+To login to TUmitfahrer you need to create a POST request to sessions. In the header `Authorization: Basic`, you should provide encrypted credentials in the form: `base64_encryption(username:sha512_encryption(password+'toj369sbz1f316sx'))`. sha512_encryption is a standard encryption algorithm whose implementation you can find on the Internet, and here it's used to encrypt password with added salt 'toj369sbz1f316sx' (the salt is taken from the old system). `username:sha512_encryption` are again encrypted with base64 encryption.
+
+So to sum up, pass a header in form:
+`Authorization: Basic base64_encryption(username:sha512_encryption(password+'toj369sbz1f316sx'))`
+
 
 Type | URI | Explanation
 --- | --- | ---
-*POST* | `/sessions` | create a new session for the user. Required paramters: `email, hashed_password`
+*POST* | `/sessions` | create a new session for the user. Required header: `email, hashed_password`
 
 #### Users
 
-http://www.tumitfahrer.de/api/v1/users
+http://tumitfahrer-staging.herokuapp.com/api/v2/users
+
+To create a new user, create a POST request to `/users`
 
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/users` | get all users
 *GET* | `/users/1` | get user no. 1
-*POST* | `/users` | create a new user
+*POST* | `/users` | create a new user, required parameters as json: `{"user" : { email : "xyz@tum.de", first_name: "Name", last_name: "Name", department: departmentNo(integer), is_student: boolean, password: "password", password_confirmation: "password"}}`  where departmentNo is a number of faculty (faculties are taken is alpabethic order from : http://www.tum.de/en/about-tum/faculties/, so e.g. Architecture has departmentNo `0`)
 *PUT* | `/users/1` | update user no. 1.   Optional parameters `phone_number (string), rank (integer), exp (float), car (string), unbound_contributions (integer), department (integer), hashed_password (string), hashed_password_confirmation (string), gamification (boolean)`
 
 
 #### Rides
 
-http://www.tumitfahrer.de/api/v1/rides
+http://tumitfahrer-staging.herokuapp.com/api/v2/rides
 
 Type | URI | Explanation
 --- | --- | ---
