@@ -12,7 +12,7 @@ class Relationship < ActiveRecord::Base
 
   # Active Record relationships
   belongs_to :user
-  belongs_to :ride
+  belongs_to :ride, dependent: :destroy
 
   # filters
   before_save :default_values

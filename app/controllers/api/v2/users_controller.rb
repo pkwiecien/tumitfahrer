@@ -1,13 +1,13 @@
 class Api::V2::UsersController < ApiController
   respond_to :xml, :json
 
-  # GET /api/v1/users/
+  # GET /api/v2/users/
   def index
     @users = User.all
     respond_with @users, status: :ok
   end
 
-  # GET /api/v1/users/:id
+  # GET /api/v2/users/:id
   def show
     # check if there an authentication header, if so consume it and return more
     if !request.headers[:Authorization].nil?
@@ -21,7 +21,6 @@ class Api::V2::UsersController < ApiController
     end
 
     if @user && !email.nil? && !hashed_password.nil? && @user.authenticate(hashed_password)
-
       respond_with @user, status: :ok
     else
       respond_with status: :bad_request, message: "Could not retrieve the user"
@@ -51,6 +50,38 @@ class Api::V2::UsersController < ApiController
     end
   end
 
+  # PUT /api/v2/users/:id
+  def update
+    logger.debug "Authenticating"
+    if !request.headers[:Authorization].nil?
+      email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
+    end
+
+    logger.debug "username: #{email}, #{hashed_password}"
+
+    @user = User.find_by(id: params[:id])
+    logger.debug "trying to find user with id: #{params[:id]}, user: #{@user[:password_digest]} and password #{@user[:password]}"
+
+    if hashed_password.nil? || !@user.authenticate(hashed_password)
+      return respond_with status: :bad_request, message: "Could not retrieve the user" if @user.nil?
+    end
+
+    logger.debug "new password digest: #{@user[:password_digest]} "
+
+    logger.debug "user found by id #{params[:id]}, let's check if authenthicated: #{@user.authenticate(hashed_password)}"
+
+    begin
+      @user.update_attributes!(update_params)
+
+      logger.debug "password changed for user: #{@user.to_s}"
+      respond_with @user, status: :ok
+    rescue
+      logger.debug "could not change password"
+      respond_with status: :bad_request, message: "Could not retrieve the user"
+    end
+
+  end
+
   private
 
   # TODO: introduce authentication by api key
@@ -64,6 +95,10 @@ class Api::V2::UsersController < ApiController
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :department, :is_student)
+  end
+
+  def update_params
+    params.require(:user).permit(:phone_number, :car, :password, :password_confirmation)
   end
 
 end

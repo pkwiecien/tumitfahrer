@@ -34,7 +34,6 @@ class Ride < ActiveRecord::Base
   before_save :default_values
 
   # validators
-  default_scope -> { order ('departure_time ASC') }
   validates :departure_place, :departure_time, :meeting_point, :free_seats, presence: true
 
   # get a driver of a ride
