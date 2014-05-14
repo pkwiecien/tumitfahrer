@@ -20,8 +20,9 @@ class Api::V2::SessionsController < ApiController
       logger.debug "could not log in user #{@user.to_s}"
 
       respond_to do |format|
-        format.json { render json: {status: :bad_request, :message => "User couldn't be added to the database"} }
-        format.xml { render xml: {status: :bad_request, :message => "User couldn't be added to the database"} }
+        message = "Can't create session for requested user. Check credentials."
+        format.json { render json: {status: :bad_request, message: message} }
+        format.xml { render xml: {status: :bad_request, message: message} }
       end
 
     end

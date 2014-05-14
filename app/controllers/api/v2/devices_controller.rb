@@ -3,7 +3,7 @@ class Api::V2::DevicesController < ApplicationController
   # skip_before_filter :verify_authenticity_token
   respond_to :xml, :json
 
-  # GET /api/v1/users/:user_id/devices
+  # GET /api/v2/users/:user_id/devices
   def index
     user = User.find_by(id: params[:user_id])
     if user.nil?
@@ -20,7 +20,7 @@ class Api::V2::DevicesController < ApplicationController
     end
   end
 
-  # POST /api/v1/users/:user_id/devices
+  # POST /api/v2/users/:user_id/devices
   def create
     user = User.find_by(id: params[:user_id])
     if user.nil?

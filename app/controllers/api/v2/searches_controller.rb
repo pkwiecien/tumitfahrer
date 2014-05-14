@@ -7,10 +7,20 @@ class Api::V2::SearchesController < ApiController
     start_carpool = params[:start_carpool]
     end_carpool = params[:end_carpool]
     ride_date = params[:ride_date]
+    user_id = params[:user_id]
+    ride_type = params[:ride_type]
+
+    user = User.find_by(id: user_id)
+    if user.nil?
+      return render json: {:message => "user not found"}, status: :not_found
+    else
+      user.ride_searches.create!(departure_place: start_carpool, destination: end_carpool, departure_time: ride_date, ride_type: ride_type)
+    end
 
     begin
       results = []
       Ride.all.each do |ride|
+
         duration = extra_duration(ride[:departure_place], ride[:destination], start_carpool, end_carpool)
         #if duration < ride[:duration]/10 && (ride_date-ride[:departure_time])/3600<24
         ride_attributes = ride.attributes
@@ -19,7 +29,6 @@ class Api::V2::SearchesController < ApiController
         results.append(ride_attributes)
         #end
       end
-
       render json: {:rides => results}, status: :ok
     rescue
       render json: {:rides => nil}, status: :bad_request
