@@ -1,7 +1,7 @@
 class Api::V2::RequestsController < ApiController
   respond_to :xml, :json
 
-  # GET /api/v1/rides/1/requests
+  # GET /api/v2/rides/1/requests
   def index
     ride = Ride.find_by(id: params[:ride_id])
     return respond_with ride: [], status: :not_found if ride.nil?
@@ -22,7 +22,7 @@ class Api::V2::RequestsController < ApiController
     end
   end
 
-  # PUT /api/v1/rides/:ride_id/requests?passenger_id=X&departure_place=Y&destination=Z
+  # PUT /api/v2/rides/:ride_id/requests?passenger_id=X&departure_place=Y&destination=Z
   def update
     # if driver confirmed a ride then add a new passenger, if not then just delete the request
     ride = Ride.find_by(id: params[:ride_id])

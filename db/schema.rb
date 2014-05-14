@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140507061506) do
+ActiveRecord::Schema.define(version: 20140511080139) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -175,6 +175,16 @@ ActiveRecord::Schema.define(version: 20140507061506) do
     t.string   "request_to"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "ride_searches", force: true do |t|
+    t.integer  "user_id"
+    t.string   "departure_place"
+    t.string   "destination"
+    t.datetime "departure_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "ride_type"
   end
 
   create_table "rides", force: true do |t|

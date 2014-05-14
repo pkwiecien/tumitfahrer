@@ -59,6 +59,7 @@ class User < ActiveRecord::Base
   has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
 
   has_many :devices
+  has_many :ride_searches
 
   # TODO: avatars
   ## https://github.com/thoughtbot/paperclip
