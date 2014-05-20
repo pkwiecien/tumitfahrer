@@ -14,6 +14,29 @@ Tumitfahrer::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+ # Show full error reports and disable caching.
+  config.consider_all_requests_local       = true
+  config.action_controller.perform_caching = false
+
+  # Don't care if the mailer can't send.
+# ActionMailer Config
+config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+config.action_mailer.delivery_method = :smtp
+# change to true to allow email to be sent during development
+config.action_mailer.perform_deliveries = true
+config.action_mailer.raise_delivery_errors = true
+config.action_mailer.default :charset => "utf-8"
+
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+  address:              'smtp.gmail.com',
+  port:                 587,
+  domain:               'tumitfahrer.de',
+  user_name:            ENV["EMAIL"],
+  password:             ENV["PASSWORD"],
+  authentication:       'plain',
+  enable_starttls_auto: true  }
+
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
