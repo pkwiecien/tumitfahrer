@@ -1,6 +1,7 @@
 class Api::V2::RidesController < ApiController
-  respond_to :json, :xml
-  # before_action :restrict_access, only: [:index, :create]
+  respond_to :json, :xml, :html
+  before_filter :check_format, only: [:show]
+  #before_filter :restrict_access, only: [:index, :create]
 
   # GET /api/v2/rides
   def index
@@ -48,8 +49,9 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides/:id
   def show
-    @ride = Ride.find(params[:id])
+    @ride = Ride.find_by(:id => params[:id])
     if @ride.nil?
+      @ride = {:ride => nil}
       respond_with @ride, status: :not_found
     else
       respond_with @ride, status: :ok
@@ -138,6 +140,15 @@ class Api::V2::RidesController < ApiController
       http.request(req)
     }
     return JSON.parse(res.body)
+  end
+
+  def check_format
+    puts request.format.inspect
+    if request.format.to_s == "application/json"
+      puts "hello"
+    else
+      puts "world"
+    end
   end
 
 end
