@@ -21,7 +21,6 @@ gem 'grocer'
 gem 'houston', '~> 2.0.2', :require => 'houston'
 # used for parsing xml requests
 gem 'actionpack-xml_parser'
-#gem "paperclip", "~> 4.1"
 gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
@@ -75,6 +74,9 @@ group :doc do
 end
 
 gem 'active_model_serializers'
+# for storing images
+gem 'paperclip'
+gem 'aws-sdk'
 
 # Use unicorn as the app server
 # gem 'unicorn'
