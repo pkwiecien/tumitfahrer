@@ -68,16 +68,6 @@ class Api::V2::RidesController < ApiController
       @ride = current_user.rides_as_driver.create!(ride_params)
 
       unless @ride.nil?
-        unless params[:ride][:project_id].nil?
-          @ride.assign_project(Project.find_by(id: params[:ride][:project_id]))
-        end
-        logger.debug "Current user #{current_user} and ride: #{@ride}"
-
-        logger.debug "Found: #{current_user.relationships.find_by(ride_id: @ride.id)}"
-
-        current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
-        logger.debug "updated"
-
         # update distance and duration
         # @ride.update_attributes(distance: distance(@ride[:departure_place], @ride[:destination]))
         # @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
