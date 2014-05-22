@@ -1,6 +1,3 @@
-//    $("p") get <p> element
-//    $("div.intro") get all <p> elements which class="intro"
-//    $("p#demo") get all <p> elements which id="demo"
 $(document).ready(function () {
     $("#new_user").validate({
         debug: false,
@@ -27,7 +24,7 @@ $(document).ready(function () {
             //    error.insertBefore("#user_department");
             //} else {
             error.insertBefore(element);
-            ///error.appendTo( element.parent() );
+            //error.appendTo( element.parent() );
             //}
         },
         messages: {
