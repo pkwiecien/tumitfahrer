@@ -28,9 +28,10 @@ gem 'newrelic_rpm'
 
 group :development, :production do
   # postgres database
-  # gem 'pg', '0.15.1'
-  gem 'mysql2'
+  gem 'pg', '0.15.1'
   gem 'rails_12factor', '0.0.2'
+  # gem 'mysql2'
+
 end
 
 group :development do
