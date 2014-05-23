@@ -61,11 +61,13 @@ class Api::V2::RidesController < ApiController
   # POST /api/v2/rides/
   def create
     begin
-      # TODO: potentially replace user_id with token
+      logger.debug "user api key is: #{request.headers[:apiKey]}"
       current_user = User.find_by(api_key: request.headers[:apiKey])
+      logger.debug "found user #{current_user}"
       return render json: {:ride => nil}, status: :bad_request if current_user.nil?
 
       @ride = current_user.rides_as_driver.create!(ride_params)
+      current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
 
       unless @ride.nil?
         # update distance and duration
@@ -73,6 +75,7 @@ class Api::V2::RidesController < ApiController
         # @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
 
         logger.debug "returning #{@ride}"
+        logger.debug "returning driver #{@ride.driver}"
 
         respond_with @ride, status: :created
       else
