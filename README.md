@@ -6,6 +6,12 @@ TUMitfahrer
 New backend for TUMitfahrer App build with Ruby on Rails.
 Any endpoint such as Android, iOS, Pebble apps can communicate with this backend via JSON or XML format.
 
+System overview
+-------------
+
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/develop/public/system_diagram.png
+"System overview showing interaction of clients with the server")
+
 
 Architecture of TUMitfahrer
 ---------------------------
