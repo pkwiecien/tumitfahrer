@@ -6,11 +6,17 @@ TUMitfahrer
 New backend for TUMitfahrer App build with Ruby on Rails.
 Any endpoint such as Android, iOS, Pebble apps can communicate with this backend via JSON or XML format.
 
+System overview
+-------------
+
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/develop/public/system_diagram.png
+"System overview showing interaction of clients with the server")
+
 
 Architecture of TUMitfahrer
 ---------------------------
 
-![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/architecture.png
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/architecture2.png
 "Domain model of TUMitfahrer showing all classes and relationships between them")
 
 
@@ -67,7 +73,7 @@ Type | URI | Explanation
 --- | --- | ---
 *GET* | `/users` | get all users
 *GET* | `/users/1` | get user no. 1
-*POST* | `/users` | create a new user, required parameters as json: `{"user" : { email : "xyz@tum.de", first_name: "Name", last_name: "Name", department: departmentNo(integer), is_student: boolean, password: "password", password_confirmation: "password"}}`  where departmentNo is a number of faculty (faculties are taken is alpabethic order from : http://www.tum.de/en/about-tum/faculties/, so e.g. Architecture has departmentNo `0`)
+*POST* | `/users` | create a new user, required parameters as json: `{"user" : { email : "xyz@tum.de", first_name: "Name", last_name: "Name", department: departmentNo(integer)}}`  where departmentNo is a number of faculty (faculties are taken is alpabethic order from : http://www.tum.de/en/about-tum/faculties/, so e.g. Architecture has departmentNo `0`)
 *PUT* | `/users/1` | update user no. 1.   Optional parameters `phone_number (string), rank (integer), exp (float), car (string), unbound_contributions (integer), department (integer), hashed_password (string), hashed_password_confirmation (string), gamification (boolean)`
 
 
