@@ -33,7 +33,9 @@ Tumitfahrer::Application.routes.draw do
       resources :users do
         resources :devices
         match '/rides', to: 'rides#get_user_rides', via: :get
-      end
+        resources :rides do
+          resources :requests
+        end        end
       resources :rides do
         resources :requests
       end

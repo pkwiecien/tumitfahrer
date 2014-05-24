@@ -58,13 +58,12 @@ class Api::V2::RidesController < ApiController
     end
   end
 
-  # POST /api/v2/rides/
+  # POST /api/v2/users/11/rides/
   def create
     begin
-      logger.debug "user api key is: #{request.headers[:apiKey]}"
+      current_user_db = User.find_by(id: params[:user_id])
       current_user = User.find_by(api_key: request.headers[:apiKey])
-      logger.debug "found user #{current_user}"
-      return render json: {:ride => nil}, status: :bad_request if current_user.nil?
+      return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
 
       @ride = current_user.rides_as_driver.create!(ride_params)
       current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
