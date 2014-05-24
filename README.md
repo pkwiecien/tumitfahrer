@@ -13,11 +13,11 @@ System overview
 "System overview showing interaction of clients with the server")
 
 
-Architecture of TUMitfahrer
+Development process of TUMitfahrer
 ---------------------------
 
-![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/architecture2.png
-"Domain model of TUMitfahrer showing all classes and relationships between them")
+![Alt text](https://raw.githubusercontent.com/pkwiecien/tumitfahrer/master/public/development_process_diagram.png
+"High level overview of the development process of TUMitfahrer")
 
 
 Domain Model
@@ -25,20 +25,21 @@ Domain Model
 
 Domain model is shown on the class diagram below (click to zoom):
 ![Alt text](https://github.com/pkwiecien/tumitfahrer/raw/master/public/ClassDiagram.png
-"High level architecture diagram of TUMitfahrer")
+"Domain model of TUMitfahrer showing all classes and relationships between them")
 
-Roadmap 
+Roadmap: 
 -------
 
-#### Done
-* backend in Rails (Pawel)
-* integration of backend with existing Android app (Pawel)
+Elements being implemented:
 
-#### To be done
-* new iOS app with new features (Pawel)
-* web app in AngularJS/Backbone/similar that uses Rails backend (tba)
-* Android app polish, refactoring and new features (tba)
-* other cool ideas such as Pebble app
+* backend in Rails and REST API (Pawel)
+* integration of backend with existing Android app (Pawel)
+* iOS app (Pawel)
+* web app using Haml/jQuery (Anuradha, Shahid)
+* Android app (Abhijith, Amr)
+* Pebble app and VisioM intergration(Saqib, Behroz)
+* Test framework (Dansen)
+* UI and UX (Lukasz)
 
 
 API Reference
