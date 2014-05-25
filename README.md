@@ -100,6 +100,8 @@ Type | URI | Explanation
 
 #### Messages
 
+**still needs to be implemented in api/v2**
+
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/users/1/messages` | get all messages of user no. 1. Parameters: `receiver_id (integer)`
