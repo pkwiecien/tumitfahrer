@@ -1,56 +1,45 @@
 class Api::V2::UsersController < ApiController
   respond_to :xml, :json
 
+  # GET /api/v2/users/
   def index
     @users = User.all
-
-   respond_to do |format|
-      format.json { render json: @users}
-      format.xml { render xml: @users }
-    end
+    respond_with @users, status: :ok
   end
 
+  # GET /api/v2/users/:id
   def show
-
     # check if there an authentication header, if so consume it and return more
     if !request.headers[:Authorization].nil?
       email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
     end
 
+    # if user could not be found by id then find him by email
     @user = User.find_by(id: params[:id])
     if !@user
       @user = User.find_by(email: email)
     end
 
     if @user && !email.nil? && !hashed_password.nil? && @user.authenticate(hashed_password)
-
-      logger.debug "WE ARE HERE : #{email} and #{hashed_password} and #{@user}"
-      respond_to do |format|
-        format.json { render json: @user }
-        format.xml { render xml: {profil: {mail: @user[:email], username: @user[:email], vname: @user[:first_name],
-                                           nname: @user[:last_name], student: "true", fak: "4", fahrten_fahrer: "", fahrzeug: "",
-                                           fahrten_mitfahrer: "", bewertung_ges: "", bewertungen_fahrer: "", bewertungen_mitfahrer: "",
-                                           fahrt_angeboten: "0", fahrt_abgesagt: "1", fahrt_teilgenommen: ""}} }
-      end
+      respond_with @user, status: :ok
     else
-      respond_to do |format|
-        format.json { render json: @user }
-        format.xml { render xml: {:email => @user[:email]} }
-      end
+      respond_with status: :bad_request, message: "Could not retrieve the user"
     end
   end
 
   # POST /api/v2/users
   def create
+    # generate new password for a new user
     new_password = User.generate_new_password
     hashed_password = User.generate_hashed_password(new_password)
     @user = User.new(user_params.merge(password: hashed_password, password_confirmation: hashed_password))
 
     if @user.save
+      # if user was created successfully then send a welcome email
       UserMailer.welcome_email(@user, new_password).deliver
 
       respond_to do |format|
-        format.json { render json: {:status => :created, :message => "User created"} }
+        format.json { render json: {:message => "User created"}, status: :created }
         format.xml { render xml: {:status => :created, :message => "User created" } }
       end
     else
@@ -61,7 +50,41 @@ class Api::V2::UsersController < ApiController
     end
   end
 
+  # PUT /api/v2/users/:id
+  def update
+    logger.debug "Authenticating"
+    if !request.headers[:Authorization].nil?
+      email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
+    end
+
+    logger.debug "username: #{email}, #{hashed_password}"
+
+    @user = User.find_by(id: params[:id])
+    logger.debug "trying to find user with id: #{params[:id]}, user: #{@user[:password_digest]} and password #{@user[:password]}"
+
+    if hashed_password.nil? || !@user.authenticate(hashed_password)
+      return respond_with status: :bad_request, message: "Could not retrieve the user" if @user.nil?
+    end
+
+    logger.debug "new password digest: #{@user[:password_digest]} "
+
+    logger.debug "user found by id #{params[:id]}, let's check if authenthicated: #{@user.authenticate(hashed_password)}"
+
+    begin
+      @user.update_attributes!(update_params)
+
+      logger.debug "password changed for user: #{@user.to_s}"
+      respond_with @user, status: :ok
+    rescue
+      logger.debug "could not change password"
+      respond_with status: :bad_request, message: "Could not retrieve the user"
+    end
+
+  end
+
   private
+
+  # TODO: introduce authentication by api key
   def authenticate_user
     @current_user = User.find_by_api_key(params[:api_key])
   end
@@ -72,6 +95,10 @@ class Api::V2::UsersController < ApiController
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :department, :is_student)
+  end
+
+  def update_params
+    params.require(:user).permit(:phone_number, :car, :password, :password_confirmation)
   end
 
 end

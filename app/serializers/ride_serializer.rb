@@ -1,7 +1,7 @@
 class RideSerializer < ActiveModel::Serializer
   attributes :id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time,
-   :project_id, :price, :realtime_departure_time, :realtime_km, :driver_id, :requests, :passengers,
-   :contribution_mode, :is_paid, :duration, :pending_payments
+   :price, :realtime_departure_time, :realtime_km, :driver, :requests, :passengers,
+   :contribution_mode, :is_paid, :duration, :pending_payments, :distance, :ride_type, :created_at, :updated_at
 
   def project_id
     unless object.project.nil?
@@ -11,11 +11,11 @@ class RideSerializer < ActiveModel::Serializer
     end
   end
 
-  def driver_id
+  def driver
     unless object.driver.nil?
-      object.driver.id
+      object.driver
     else
-      -1
+      nil
     end
   end
 
@@ -24,19 +24,7 @@ class RideSerializer < ActiveModel::Serializer
   end
 
   def passengers
-    relationships = Relationship.where(driver_ride_id: object.id, is_driving: false)
-    results = []
-    relationships.each do |r|
-      ride = Ride.find_by(id: r.ride_id)
-      passenger = {}
-      passenger[:id] = r.user_id
-      passenger[:realtime_km] = ride.realtime_km
-      passenger[:departure_place] =  ride.departure_place
-      passenger[:destination] = ride.destination
-      passenger[:contribution_mode] = ride.contribution_mode
-      results.append(passenger)
-    end
-    results
+    object.passengers_of_ride
   end
 
   def requests

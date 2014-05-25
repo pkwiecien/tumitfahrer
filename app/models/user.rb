@@ -25,6 +25,7 @@ require 'securerandom'
 
 class User < ActiveRecord::Base
 
+  # Active Record relationships
   has_many :relationships, foreign_key: :user_id
   has_many :rides, through: :relationships, source: :ride, class_name: "Ride", dependent: :delete_all
   has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'})},
@@ -58,15 +59,25 @@ class User < ActiveRecord::Base
   has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
 
   has_many :devices
+  has_many :ride_searches
 
-  ## https://github.com/thoughtbot/paperclip
-  #has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
-  #validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+  # user's avatar
+  has_attached_file :avatar, styles: {
+      thumb: '100x100>',
+      square: '200x200#',
+      medium: '300x300>'
+  }
 
+  # Validate the attached image is image/jpg, image/png, etc
+  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+
+
+  # filters
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
   before_save :default_values
 
+  # validators
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 20}
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -74,6 +85,7 @@ class User < ActiveRecord::Base
   has_secure_password
   validates :password, length: {minimum: 6}
 
+  # generate remember token used by web app to remember user session
   def User.new_remember_token
     SecureRandom.urlsafe_base64
   end
@@ -90,16 +102,13 @@ class User < ActiveRecord::Base
     SecureRandom.hex(4)
   end
 
+  # each password stored in DB is encrypted with SHA512 and salt
   def User.generate_hashed_password(password)
     Digest::SHA512.hexdigest(password+Tumitfahrer::Application::SALT)
   end
 
   def send_message!(other_user, content)
     self.sent_messages.create!(sender_id: self.id, receiver_id: other_user.id, content: content)
-  end
-
-  def to_s
-    "#{self.first_name} #{self.last_name}, #{self.password_digest}"
   end
 
   def become_passenger!(new_ride_id)
@@ -153,6 +162,19 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  def to_s
+    "#{self.first_name} #{self.last_name}, #{self.password_digest}"
+  end
+
+  def compute_avg_rating
+    num_all_rating = self.ratings_received.count
+    if num_all_rating == 0
+      0
+    else
+      self.ratings_received.where('rating_type=?', 1)/num_all_rating
+    end
+  end
+
   private
 
   def create_remember_token
@@ -169,6 +191,7 @@ class User < ActiveRecord::Base
     self.unbound_contributions ||= 0
     self.gamification ||= true
     self.is_student ||= true
+    self.rating_avg ||= 0.0
     nil
   end
 

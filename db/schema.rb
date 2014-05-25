@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323075144) do
+ActiveRecord::Schema.define(version: 20140511080139) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,16 @@ ActiveRecord::Schema.define(version: 20140323075144) do
     t.datetime "updated_at"
   end
 
+  create_table "ride_searches", force: true do |t|
+    t.integer  "user_id"
+    t.string   "departure_place"
+    t.string   "destination"
+    t.datetime "departure_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "ride_type"
+  end
+
   create_table "rides", force: true do |t|
     t.string   "departure_place"
     t.string   "destination"
@@ -193,8 +203,10 @@ ActiveRecord::Schema.define(version: 20140323075144) do
     t.datetime "realtime_arrival_time"
     t.integer  "contribution_mode"
     t.boolean  "is_paid"
+    t.integer  "rideType"
     t.boolean  "is_finished"
     t.float    "distance"
+    t.integer  "ride_type"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
@@ -243,6 +255,7 @@ ActiveRecord::Schema.define(version: 20140323075144) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.boolean  "gamification"
+    t.float    "rating_avg"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

@@ -18,14 +18,12 @@ gem 'gcm', :require => "gcm"
 # gem for push notificaitons to iOS devices
 gem 'grocer'
 # gem for push notificaitons to iOS devices
-gem 'houston', :require => 'houston'
+gem 'houston', '~> 2.0.2', :require => 'houston'
 # used for parsing xml requests
 gem 'actionpack-xml_parser'
-#gem "paperclip", "~> 4.1"
-gem "httparty", "~> 0.13.0"
+gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
-
 
 group :development, :production do
   # postgres database
@@ -58,7 +56,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'execjs'
+gem 'therubyracer', :platforms => :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -75,6 +74,9 @@ group :doc do
 end
 
 gem 'active_model_serializers'
+# for storing images
+gem 'paperclip'
+gem 'aws-sdk'
 
 # Use unicorn as the app server
 # gem 'unicorn'
