@@ -98,20 +98,6 @@ Type | URI | Explanation
 *GET* | `/users/1/devices` | get all devices of the user no. 1
 *POST* | `/users/1/devices` | create a new device for the user no. 1. Parameters `token (string), enabled (boolean), platform (string)`. Platform is one of: `android, ios, windows`
 
-#### Friend Requests
-
-Type | URI | Explanation
---- | --- | ---
-*GET* | `/users/1/friend_requests` | get all friend request of the user no. 1
-*POST* | `/users/1/friend_requests` | create new friend request of the user no. 1. Parameters: `to_user_id (integer)`
-*PUT* | `/users/1/friend_requests/2` | handle a friend request between user no. 1 and user no 2. Parameter: `accept (boolean)`. Both users become friends if :accept is true and at the end friend request is destroyed.
-
-#### Friends
-
-Type | URI | Explanation
---- | --- | ---
-*GET* | `/users/1/friends` | get all friends of user no. 1
-
 #### Messages
 
 Type | URI | Explanation
@@ -123,30 +109,16 @@ Type | URI | Explanation
 
 #### Passengers
 
+**still needs to be implemented in api/v2**
+
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/rides/1/passengers` | get all passenger of the ride no. 1
 *PUT* | `/rides/1/passengers/2` | update a ride for a passenger no 2. Parameters: `contribution_mode, realtime_km`
 
-#### Payments
-
-Type | URI | Explanation
---- | --- | ---
-*GET* | `/users/1/payments` | get all payments of the user no. 1. Optional parameter: `pending=true (boolean)`
-*POST* | `/users/1/payments` | create a new payment from user no. 1. Required parameters: `ride_id (integer), amount (float), from_user_id (integer)`
-
-
-#### Projects
-
-Type | URI | Explanation
---- | --- | ---
-*GET* | `/projects` | get all projects. Optional parameters: `offered=true (boolean)`
-*GET* | `/projects/1` | get project no. 1
-*POST* | `/users/1/projects/` | create a new project with user no. 1 as owner. Parameters: `fundings_target (float), description (string), title (string), fundings_target (float)`
-*PUT* | `/projects/1` | update project no. 1. Parameters: `phase, title, description`
-
-
 #### Ratings
+
+**still needs to be implemented in api/v2**
 
 Type | URI | Explanation
 --- | --- | ---
@@ -160,40 +132,21 @@ Type | URI | Explanation
 *POST* | `/rides/1/requests` | create a new ride request for a ride no. 1. Parameters: `user_id (integer), requested_from (string), requested_to (string)`
 *PUT* | `/rides/1/requests` | handle ride request for a ride no. 1. Parameters: `passenger_id (integer), departure_place (string), destination (string), confirmed (boolean)`
 
-#### Contributions
-
-Type | URI | Explanation
---- | --- | ---
-*GET* | `/users/1/contributions` | get all contributions of the user no. 1
-*POST* | `/users/1/contributions` | create a new contribution from user no 1. Parameters `amount (float), project_id (integer)`
-*POST* | `/users/1/rides/2/contributions` | create a new contribution from user no. 1 for ride no. 2
-*DELETE* | `/users/1/contributions/2` | delete a contribution from user  no. 1 for project no. 2
-
 #### Search
 
 Type | URI | Explanation
 --- | --- | ---
-*POST* | `/search` | search for a ride. Parameters `start_carpool (string), end_carpool (string), ride_date (datetime)`
+*POST* | `/search` | search for a ride. Parameters `start_carpool (string), end_carpool (string), ride_date (datetime), ride_type (integer)`
 
 
-API v2
+Discarded API calls:
+---------------------------
 
-#### Users
-
-Type | URI | Explanation
---- | --- | ---
-*GET* | /users | get all users
-*GET* | /users/:id | get user with id 1
-*POST* | /users | create new user
-*PUT* | /users/:id | update user with id 1
-*DELETE* | /users/:id | delete user with id 1
-
-#### Rides
-
-Type | URI | Explanation
---- | --- | ---
-
-
+* friend_requests
+* friends
+* payments
+* contributions
+* projects
 
 Contributions
 -------------
