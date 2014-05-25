@@ -18,7 +18,7 @@ gem 'gcm', :require => "gcm"
 # gem for push notificaitons to iOS devices
 gem 'grocer'
 # gem for push notificaitons to iOS devices
-gem 'houston', :require => 'houston'
+gem 'houston', '~> 2.0.2', :require => 'houston'
 # used for parsing xml requests
 gem 'actionpack-xml_parser'
 #gem "paperclip", "~> 4.1"
@@ -26,11 +26,12 @@ gem "httparty", "~> 0.13.0"
 # for application monitoring
 gem 'newrelic_rpm'
 
-
 group :development, :production do
   # postgres database
   gem 'pg', '0.15.1'
   gem 'rails_12factor', '0.0.2'
+  #gem 'mysql2'
+
 end
 
 group :development do
@@ -58,10 +59,14 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'execjs'
+gem 'therubyracer', :platforms => :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+
+gem 'therubyracer'
+#gem 'angularjs-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'

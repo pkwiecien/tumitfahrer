@@ -29,7 +29,7 @@ class Api::V1::SearchesController < ApiController
 
   private
 
-  # get the duration of the ride
+  # get duration of the ride
   def extra_duration(start_point, end_point, start_carpool, end_carpool)
     result = prepare_url(start_point, end_point, start_carpool, end_carpool)
     return result["routes"].first["legs"].first["duration"]["value"]/60
