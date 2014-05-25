@@ -13,6 +13,7 @@ class Api::V2::SearchesController < ApiController
     if user.nil?
       return render json: {:message => "user not found"}, status: :not_found
     else
+      # add this search to table ride_searches which is displayed as a timeline
       user.ride_searches.create!(departure_place: start_carpool, destination: end_carpool,
                                  departure_time: ride_date, ride_type: ride_type)
     end
@@ -20,14 +21,21 @@ class Api::V2::SearchesController < ApiController
     begin
       results = []
       Ride.all.each do |ride|
+        # get duration of detour from google api, currently not working very well
 
         duration = extra_duration(ride[:departure_place], ride[:destination], start_carpool, end_carpool)
+
         #if duration < ride[:duration]/10 && (ride_date-ride[:departure_time])/3600<24
         ride_attributes = ride.attributes
         ride_attributes[:detour] = duration
-        ride_attributes[:driver_id] = ride.driver.id
+        # if driver is nil then it means that the ride is ride request created by potential passenger
+        if !ride.driver.nil?
+          ride_attributes[:driver_id] = ride.driver.id
+        else
+          ride_attributes[:driver_id] = nil
+        end
         results.append(ride_attributes)
-        #end
+
       end
       render json: {:rides => results}, status: :ok
     rescue
