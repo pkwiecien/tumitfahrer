@@ -1,7 +1,10 @@
 class Api::V2::SessionsController < ApiController
   respond_to :json, :xml
 
+  # POST /api/v2/sessions
+  # create new session for the user
   def create
+    # retrieve encrypted credentials
     email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
     logger.debug "authenticating user for #{email} and #{hashed_password}"
 
@@ -13,16 +16,13 @@ class Api::V2::SessionsController < ApiController
       end
 
       logger.debug "logging in user #{@user.to_s}"
-      respond_to do |format|
-        format.json { render json: @user, serializer: UserSerializer }
-        format.xml { render xml: {:attempt => "true", "user_id" => "31"} }
-      end
+      respond_with @user, status: :ok
     else
       logger.debug "could not log in user #{@user.to_s}"
 
       respond_to do |format|
-        format.json { render json: {:message => "User couldn't be added to the database"} }
-        format.xml { render xml: {:attempt => "dupa", :user_id => "0"} }
+        format.json { render json: {status: :bad_request, :message => "User couldn't be added to the database"} }
+        format.xml { render xml: {status: :bad_request, :message => "User couldn't be added to the database"} }
       end
 
     end
