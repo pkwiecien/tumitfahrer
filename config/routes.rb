@@ -60,6 +60,12 @@ Tumitfahrer::Application.routes.draw do
   match "/discover", to: "static_pages#discover", via: 'get'
 
 
+  #map.check_email "users/check_email", :controller => "users", :action => "check_email"
+  #map.resources :users
+
+  #map.resources :users, :collection => { :check_email => :get }
+
+
   # HOW TO:
 
   # The priority is based upon order of creation: first created -> highest priority.
