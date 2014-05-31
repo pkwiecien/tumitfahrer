@@ -4,6 +4,17 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:edit, :update, :show]
   before_action :right_user, only: [:edit, :update]
 
+  def check_email
+    @user = User.find_by_email(params[:user][:email])
+
+    respond_to do |format|
+      format.json { render :json => !@user }
+    end
+  end
+
+
+
+
   def new
     if signed_in?
       redirect_to current_user

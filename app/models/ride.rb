@@ -38,7 +38,7 @@ class Ride < ActiveRecord::Base
   before_save :default_values
 
   # validators
-  validates :departure_place, :departure_time, :meeting_point, :free_seats, presence: true
+  validates :departure_place, :departure_time, presence: true
 
   # get a driver of a ride
   def driver # should return only one row

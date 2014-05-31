@@ -3,6 +3,7 @@ class Api::V2::SearchesController < ApiController
 
   # POST /api/v2/search?start_carpool=X&end_carpool=Y&ride_date=Z
   # create new search query
+  # page them with 6 at the time
   def create
     start_carpool = params[:start_carpool]
     end_carpool = params[:end_carpool]
