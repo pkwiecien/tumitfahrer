@@ -26,14 +26,12 @@ config.action_mailer.delivery_method = :smtp
 config.action_mailer.smtp_settings = {
   address:              'smtp.gmail.com',
   port:                 587,
-  #domain:               'tumitfahrer.de'
-  domain:		 'gmail.com',
+  #domain:              'tumitfahrer.de'
+  domain:		            'gmail.com',
   user_name:            ENV["EMAIL"],
   password:             ENV["PASSWORD"],
   authentication:       'plain',
   enable_starttls_auto: true  }
-
-
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -45,7 +43,6 @@ config.action_mailer.smtp_settings = {
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
-
   config.log_level = :debug
 
   config.paperclip_defaults = {

@@ -9,8 +9,7 @@ class Api::V2::RidesController < ApiController
 
       campus_rides = Ride.where(ride_type: 0).order(departure_time: :desc).offset(params[:page].to_i*6).limit(6)
       activity_rides = Ride.where(ride_type: 1).order(departure_time: :desc).offset(params[:page].to_i*6).limit(6)
-      ride_requests = Ride.where(ride_type: 2).order(departure_time: :desc).offset(params[:page].to_i*6).limit(6)
-      temp_rides = campus_rides + activity_rides + ride_requests
+      temp_rides = campus_rides + activity_rides
 
       @rides = []
       temp_rides.each do |r|
@@ -65,8 +64,14 @@ class Api::V2::RidesController < ApiController
       current_user = User.find_by(api_key: request.headers[:apiKey])
       return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
 
-      @ride = current_user.rides_as_driver.create!(ride_params)
-      current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
+      if params[:ride] && params[:ride][:passenger]
+        logger.debug "adding as passenger"
+        @ride = current_user.rides_as_passenger.create!(passenger_params)
+      else
+        logger.debug "adding as driver"
+        @ride = current_user.rides_as_driver.create!(ride_params)
+        current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
+      end
 
       unless @ride.nil?
         # update distance and duration
@@ -74,7 +79,6 @@ class Api::V2::RidesController < ApiController
         # @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
 
         logger.debug "returning #{@ride}"
-        logger.debug "returning driver #{@ride.driver}"
 
         respond_with @ride, status: :created
       else
@@ -88,6 +92,7 @@ class Api::V2::RidesController < ApiController
   def destroy
     begin
       ride = Ride.find_by(id: params[:id]).destroy
+      ride.driver
       respond_to do |format|
         format.xml { render xml: {:status => :ok} }
         format.any { render json: {:status => :ok} }
@@ -110,6 +115,10 @@ class Api::V2::RidesController < ApiController
 
   def ride_params
     params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type)
+  end
+
+  def passenger_params
+    params.require(:ride).permit(:departure_place, :destination, :departure_time, :ride_type)
   end
 
   # get distance of the ride from google api
