@@ -65,27 +65,43 @@ class Notification < ActiveRecord::Base
     notifications.each do |notification|  #loop through all the notifications
       message = Notification.get_message(notification)  #get the constructed message based on message type
 
-      platform = notification.user.devices.platform  #get platform and device id
-      device_id = notification.user.devices.token  #get platform and device id
+      devices_list = notification.user.devices
 
-      data = NotificationData.new(message,device_id,platform) #initialize a custom object
+      devices_list.each do |device|
+        platform = device.platform  #get platform and device id
+        device_id = device.token  #get platform and device id
 
-      result << data  #append the object in array and return the array
+        data = NotificationData.new(message,device_id,platform) #initialize a custom object
+
+        result << data  #append the object in array and return the array
+      end
+
+      result  #return the result
+      #platform = notification.user.devices.platform  #get platform and device id
+      #device_id = notification.user.devices.token  #get platform and device id
+
+      #data = NotificationData.new(message,device_id,platform) #initialize a custom object
+
+      #result << data  #append the object in array and return the array
     end #Loop through notifications
   end
 
   def self.get_message(notification)
     case notification.message_type
       when '1'
-        Notification.construct_message_1(notification)
+        Notification.driver_pickup_alert(notification)
       when '2'
-        Notification.construct_message_2(notification)
+        Notification.passenger_ride_alert(notification)
+      when '3'
+        Notification.cancel_ride_alert(notification)
+      when '4'
+        Notification.reservation_cancelled_passenger_alert(notification)
       else
 
     end
   end
 
-  def self.construct_message_1(notification)
+  def self.driver_pickup_alert(notification)
     #2 - Driver Pick-up Alert
     #H=> TuMitfahrer: Alert
     #M=> Reminder for Pickup:
@@ -113,7 +129,7 @@ class Notification < ActiveRecord::Base
     message
   end
 
-  def self.construct_message_2(notification)
+  def self.passenger_ride_alert(notification)
     #Passenger Ride Alert
     #H=> TuMitfahrer: Alert
     #M=> Reminder for Ride:
@@ -134,5 +150,47 @@ class Notification < ActiveRecord::Base
     message = "TumMitFahrer: Alert (Passenger Ride Alert) Time: #{time} Location: #{departure} Driver: #{result}"
 
 
+  end
+
+  def self.cancel_ride_alert(notification)
+    #Cancel ride alert to passengers
+    #H=> TuMitfahrer: Alert
+    #M=> Ride Cancelled:
+    #Driver , has cancelled the ride.
+    #Time: ride
+    #Location:
+    #Reason: due to an unexpected event.
+
+    departure = notification.ride.departure_place
+    time = notification.ride.departure_time
+    user_id = notification.user_id
+    ride_id = notification.ride_id
+
+    ride = Ride.new
+    ride.user_id = user_id
+    ride.id = ride_id
+    result = ride.driver    #get driver  -- Should only return 1 row
+
+    message = "TumMitFahrer: Alert (Ride Cancelled) Driver #{driver}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
+
+
+  end
+
+  def self.reservation_cancelled_passenger_alert(notification)
+    #Reservation cancelled alert to driver
+    #H=> TuMitfahrer: Alert
+    #M=> Reservation Cancelled:
+    #Passenger , is unable to join you.
+    #Time: ride
+    #Location:
+    #Reason: due to an unexpected event.
+
+    departure = notification.ride.departure_place
+    time = notification.ride.departure_time
+    user_id = notification.user_id
+    ride_id = notification.ride_id
+    username = notification.user.last_name + notification.user.first_name
+
+    message = "TumMitFahrer: Alert (Reservation Cancelled) Passenger #{username}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
   end
 end
