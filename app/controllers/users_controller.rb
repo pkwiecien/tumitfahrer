@@ -32,6 +32,9 @@ class UsersController < ApplicationController
   end
 
   def show
+    #TODO: REMOVE THE FOLLOWING CODE JUST FOR TESTING BY BEHROZ
+    @result = Notification.get_notification_list
+    #TODO: END
     @user = User.find_by(id: params[:id])
     @rides = @user.rides.paginate(page: params[:page])
   end

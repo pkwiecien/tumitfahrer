@@ -26,6 +26,10 @@ require 'securerandom'
 class User < ActiveRecord::Base
 
   # Active Record relationships
+
+  #Added by Behroz
+  has_many :notifications
+
   has_many :relationships, foreign_key: :user_id
   has_many :rides, through: :relationships, source: :ride, class_name: "Ride", dependent: :delete_all
   has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'})},

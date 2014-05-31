@@ -23,6 +23,10 @@
 class Ride < ActiveRecord::Base
 
   # Active Record relationships
+
+  #Added by Behroz
+  has_many :notifications
+
   has_many :relationships, dependent: :delete_all
   has_many :passengers, -> { where(relationships: {is_driving: 'false'}) }, :through => :relationships, source: :user
 
