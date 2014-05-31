@@ -25,3 +25,4 @@ doc/
 .idea
 .secret
 /config/initializers/app_env_vars.rb
+/config/certificate/cert_apple_development.pem

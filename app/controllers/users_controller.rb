@@ -1,4 +1,5 @@
 require 'digest/sha2'
+require 'message_sender'
 
 class UsersController < ApplicationController
   before_action :signed_in_user, only: [:edit, :update, :show]
@@ -44,7 +45,9 @@ class UsersController < ApplicationController
 
   def show
     #TODO: REMOVE THE FOLLOWING CODE JUST FOR TESTING BY BEHROZ
-    @result = Notification.get_notification_list
+    #@result = Notification.get_notification_list
+    MessageSender.send_next_batch()
+
     #TODO: END
     @user = User.find_by(id: params[:id])
     @rides = @user.rides.paginate(page: params[:page])

@@ -71,12 +71,11 @@ class Notification < ActiveRecord::Base
         platform = device.platform  #get platform and device id
         device_id = device.token  #get platform and device id
 
-        data = NotificationData.new(message,device_id,platform) #initialize a custom object
+        data = NotificationData.new(notification.id,message,device_id,platform) #initialize a custom object
 
         result << data  #append the object in array and return the array
       end
 
-      result  #return the result
       #platform = notification.user.devices.platform  #get platform and device id
       #device_id = notification.user.devices.token  #get platform and device id
 
@@ -84,6 +83,8 @@ class Notification < ActiveRecord::Base
 
       #result << data  #append the object in array and return the array
     end #Loop through notifications
+
+    result  #return the result
   end
 
   def self.get_message(notification)
