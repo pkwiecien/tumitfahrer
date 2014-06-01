@@ -65,11 +65,9 @@ class Api::V2::RidesController < ApiController
       return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
 
       if params[:ride] && params[:ride][:passenger]
-        logger.debug "adding as passenger"
-        @ride = current_user.rides_as_passenger.create!(passenger_params)
+        @ride = current_user.rides_as_passenger.create!(passenger_params.merge(ride_owner_id: current_user.id))
       else
-        logger.debug "adding as driver"
-        @ride = current_user.rides_as_driver.create!(ride_params)
+        @ride = current_user.rides_as_driver.create!(ride_params.merge(ride_owner_id: current_user.id))
         current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
       end
 
@@ -90,9 +88,11 @@ class Api::V2::RidesController < ApiController
   end
 
   def destroy
+    ride = Ride.find_by(id: params[:id])
+
     begin
       ride = Ride.find_by(id: params[:id]).destroy
-      ride.driver
+
       respond_to do |format|
         format.xml { render xml: {:status => :ok} }
         format.any { render json: {:status => :ok} }
