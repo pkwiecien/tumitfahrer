@@ -104,6 +104,33 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  def rides_as_driver
+    unless user.rides
+      user.rides.joins(:relationships).where(relationships: {is_driving: true})
+    else
+      nil
+    end
+  end
+
+  # ride as passenger is when user is not owner of the ride and is not driving
+  def rides_as_passenger
+    ride_ids = user.relationships.select(:ride_id).where(is_driving: false).joins(:ride).where("rides.user_id <> ?", user.id)
+    unless ride_ids
+      Ride.where("id in (?)", ride_ids)
+    else
+      nil
+    end
+  end
+
+  # ride request is a ride, where user is owner of the ride, however he's not driving
+  def ride_requests
+    unless user.rides
+      user.rides.joins(:relationships).where(relationships: {is_driving: false})
+    else
+      nil
+    end
+  end
+
   def to_s
     "#{self.first_name} #{self.last_name}, #{self.password_digest}"
   end
