@@ -108,10 +108,6 @@ class Api::V2::RidesController < ApiController
     params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type, :is_driving)
   end
 
-  def passenger_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :ride_type)
-  end
-
   # get distance of the ride from google api
   def distance(start_point, end_point)
     result = prepare_url(start_point, end_point)
