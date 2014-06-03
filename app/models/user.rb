@@ -128,10 +128,6 @@ class User < ActiveRecord::Base
   end
 
   def default_values
-    self.rank ||= 0
-    self.exp ||= 0
-    self.unbound_contributions ||= 0
-    self.gamification ||= true
     self.is_student ||= true
     self.rating_avg ||= 0.0
     nil

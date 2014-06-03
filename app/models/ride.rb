@@ -7,16 +7,9 @@
 #  departure_time          :datetime
 #  meeting_point           :string
 #  free_seats              :string
-#  department              :integer
-#  realtime_km             :string
-#  realtime_departure_time :datetime
-#  realtime_arrival_time   :datetime
-#  duration                :float
-#  distance                :float
 #  is_paid                 :boolean
 #  is_finished             :boolean
-#  contribution_mode       :integer          # for gamification
-#  ride_type               :integer          # 0 - campus ride, 1 - activity ride, 2 - ride request
+#  ride_type               :integer          # 0 - campus ride, 1 - activity ride
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 
@@ -47,7 +40,7 @@ class Ride < ActiveRecord::Base
   end
 
   def passengers_of_ride
-    relationships = Relationship.where(driver_ride_id: self.id, is_driving: false)
+    relationships = Relationship.where(ride_id: self.id, is_driving: false)
     results = []
     relationships.each do |r|
       user = User.find_by(id: r.user)
@@ -89,11 +82,6 @@ class Ride < ActiveRecord::Base
   def default_values
     self.is_paid ||= false
     self.price ||= 0
-    self.realtime_km ||= 0
-    self.duration ||= 0
-    self.contribution_mode ||= 0
-    self.is_finished ||= false
-    self.distance ||= 0
     self.ride_type ||= 0
     nil
   end
