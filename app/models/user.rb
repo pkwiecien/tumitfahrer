@@ -27,11 +27,7 @@ class User < ActiveRecord::Base
 
   # Active Record relationships
   has_many :relationships, foreign_key: :user_id
-  has_many :rides, through: :relationships, source: :ride, class_name: "Ride", dependent: :delete_all
-  has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'})},
-           through: :relationships, source: :ride, dependent: :delete_all
-  has_many :rides_as_passenger, -> { where(relationships: {is_driving: 'false'})},
-           through: :relationships, source: :ride
+  has_many :rides
 
   has_many :ratings_given, foreign_key: :from_user_id, class_name: "Rating"
   has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
