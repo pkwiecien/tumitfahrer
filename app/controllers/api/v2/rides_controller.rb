@@ -64,20 +64,12 @@ class Api::V2::RidesController < ApiController
       current_user = User.find_by(api_key: request.headers[:apiKey])
       return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
 
-      if params[:ride] && params[:ride][:passenger]
-        @ride = current_user.rides_as_passenger.create!(passenger_params.merge(ride_owner_id: current_user.id))
-      else
-        @ride = current_user.rides_as_driver.create!(ride_params.merge(ride_owner_id: current_user.id))
-        current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
-      end
+      @ride = Ride.create_ride_by_owner ride_params, current_user
 
       unless @ride.nil?
         # update distance and duration
         # @ride.update_attributes(distance: distance(@ride[:departure_place], @ride[:destination]))
         # @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
-
-        logger.debug "returning #{@ride}"
-
         respond_with @ride, status: :created
       else
         render json: {:ride => nil}, status: :bad_request
@@ -86,7 +78,6 @@ class Api::V2::RidesController < ApiController
       return respond_with json: {:ride => nil}, status: :bad_request
     end
   end
-
   def destroy
     ride = Ride.find_by(id: params[:id])
 
@@ -114,7 +105,7 @@ class Api::V2::RidesController < ApiController
   end
 
   def ride_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type)
+    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type, :is_driving)
   end
 
   def passenger_params

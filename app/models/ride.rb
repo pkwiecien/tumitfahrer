@@ -24,8 +24,6 @@ class Ride < ActiveRecord::Base
 
   # Active Record relationships
   has_many :relationships, dependent: :delete_all
-  has_many :passengers, -> { where(relationships: {is_driving: 'false'}) }, :through => :relationships, source: :user
-
   has_many :users, through: :relationships
   has_one :project
   has_many :requests
@@ -34,7 +32,7 @@ class Ride < ActiveRecord::Base
   before_save :default_values
 
   # validators
-  validates :departure_place, :departure_time, :ride_owner_id, presence: true
+  validates :departure_place, :departure_time, presence: true
 
   # get a driver of a ride
   def driver # should return only one row
@@ -90,6 +88,19 @@ class Ride < ActiveRecord::Base
 
   def to_s
     "Ride id: #{self.id}, from: #{departure_place}, to: #{destination}"
+  end
+
+  def self.create_ride_by_owner ride_params, current_user
+    is_driving =  ride_params[:is_driving].to_i
+    ride_params.delete("is_driving")
+    @ride = current_user.rides.create!(ride_params)
+    if @ride.save
+      @ride.relationships.create!(user: current_user, is_driving: is_driving)
+      if @ride.save
+        return @ride
+      end
+    end
+    return nil
   end
 
   private
