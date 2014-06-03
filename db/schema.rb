@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140601145949) do
+ActiveRecord::Schema.define(version: 20140603165130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,7 +161,6 @@ ActiveRecord::Schema.define(version: 20140601145949) do
     t.boolean  "is_driving"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "driver_ride_id"
   end
 
   add_index "relationships", ["ride_id"], name: "index_relationships_on_ride_id", using: :btree
@@ -171,8 +170,6 @@ ActiveRecord::Schema.define(version: 20140601145949) do
   create_table "requests", force: true do |t|
     t.integer  "ride_id"
     t.integer  "passenger_id"
-    t.string   "requested_from"
-    t.string   "request_to"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -196,18 +193,11 @@ ActiveRecord::Schema.define(version: 20140601145949) do
     t.string   "meeting_point"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "realtime_km"
     t.float    "price"
-    t.datetime "realtime_departure_time"
-    t.float    "duration"
-    t.datetime "realtime_arrival_time"
-    t.integer  "contribution_mode"
     t.boolean  "is_paid"
     t.integer  "rideType"
-    t.boolean  "is_finished"
     t.float    "distance"
     t.integer  "ride_type"
-    t.integer  "ride_owner_id"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
@@ -248,14 +238,10 @@ ActiveRecord::Schema.define(version: 20140601145949) do
     t.boolean  "admin"
     t.string   "api_key"
     t.boolean  "is_student"
-    t.integer  "rank"
-    t.float    "unbound_contributions"
-    t.integer  "exp"
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.boolean  "gamification"
     t.float    "rating_avg"
   end
 

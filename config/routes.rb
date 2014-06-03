@@ -7,16 +7,9 @@ Tumitfahrer::Application.routes.draw do
       resources :users do
         match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
-          match '/contributions', to: 'contributions#contribute_to_ride', via: :post
-          resources :contributions
           resources :requests
         end
         resources :devices
-        resources :payments
-        resources :friends
-        resources :friend_requests
-        resources :contributions
-        resources :projects
         resources :ratings
         resources :messages
       end

@@ -32,24 +32,6 @@ class User < ActiveRecord::Base
   has_many :ratings_given, foreign_key: :from_user_id, class_name: "Rating"
   has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
 
-  has_many :payments_given, foreign_key: :from_user_id, class_name: "Payment"
-  has_many :payments_received, foreign_key: :to_user_id, class_name: "Payment"
-
-  has_many :contributions
-  has_many :offered_projects, foreign_key: :owner_id, class_name: "Project", source: :project
-  has_many :contributed_projects, through: :contributions, class_name: "Project", source: :project
-
-  has_many :friendships
-  has_many :friends, through: :friendships, source: :friend
-
-  has_many :friendship_requests, foreign_key: :from_user_id
-  has_many :sent_friendship_requests, foreign_key: :from_user_id, class_name: "FriendshipRequest" # requests received by this user from other users
-  has_many :pending_friends, through: :friendship_requests, source: :to_user, class_name: "User"
-
-  has_many :reverse_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest"
-  has_many :received_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest" #this user sends a request to another user
-  has_many :requesting_friends, through: :reverse_friendship_requests, source: :from_user, class_name: "User"
-
   has_many :messages
   has_many :sent_messages, foreign_key: :sender_id, class_name: "Message"
   has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
@@ -66,7 +48,6 @@ class User < ActiveRecord::Base
 
   # Validate the attached image is image/jpg, image/png, etc
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
-
 
   # filters
   before_create :create_remember_token, :generate_api_key
@@ -109,41 +90,6 @@ class User < ActiveRecord::Base
 
   def become_passenger!(new_ride_id)
     self.relationships.create!(ride_id: new_ride_id)
-  end
-
-  def friend?(other_user)
-    friendships.find_by(friend_id: other_user.id)
-  end
-
-  def befriend!(other_user)
-    friendships.create!(friend_id: other_user.id)
-  end
-
-  def unfriend!(other_user)
-    friendships.find_by(friend_id: other_user.id).destroy
-  end
-
-  def send_friend_request!(to_user)
-    self.sent_friendship_requests.create!(to_user_id: to_user.id, from_user_id: self.id)
-  end
-
-  def handle_friend_request(other_user, shouldAccept)
-    logger.debug "Accepting friendship from #{self.id} to other user: #{other_user.id}"
-    if shouldAccept == true
-      self.befriend!(other_user)
-    end
-    friendship = FriendshipRequest.find_by(from_user_id: other_user.id, to_user_id: self.id)
-    unless friendship.nil?
-      friendship.destroy
-    end
-  end
-
-  def pending_payments
-    self.rides_as_passenger.where(is_paid: false)
-  end
-
-  def new_project()
-    Project.create(owner_id: self.id, )
   end
 
   def request_ride!(ride, from, to)

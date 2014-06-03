@@ -25,7 +25,6 @@ class Ride < ActiveRecord::Base
   # Active Record relationships
   has_many :relationships, dependent: :delete_all
   has_many :users, through: :relationships
-  has_one :project
   has_many :requests
 
   # filters
@@ -43,25 +42,8 @@ class Ride < ActiveRecord::Base
     result
   end
 
-  def assign_project(project)
-    self.project = project
-  end
-
   def request!(passenger, requested_from, request_to)
     self.requests.create!(passenger_id: passenger.id, requested_from: requested_from, request_to: request_to)
-  end
-
-  def pending_payments
-    result = []
-    self.relationships.where('driver_ride_id=?', self.id).each do |r|
-      if r.ride[:is_paid] == false
-        payment = {}
-        payment[:ride_id] = self.id
-        payment[:driver_id] = r.ride.driver.id
-        result.append(payment)
-      end
-    end
-    result
   end
 
   def passengers_of_ride
@@ -74,7 +56,6 @@ class Ride < ActiveRecord::Base
     results
   end
 
-
   def self.rides_of_drivers
     rides = []
     #check if the driver for a ride is not null, if is null, then it's a passenger
@@ -84,10 +65,6 @@ class Ride < ActiveRecord::Base
       end
     end
     return rides
-  end
-
-  def to_s
-    "Ride id: #{self.id}, from: #{departure_place}, to: #{destination}"
   end
 
   def self.create_ride_by_owner ride_params, current_user
@@ -101,6 +78,10 @@ class Ride < ActiveRecord::Base
       end
     end
     return nil
+  end
+
+  def to_s
+    "Ride id: #{self.id}, from: #{departure_place}, to: #{destination}"
   end
 
   private
