@@ -1,2 +1,0 @@
-class ContributionsController < ApplicationController
-end
