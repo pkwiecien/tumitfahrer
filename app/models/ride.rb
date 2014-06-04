@@ -24,40 +24,45 @@ class Ride < ActiveRecord::Base
   before_save :default_values
 
   # validators
-  validates :departure_place, :departure_time, presence: true
+  validates :departure_place, :departure_time, :destination, presence: true
 
   # get a driver of a ride
   def driver # should return only one row
-    result = self.relationships.find_by(ride_id: self.id, is_driving: true)
-    unless result.nil?
-      result = User.find_by(id: result[:user_id])
+    relationship = self.relationships.find_by(ride_id: self.id, is_driving: true)
+    unless relationship.nil?
+      relationship.user
+    else
+      nil
     end
-    result
   end
 
-  def request!(passenger, requested_from, request_to)
-    self.requests.create!(passenger_id: passenger.id, requested_from: requested_from, request_to: request_to)
+  def ride_owner
+    User.find_by_id(self.user_id)
   end
 
+  def is_ride_request
+    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND
+relationships.is_driving= false", self.user_id)
+  if ride_request_relationship.empty?
+    return FALSE
+  else
+    return TRUE
+  end
+
+  end
+
+  # get a passengers of a ride
   def passengers_of_ride
-    relationships = Relationship.where(ride_id: self.id, is_driving: false)
-    results = []
-    relationships.each do |r|
-      user = User.find_by(id: r.user)
-      results.append(user)
-    end
-    results
-  end
+    relationships = self.relationships.where("relationships.user_id <> ? AND relationships
+.is_driving = false", self.user_id)
+    return nil if relationships.nil? # no passengers
 
-  def self.rides_of_drivers
-    rides = []
-    #check if the driver for a ride is not null, if is null, then it's a passenger
-    Ride.all.each do |ride|
-      unless ride.driver.nil?
-        rides.append(ride)
-      end
+    passengers = []
+
+    relationships.each do |r|
+      passengers.append(r.user)
     end
-    return rides
+    passengers
   end
 
   def self.create_ride_by_owner ride_params, current_user
@@ -71,6 +76,20 @@ class Ride < ActiveRecord::Base
       end
     end
     return nil
+  end
+
+  def create_ride_request(passenger)
+    self.requests.create!(passenger_id: passenger.id)
+  end
+
+  def accept_ride_request(user_id)
+    request = self.requests.where(user_id: user_id)
+    if request
+      relationship = self.relationships.create(user_id: user_id)
+        if relationship.save
+          request.destroy
+        end
+    end
   end
 
   def to_s

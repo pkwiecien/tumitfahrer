@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140603165130) do
+ActiveRecord::Schema.define(version: 20140604073115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 20140603165130) do
   end
 
   add_index "relationships", ["ride_id"], name: "index_relationships_on_ride_id", using: :btree
-  add_index "relationships", ["user_id", "ride_id"], name: "index_relationships_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "relationships", ["user_id", "ride_id", "is_driving"], name: "index_relationships_on_user_id_and_ride_id_and_is_driving", unique: true, using: :btree
   add_index "relationships", ["user_id"], name: "index_relationships_on_user_id", using: :btree
 
   create_table "requests", force: true do |t|
