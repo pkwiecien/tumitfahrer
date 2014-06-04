@@ -3,25 +3,28 @@ class Api::V2::RidesController < ApiController
   before_filter :check_format, only: [:show]
   #before_filter :restrict_access, only: [:index, :create]
 
+  @@num_page_results = 10
+
   # GET /api/v2/rides
   def index
+    page = 0
+
     if params.has_key?(:page)
+      page = params[:page].to_i
+    end
 
-      campus_rides = Ride.where(ride_type: 0).order(departure_time: :desc).offset(params[:page].to_i*6).limit(6)
-      activity_rides = Ride.where(ride_type: 1).order(departure_time: :desc).offset(params[:page].to_i*6).limit(6)
-      temp_rides = campus_rides + activity_rides
+    campus_rides = Ride.where(ride_type: 0).order(departure_time: :desc).joins(:relationships)
+    .where(:relationships => {is_driving: true}).offset(page*@@num_page_results).limit(@@num_page_results)
 
-      @rides = []
-      temp_rides.each do |r|
-        if !r.driver.nil?
-          @rides.append(r)
-        end
-      end
+    activity_rides = Ride.where(ride_type: 1).order(departure_time: :desc).joins(:relationships)
+    .where(:relationships => {is_driving: true}).offset(page*@@num_page_results).
+        limit(@@num_page_results)
+
+    @rides = campus_rides + activity_rides
+    unless @rides.nil?
       respond_with @rides, status: :ok
     else
-      @rides = Ride.rides_of_drivers
-      respond_with @rides, status: :ok
-      # todo: potentially check if there are rides at all, and if not then respond with status code :no_content
+      respond_with :rides => [], status: :no_content
     end
 
   end
@@ -78,6 +81,7 @@ class Api::V2::RidesController < ApiController
       return respond_with json: {:ride => nil}, status: :bad_request
     end
   end
+
   def destroy
     ride = Ride.find_by(id: params[:id])
 

@@ -16,10 +16,6 @@ require 'securerandom'
 #  is_admin               :boolean
 #  is_student             :boolean
 #  api_key                :string
-#  rank                   :integer
-#  unbound_contributions  :integer
-#  exp                    :float
-#  gamification           :boolean
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 
@@ -131,10 +127,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def to_s
-    "#{self.first_name} #{self.last_name}, #{self.password_digest}"
-  end
-
   def compute_avg_rating
     num_all_rating = self.ratings_received.count
     if num_all_rating == 0
@@ -142,6 +134,10 @@ class User < ActiveRecord::Base
     else
       self.ratings_received.where('rating_type=?', 1)/num_all_rating
     end
+  end
+
+  def to_s
+    "#{self.first_name} #{self.last_name}, #{self.password_digest}"
   end
 
   private
