@@ -8,6 +8,7 @@
 #  meeting_point           :string
 #  free_seats              :string
 #  is_paid                 :boolean
+#  price                   :float
 #  is_finished             :boolean
 #  ride_type               :integer          # 0 - campus ride, 1 - activity ride
 #  created_at              :datetime         not null

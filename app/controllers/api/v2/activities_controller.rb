@@ -12,7 +12,7 @@ class Api::V2::ActivitiesController < ApplicationController
       page = params[:page].to_i
     end
 
-      @activities = {}
+      @activities = {id: 1}
       campus_rides = Ride.order(updated_at: :desc).where(ride_type: 0).offset(page*@@num_page_results).limit(@@num_page_results)
       activity_rides = Ride.order(updated_at: :desc).where(ride_type: 1).offset(page*@@num_page_results).limit(@@num_page_results)
 
