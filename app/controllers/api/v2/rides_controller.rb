@@ -7,17 +7,18 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides
   def index
+    if params.has_key?(:ids)
+
+    end
     page = 0
 
     if params.has_key?(:page)
       page = params[:page].to_i
     end
 
-    campus_rides = Ride.where(ride_type: 0).order(departure_time: :desc).joins(:relationships)
-    .where(:relationships => {is_driving: true}).offset(page*@@num_page_results).limit(@@num_page_results)
+    campus_rides = Ride.where(ride_type: 0).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
 
-    activity_rides = Ride.where(ride_type: 1).order(departure_time: :desc).joins(:relationships)
-    .where(:relationships => {is_driving: true}).offset(page*@@num_page_results).
+    activity_rides = Ride.where(ride_type: 1).order(departure_time: :desc).offset(page*@@num_page_results).
         limit(@@num_page_results)
 
     @rides = campus_rides + activity_rides
@@ -27,6 +28,15 @@ class Api::V2::RidesController < ApiController
       respond_with :rides => [], status: :no_content
     end
 
+  end
+
+  # GET api/v2/rides/ids
+  def get_ids_existing_rides
+    ride_ids = Ride.select(:id).map(&:id)
+    respond_to do |format|
+      format.xml { render xml: {ids: ride_ids}, :status => :ok }
+      format.json { render json: {ids: ride_ids}, :status => :ok }
+    end
   end
 
   # GET api/v2/users/:user_id/rides

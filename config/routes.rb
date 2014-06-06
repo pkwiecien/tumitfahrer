@@ -29,6 +29,7 @@ Tumitfahrer::Application.routes.draw do
         resources :rides do
           resources :requests
         end        end
+      match '/rides/ids', to: 'rides#get_ids_existing_rides', via: :get
       resources :rides do
         resources :requests
       end

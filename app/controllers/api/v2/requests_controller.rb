@@ -15,7 +15,6 @@ class Api::V2::RequestsController < ApiController
     @new_request = ride.requests.create!(request_params)
 
     unless @new_request.nil?
-      logger.debug "Created ride request for ride with id: #{ride.id} adnd reuqest id: #{@new_request.id}"
       render json: {status: :created, request: @new_request}
     else
       render json: {status: :bad_request}
@@ -88,7 +87,7 @@ class Api::V2::RequestsController < ApiController
   end
 
   def request_params
-    params.require(:request).permit(:requested_from, :request_to, :passenger_id)
+    params.require(:request).permit(:passenger_id)
   end
 
 end
