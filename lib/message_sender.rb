@@ -11,6 +11,7 @@ class MessageSender
   #Method to send messages to different platforms based on the platform information in the object.``
   def self.send_message(notificationDataList)
     notificationDataList.each do |notification|
+
       if(notification.device_type == 'Android')
         result = MessageSender.send_android_notification(notification.device_id, notification.message)
         if (result == 1)
@@ -18,8 +19,10 @@ class MessageSender
           Notification.update_status(notification.notification_id, true)
         end
       else if(notification.device_type == 'iPhone')
-             MessageSender.send_iphone_notification(notification.device_id, notification.message)
-        Notification.update_status(notification.notification_id, true)
+          MessageSender.send_iphone_notification(notification.device_id, notification.message)
+          Notification.update_status(notification.notification_id, true)
+
+      #TODO: Add check for visiom
       end
     end
   end
@@ -47,7 +50,7 @@ class MessageSender
   end
 
   def self.send_iphone_notification(token,message)
-    pusher = Grocer.pusher(certificate: "/config/certificate/cert_apple_development.pem", passphrase: "", gateway: "gateway.sandbox.push.apple.com", port: 2195, retries: 3)
+    pusher = Grocer.pusher(certificate: Rails.root + "/config/certificate/cert_apple_development.pem", passphrase: "", gateway: "gateway.sandbox.push.apple.com", port: 2195, retries: 3)
 
     #working device id pawel: f4f382b537d663af6256649e412fc19110cbbdc3d80c04373c090a623810127e
     #260359d0e9baf2ed4065c9876c985c8e636ee8c8

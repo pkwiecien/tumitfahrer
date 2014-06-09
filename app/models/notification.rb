@@ -122,9 +122,8 @@ class Notification < ActiveRecord::Base
     message = "TumMitFahrer: Alert (Reminder for Pickup) Time: #{time} Location: #{departure} Passenger: "
 
     #if result is empty
-
     result.each do |user|
-      message += user.last_name
+      message += user.last_
     end #return the final message generated
 
     message
