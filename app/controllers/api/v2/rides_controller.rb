@@ -5,7 +5,7 @@ class Api::V2::RidesController < ApiController
 
   @@num_page_results = 10
 
-  # GET /api/v2/rides
+  # GET /api/v2/rides?past
   def index
     page = 0
 
@@ -13,9 +13,8 @@ class Api::V2::RidesController < ApiController
       page = params[:page].to_i
     end
 
-    campus_rides = Ride.where(ride_type: 0).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
-
-    activity_rides = Ride.where(ride_type: 1).order(departure_time: :desc).offset(page*@@num_page_results).
+    campus_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
+    activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
         limit(@@num_page_results)
 
     @rides = campus_rides + activity_rides
@@ -42,7 +41,10 @@ class Api::V2::RidesController < ApiController
     user = User.find_by(id: params[:user_id])
     return respond_with :rides => [], :status => :not_found if user.nil?
 
-    if params.has_key?(:driver)
+
+    if params.has_key?(:past)
+      return get_past_rides user
+    elsif params.has_key?(:driver)
       @rides = user.rides_as_driver
     elsif params.has_key?(:passenger)
       @rides = user.rides_as_passenger
@@ -55,6 +57,15 @@ class Api::V2::RidesController < ApiController
     end
     respond_with @rides, status: :ok
   end
+
+  #GET /api/v2/rides?past
+  def get_past_rides user
+
+    @rides = user.rides.where("departure_time < ?", Time.now)
+    respond_with @rides, status: :ok
+
+  end
+
 
   # GET /api/v2/rides/:id
   def show
