@@ -7,9 +7,6 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides
   def index
-    if params.has_key?(:ids)
-
-    end
     page = 0
 
     if params.has_key?(:page)
@@ -50,7 +47,7 @@ class Api::V2::RidesController < ApiController
     elsif params.has_key?(:passenger)
       @rides = user.rides_as_passenger
     else
-      @rides = user.rides_as_driver + user.rides_as_passenger
+      @rides = user.all_rides
     end
 
     if params.has_key?(:is_paid)
