@@ -12,7 +12,7 @@ class RideSerializer < ActiveModel::Serializer
   end
 
   def passengers
-    object.passengers_of_ride
+    object.passengers
   end
 
   def requests

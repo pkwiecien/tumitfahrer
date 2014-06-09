@@ -24,16 +24,11 @@ class User < ActiveRecord::Base
   # Active Record relationships
   has_many :relationships, foreign_key: :user_id
   has_many :rides
+  has_many :devices
+  has_many :ride_searches
 
   has_many :ratings_given, foreign_key: :from_user_id, class_name: "Rating"
   has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
-
-  has_many :messages
-  has_many :sent_messages, foreign_key: :sender_id, class_name: "Message"
-  has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
-
-  has_many :devices
-  has_many :ride_searches
 
   # user's avatar
   has_attached_file :avatar, styles: {
@@ -75,6 +70,14 @@ class User < ActiveRecord::Base
     SecureRandom.hex(4)
   end
 
+  def messages_send_to receiver_id, ride_id
+    self.messages.where(receiver_id: receiver_id, ride_id:ride_id)
+  end
+
+  def messages_received_from sender_id, ride_id
+    Message.where(receiver_id: self.id, sender_id: sender_id, ride_id: ride_id)
+  end
+
   # each password stored in DB is encrypted with SHA512 and salt
   def User.generate_hashed_password(password)
     Digest::SHA512.hexdigest(password+Tumitfahrer::Application::SALT)
@@ -101,27 +104,31 @@ class User < ActiveRecord::Base
   end
 
   def rides_as_driver
-    unless user.rides
-      user.rides.joins(:relationships).where(relationships: {is_driving: true})
+    if self.rides.count > 0
+      self.rides.joins(:relationships).where(relationships: {is_driving: true})
     else
-      nil
+      []
     end
   end
 
   # ride as passenger is when user is not owner of the ride and is not driving
   def rides_as_passenger
-    ride_ids = user.relationships.select(:ride_id).where(is_driving: false).joins(:ride).where("rides.user_id <> ?", user.id)
-    unless ride_ids
+    ride_ids = self.relationships.select(:ride_id).where(is_driving: false).joins(:ride).where("rides.user_id <> ?", self.id)
+    if ride_ids.count > 0
       Ride.where("id in (?)", ride_ids)
     else
-      nil
+      []
     end
+  end
+
+  def all_rides
+    rides_as_driver + rides_as_passenger
   end
 
   # ride request is a ride, where user is owner of the ride, however he's not driving
   def ride_requests
-    unless user.rides
-      user.rides.joins(:relationships).where(relationships: {is_driving: false})
+    if self.rides.count > 0
+      self.rides.joins(:relationships).where(relationships: {is_driving: false})
     else
       nil
     end

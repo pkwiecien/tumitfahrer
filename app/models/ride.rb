@@ -20,6 +20,7 @@ class Ride < ActiveRecord::Base
   has_many :relationships, dependent: :delete_all
   has_many :users, through: :relationships
   has_many :requests
+  has_many :conversations
 
   # filters
   before_save :default_values
@@ -44,16 +45,16 @@ class Ride < ActiveRecord::Base
   def is_ride_request
     ride_request_relationship = self.relationships.where("relationships.user_id = ? AND
 relationships.is_driving= false", self.user_id)
-  if ride_request_relationship.empty?
-    return FALSE
-  else
-    return TRUE
-  end
+    if ride_request_relationship.empty?
+      return FALSE
+    else
+      return TRUE
+    end
 
   end
 
   # get a passengers of a ride
-  def passengers_of_ride
+  def passengers
     relationships = self.relationships.where("relationships.user_id <> ? AND relationships
 .is_driving = false", self.user_id)
     return nil if relationships.nil? # no passengers
@@ -67,7 +68,7 @@ relationships.is_driving= false", self.user_id)
   end
 
   def self.create_ride_by_owner ride_params, current_user
-    is_driving =  ride_params[:is_driving].to_i
+    is_driving = ride_params[:is_driving].to_i
     ride_params.delete("is_driving")
     @ride = current_user.rides.create!(ride_params)
     if @ride.save
@@ -79,17 +80,30 @@ relationships.is_driving= false", self.user_id)
     return nil
   end
 
-  def create_ride_request(passenger)
-    self.requests.create!(passenger_id: passenger.id)
+  def create_ride_request passenger_id
+    self.requests.create!(passenger_id: passenger_id)
   end
 
-  def accept_ride_request(user_id)
-    request = self.requests.where(user_id: user_id)
-    if request
+  def accept_ride_request passenger_id
+    request = self.requests.where(passenger_id: passenger_id).first
+    if request != nil
       relationship = self.relationships.create(user_id: user_id)
-        if relationship.save
-          request.destroy
-        end
+      if relationship.save
+        request.destroy
+      end
+    end
+  end
+
+  def create_conversation user_id, other_user_id
+    self.conversations.create!(user_id: user_id, other_user_id: other_user_id)
+  end
+
+  def conversation_exists? user_id, other_user_id
+    if self.conversations.where(user_id: user_id, other_user_id: other_user_id) || self
+    .conversations.where(user_id: other_user_id, other_user_id: user_id)
+      return TRUE
+    else
+      return FALSE
     end
   end
 
