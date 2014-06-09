@@ -23,18 +23,19 @@ Tumitfahrer::Application.routes.draw do
     namespace :v2, :defaults => { :format => 'json' } do
       resources :activities
       resource :search
+      resource :feedback
       resources :users do
         resources :devices
         match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
           resources :requests
-        end        end
+        end
+      end
       match '/rides/ids', to: 'rides#get_ids_existing_rides', via: :get
       resources :rides do
         resources :requests
         resources :conversations do
           resources :messages do
-
           end
         end
       end
