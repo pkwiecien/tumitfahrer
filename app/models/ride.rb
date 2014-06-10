@@ -47,8 +47,7 @@ class Ride < ActiveRecord::Base
   end
 
   def is_ride_request
-    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND
-relationships.is_driving= false", self.user_id)
+    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND relationships.is_driving= 'f'", self.user_id)
     if ride_request_relationship.empty?
       return FALSE
     else
@@ -59,8 +58,7 @@ relationships.is_driving= false", self.user_id)
 
   # get a passengers of a ride
   def passengers
-    relationships = self.relationships.where("relationships.user_id <> ? AND relationships
-.is_driving = false", self.user_id)
+    relationships = self.relationships.where("relationships.user_id <> ? AND relationships.is_driving = 'f'", self.user_id)
     return nil if relationships.nil? # no passengers
 
     passengers = []
@@ -81,6 +79,11 @@ relationships.is_driving= false", self.user_id)
         return @ride
       end
     end
+
+    #Added by Behroz - Insert data in notification table - Start - 10-June-2014
+    Notification.insert_notification(current_user.id ,@ride.id,1,@ride.departure_time,'f')
+    #Added by Behroz - Insert data in notification table - End - 10-June-2014
+
     return nil
   end
 
