@@ -7,16 +7,10 @@
 #  departure_time          :datetime
 #  meeting_point           :string
 #  free_seats              :string
-#  department              :integer
-#  realtime_km             :string
-#  realtime_departure_time :datetime
-#  realtime_arrival_time   :datetime
-#  duration                :float
-#  distance                :float
 #  is_paid                 :boolean
+#  price                   :float
 #  is_finished             :boolean
-#  contribution_mode       :integer          # for gamification
-#  ride_type               :integer          # 0 - campus ride, 1 - activity ride, 2 - ride request
+#  ride_type               :integer          # 0 - campus ride, 1 - activity ride
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 
@@ -28,68 +22,93 @@ class Ride < ActiveRecord::Base
   has_many :notifications
 
   has_many :relationships, dependent: :delete_all
-  has_many :passengers, -> { where(relationships: {is_driving: 'false'}) }, :through => :relationships, source: :user
-
   has_many :users, through: :relationships
-  has_one :project
   has_many :requests
+  has_many :conversations
 
   # filters
   before_save :default_values
 
   # validators
-  validates :departure_place, :departure_time, presence: true
+  validates :departure_place, :departure_time, :destination, presence: true
 
   # get a driver of a ride
   def driver # should return only one row
-    result = self.relationships.find_by(ride_id: self.id, is_driving: true)
-    unless result.nil?
-      result = User.find_by(id: result[:user_id])
+    relationship = self.relationships.find_by(ride_id: self.id, is_driving: true)
+    unless relationship.nil?
+      relationship.user
+    else
+      nil
     end
-    result
   end
 
-  def assign_project(project)
-    self.project = project
+  def ride_owner
+    User.find_by_id(self.user_id)
   end
 
-  def request!(passenger, requested_from, request_to)
-    self.requests.create!(passenger_id: passenger.id, requested_from: requested_from, request_to: request_to)
-  end
-
-  def pending_payments
-    result = []
-    self.relationships.where('driver_ride_id=?', self.id).each do |r|
-      if r.ride[:is_paid] == false
-        payment = {}
-        payment[:ride_id] = self.id
-        payment[:driver_id] = r.ride.driver.id
-        result.append(payment)
-      end
+  def is_ride_request
+    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND
+relationships.is_driving= false", self.user_id)
+    if ride_request_relationship.empty?
+      return FALSE
+    else
+      return TRUE
     end
-    result
+
   end
 
-  def passengers_of_ride
-    relationships = Relationship.where(driver_ride_id: self.id, is_driving: false)
-    results = []
+  # get a passengers of a ride
+  def passengers
+    relationships = self.relationships.where("relationships.user_id <> ? AND relationships
+.is_driving = false", self.user_id)
+    return nil if relationships.nil? # no passengers
+
+    passengers = []
+
     relationships.each do |r|
-      user = User.find_by(id: r.user)
-      results.append(user)
+      passengers.append(r.user)
     end
-    results
+    passengers
   end
 
-
-  def self.rides_of_drivers
-    rides = []
-    #check if the driver for a ride is not null, if is null, then it's a passenger
-    Ride.all.each do |ride|
-      unless ride.driver.nil?
-        rides.append(ride)
+  def self.create_ride_by_owner ride_params, current_user
+    is_driving = ride_params[:is_driving].to_i
+    ride_params.delete("is_driving")
+    @ride = current_user.rides.create!(ride_params)
+    if @ride.save
+      @ride.relationships.create!(user: current_user, is_driving: is_driving)
+      if @ride.save
+        return @ride
       end
     end
-    return rides
+    return nil
+  end
+
+  def create_ride_request passenger_id
+    self.requests.create!(passenger_id: passenger_id)
+  end
+
+  def accept_ride_request passenger_id
+    request = self.requests.where(passenger_id: passenger_id).first
+    if request != nil
+      relationship = self.relationships.create(user_id: user_id)
+      if relationship.save
+        request.destroy
+      end
+    end
+  end
+
+  def create_conversation user_id, other_user_id
+    self.conversations.create!(user_id: user_id, other_user_id: other_user_id)
+  end
+
+  def conversation_exists? user_id, other_user_id
+    if self.conversations.where(user_id: user_id, other_user_id: other_user_id) || self
+    .conversations.where(user_id: other_user_id, other_user_id: user_id)
+      return TRUE
+    else
+      return FALSE
+    end
   end
 
   def to_s
@@ -101,11 +120,6 @@ class Ride < ActiveRecord::Base
   def default_values
     self.is_paid ||= false
     self.price ||= 0
-    self.realtime_km ||= 0
-    self.duration ||= 0
-    self.contribution_mode ||= 0
-    self.is_finished ||= false
-    self.distance ||= 0
     self.ride_type ||= 0
     nil
   end

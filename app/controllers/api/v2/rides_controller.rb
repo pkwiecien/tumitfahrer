@@ -3,27 +3,36 @@ class Api::V2::RidesController < ApiController
   before_filter :check_format, only: [:show]
   #before_filter :restrict_access, only: [:index, :create]
 
-  # GET /api/v2/rides
+  @@num_page_results = 10
+
+  # GET /api/v2/rides?past
   def index
+    page = 0
+
     if params.has_key?(:page)
-
-      campus_rides = Ride.where(ride_type: 0).order(departure_time: :desc).offset(params[:page].to_i*6).limit(6)
-      activity_rides = Ride.where(ride_type: 1).order(departure_time: :desc).offset(params[:page].to_i*6).limit(6)
-      temp_rides = campus_rides + activity_rides
-
-      @rides = []
-      temp_rides.each do |r|
-        if !r.driver.nil?
-          @rides.append(r)
-        end
-      end
-      respond_with @rides, status: :ok
-    else
-      @rides = Ride.rides_of_drivers
-      respond_with @rides, status: :ok
-      # todo: potentially check if there are rides at all, and if not then respond with status code :no_content
+      page = params[:page].to_i
     end
 
+    campus_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
+    activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
+        limit(@@num_page_results)
+
+    @rides = campus_rides + activity_rides
+    unless @rides.nil?
+      respond_with @rides, status: :ok
+    else
+      respond_with :rides => [], status: :no_content
+    end
+
+  end
+
+  # GET api/v2/rides/ids
+  def get_ids_existing_rides
+    ride_ids = Ride.select(:id).map(&:id)
+    respond_to do |format|
+      format.xml { render xml: {ids: ride_ids}, :status => :ok }
+      format.json { render json: {ids: ride_ids}, :status => :ok }
+    end
   end
 
   # GET api/v2/users/:user_id/rides
@@ -32,12 +41,15 @@ class Api::V2::RidesController < ApiController
     user = User.find_by(id: params[:user_id])
     return respond_with :rides => [], :status => :not_found if user.nil?
 
-    if params.has_key?(:driver)
+
+    if params.has_key?(:past)
+      return get_past_rides user
+    elsif params.has_key?(:driver)
       @rides = user.rides_as_driver
     elsif params.has_key?(:passenger)
       @rides = user.rides_as_passenger
     else
-      @rides = user.rides_as_driver + user.rides_as_passenger
+      @rides = user.all_rides
     end
 
     if params.has_key?(:is_paid)
@@ -45,6 +57,15 @@ class Api::V2::RidesController < ApiController
     end
     respond_with @rides, status: :ok
   end
+
+  #GET /api/v2/rides?past
+  def get_past_rides user
+
+    @rides = user.rides.where("departure_time < ?", Time.now)
+    respond_with @rides, status: :ok
+
+  end
+
 
   # GET /api/v2/rides/:id
   def show
@@ -64,22 +85,12 @@ class Api::V2::RidesController < ApiController
       current_user = User.find_by(api_key: request.headers[:apiKey])
       return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
 
-      if params[:ride] && params[:ride][:passenger]
-        logger.debug "adding as passenger"
-        @ride = current_user.rides_as_passenger.create!(passenger_params)
-      else
-        logger.debug "adding as driver"
-        @ride = current_user.rides_as_driver.create!(ride_params)
-        current_user.relationships.find_by(ride_id: @ride.id).update_attribute(:is_driving, true)
-      end
+      @ride = Ride.create_ride_by_owner ride_params, current_user
 
       unless @ride.nil?
         # update distance and duration
         # @ride.update_attributes(distance: distance(@ride[:departure_place], @ride[:destination]))
         # @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
-
-        logger.debug "returning #{@ride}"
-
         respond_with @ride, status: :created
       else
         render json: {:ride => nil}, status: :bad_request
@@ -90,9 +101,11 @@ class Api::V2::RidesController < ApiController
   end
 
   def destroy
+    ride = Ride.find_by(id: params[:id])
+
     begin
       ride = Ride.find_by(id: params[:id]).destroy
-      ride.driver
+
       respond_to do |format|
         format.xml { render xml: {:status => :ok} }
         format.any { render json: {:status => :ok} }
@@ -114,11 +127,7 @@ class Api::V2::RidesController < ApiController
   end
 
   def ride_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type)
-  end
-
-  def passenger_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :ride_type)
+    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type, :is_driving)
   end
 
   # get distance of the ride from google api
