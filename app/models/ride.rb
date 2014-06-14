@@ -76,13 +76,16 @@ class Ride < ActiveRecord::Base
     if @ride.save
       @ride.relationships.create!(user: current_user, is_driving: is_driving)
       if @ride.save
+
+        #Added by Behroz - Insert data in notification table - Start - 10-June-2014
+        Notification.insert_notification(current_user.id ,@ride.id,1,@ride.departure_time,'f')
+        #Added by Behroz - Insert data in notification table - End - 10-June-2014
+
         return @ride
       end
     end
 
-    #Added by Behroz - Insert data in notification table - Start - 10-June-2014
-    Notification.insert_notification(current_user.id ,@ride.id,1,@ride.departure_time,'f')
-    #Added by Behroz - Insert data in notification table - End - 10-June-2014
+
 
     return nil
   end
