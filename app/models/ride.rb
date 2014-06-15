@@ -174,6 +174,7 @@ relationships.is_driving= false", self.user_id)
     self.is_paid ||= false
     self.price ||= 0
     self.ride_type ||= 0
+    self.car ||= ""
     nil
   end
 
