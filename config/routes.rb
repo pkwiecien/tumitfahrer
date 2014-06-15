@@ -1,5 +1,8 @@
 Tumitfahrer::Application.routes.draw do
 
+  resources :locations
+
+  get "password_resets/new"
   namespace :api do
     # API v1 Routes
     namespace :v1, :defaults => { :format => 'json' } do
@@ -45,6 +48,8 @@ Tumitfahrer::Application.routes.draw do
   resources :users
   resources :rides
   resource :sessions, only: [:new, :create, :destroy]
+  resources :password_resets
+  resources :searches
 
   # Start page route
   root "static_pages#home"
@@ -52,6 +57,8 @@ Tumitfahrer::Application.routes.draw do
   match "/signup", to: "users#new", via: 'get'
   match "/signin", to: "sessions#new", via: 'get'
   match "/signout", to: "sessions#destroy", via: 'delete'
+  match "/ride_details/:id", to: "rides#ride_details", via: 'get'
+  match "/search1", to: "searches#search", via: 'get'
   match "/help", to: "static_pages#help", via: 'get'
   match "/contact", to: "static_pages#contact", via: 'get'
   match "/about", to: "static_pages#about", via: 'get'

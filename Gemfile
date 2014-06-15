@@ -26,9 +26,11 @@ gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
 
+gem 'geocoder'
+gem 'nifty-generators'
 group :development, :production do
   # postgres database
-  gem 'pg', '0.15.1'
+  gem 'mysql2'
   gem 'rails_12factor', '0.0.2'
 end
 
@@ -64,7 +66,7 @@ gem 'therubyracer', :platforms => :ruby
 gem 'jquery-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+#gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'

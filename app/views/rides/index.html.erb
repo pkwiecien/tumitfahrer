@@ -15,12 +15,12 @@
       </thead>
       <tbody>
       <% @rides.each do |ride| %>
-          <tr data-link="<%= ride_path(ride.id) %>" style="cursor:pointer">
+          <tr onclick="document.location='/ride_details/<%= ride.id %>'" style="cursor:pointer">
             <td><span><%= ride.departure_place %></span></td>
             <td><span><%= ride.destination %></span></td>
             <td><span><%= ride.departure_time %></span></td>
             <td><span><%= pluralize(ride.free_seats, "seat") %></td>
-            <td><span><%= gravatar_for @users.find(ride.user_id), size: 30 %><%= link_to @users.find(ride.user_id).first_name+" " +@users.find(ride.user_id).last_name, user_path(ride.user_id) %></td>
+
           </tr>
       <% end %>
       </tbody>

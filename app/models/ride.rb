@@ -30,13 +30,19 @@ class Ride < ActiveRecord::Base
   has_one :project
   has_many :requests
 
+
+  
+
+
   # filters
   before_save :default_values
 
   # validators
   validates :departure_place, :departure_time, :meeting_point, :free_seats, presence: true
 
-  # get a driver of a ride
+#after_validations :geocode
+
+# get a driver of a ride
   def driver # should return only one row
     result = self.relationships.find_by(ride_id: self.id, is_driving: true)
     unless result.nil?

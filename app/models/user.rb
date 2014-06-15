@@ -59,7 +59,6 @@ class User < ActiveRecord::Base
   has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
 
   has_many :devices
-  has_many :ride_searches
 
   # TODO: avatars
   ## https://github.com/thoughtbot/paperclip
@@ -77,7 +76,7 @@ class User < ActiveRecord::Base
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
   has_secure_password
-  validates :password, length: {minimum: 6}
+  #validates :password, length: {minimum: 4}
 
   # generate remember token used by web app to remember user session
   def User.new_remember_token
@@ -160,15 +159,6 @@ class User < ActiveRecord::Base
     "#{self.first_name} #{self.last_name}, #{self.password_digest}"
   end
 
-  def compute_avg_rating
-    num_all_rating = self.ratings_received.count
-    if num_all_rating == 0
-      0
-    else
-      self.ratings_received.where('rating_type=?', 1)/num_all_rating
-    end
-  end
-
   private
 
   def create_remember_token
@@ -185,9 +175,10 @@ class User < ActiveRecord::Base
     self.unbound_contributions ||= 0
     self.gamification ||= true
     self.is_student ||= true
-    self.rating_avg ||= 0.0
     nil
   end
+
+  
 
 
 end

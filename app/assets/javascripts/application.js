@@ -11,7 +11,8 @@
 // about supported directives.
 //
 //= require jquery
+//= require typeahead
+//= require typeahead-addresspicker
 //= require jquery_ujs
 //= require bootstrap
-//= require turbolinks
 //= require_tree .

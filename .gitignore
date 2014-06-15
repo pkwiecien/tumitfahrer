@@ -25,3 +25,5 @@ doc/
 .idea
 .secret
 /config/initializers/app_env_vars.rb
+Gemfile
+Gemfile.lock
