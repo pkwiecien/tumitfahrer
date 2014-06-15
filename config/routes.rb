@@ -26,6 +26,7 @@ Tumitfahrer::Application.routes.draw do
       resource :feedback
       resources :users do
         resources :devices
+        match '/requests', to: 'requests#get_user_requests', via: :get
         match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
           resources :requests

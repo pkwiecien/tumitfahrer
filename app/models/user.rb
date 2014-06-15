@@ -121,17 +121,17 @@ class User < ActiveRecord::Base
     end
   end
 
-  def all_rides
-    rides_as_driver + rides_as_passenger
+  # requests_for_driver is a ride, where user is owner of the ride, however he's not driving
+  def requests_for_driver
+    self.rides.joins(:relationships).where(relationships: {is_driving: false})
   end
 
-  # ride request is a ride, where user is owner of the ride, however he's not driving
-  def ride_requests
-    if self.rides.count > 0
-      self.rides.joins(:relationships).where(relationships: {is_driving: false})
-    else
-      nil
-    end
+  def all_rides
+    rides_as_driver + requests_for_driver + rides_as_passenger + requested_rides
+  end
+
+  def requested_rides
+    Ride.where(id: Request.where(passenger_id: self.id).select(:ride_id))
   end
 
   def compute_avg_rating

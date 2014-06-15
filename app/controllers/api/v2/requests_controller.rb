@@ -9,9 +9,19 @@ class Api::V2::RequestsController < ApiController
     respond_with requests: requests, status: :ok
   end
 
+  # GET /api/v2/users/1/requests
+  def get_user_requests
+    user = User.find_by(id: params[:user_id])
+    return respond_with :requests => [], :status => :not_found if user.nil?
+
+    respond_with Request.where(ride_id: user.requested_rides), status: :ok
+  end
+
   # POST /api/v2/rides/:ride_id/requests
   def create
     ride = Ride.find_by(id: params[:ride_id])
+    return render json: {status: :bad_request, request: []} if ride.requests.find_by(passenger_id: params[:passenger_id]) != nil
+
     @new_request = ride.requests.create!(request_params)
 
     unless @new_request.nil?
@@ -21,47 +31,34 @@ class Api::V2::RequestsController < ApiController
     end
   end
 
-  # PUT /api/v2/rides/:ride_id/requests?passenger_id=X&departure_place=Y&destination=Z
+  # PUT /api/v2/rides/:ride_id/requests?passenger_id=X
   def update
-    # if driver confirmed a ride then add a new passenger, if not then just delete the request
+
     ride = Ride.find_by(id: params[:ride_id])
     passenger = User.find_by(id: params[:passenger_id])
-    if ride.nil? || passenger.nil?
-      respond_to do |format|
-        format.xml { render xml: {:status => :not_found} }
-        format.any { render json: {:status => :not_found} }
-      end
-    end
+    return render json: {status: :not_found} if ride.nil? || passenger.nil?
 
-    request = ride.requests.find_by(ride_id: ride.id, passenger_id: passenger.id)
-    if params[:id] && params[:confirmed] == true
-      new_ride = passenger.rides_as_passenger.create!(departure_place: params[:departure_place], destination: params[:destination],
-                                                      meeting_point: ride[:meeting_point], departure_time: ride[:departure_time],
-                                                      free_seats: ride[:free_seats])
-      Relationship.find_by(ride_id: new_ride.id).update_attributes(driver_ride_id: ride.id)
-      # TODO: send push notification if request was confirmed
+    ride.accept_ride_request ride.ride_owner.id, passenger.id, params[:confirmed].to_i
+    # TODO: send push notification if request was confirmed or rejected
+
+    respond_to do |format|
+      format.xml { render xml: {:status => :ok, :message => "request handled successfully"} }
+      format.any { render json: {:status => :ok, :message => "request handled successfully"} }
     end
-    request.destroy
+  end
+
+  # DELETE /api/v2/rides/:ride_id/requests/:id
+  def destroy
+    ride = Ride.find_by(id: params[:ride_id])
+    return render json: {status: :not_found, message: "ride not found"} if ride.nil?
+
+    ride.remove_ride_request params[:id]
 
     respond_to do |format|
       format.xml { render xml: {:status => :ok} }
       format.any { render json: {:status => :ok} }
     end
-  end
 
-  def destroy
-    begin
-      request = Request.find_by(id: params[:id]).destroy
-      respond_to do |format|
-        format.xml { render xml: {:status => :ok} }
-        format.any { render json: {:status => :ok} }
-      end
-    rescue
-      respond_to do |format|
-        format.xml { render xml: {:status => :not_found} }
-        format.any { render json: {:status => :not_found} }
-      end
-    end
   end
 
 

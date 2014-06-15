@@ -5,7 +5,7 @@ class Api::V2::RidesController < ApiController
 
   @@num_page_results = 10
 
-  # GET /api/v2/rides?past
+  # GET /api/v2/rides
   def index
     page = 0
 
@@ -14,7 +14,7 @@ class Api::V2::RidesController < ApiController
     end
 
     campus_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
-    activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
+    activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 1, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
         limit(@@num_page_results)
 
     @rides = campus_rides + activity_rides
@@ -23,7 +23,6 @@ class Api::V2::RidesController < ApiController
     else
       respond_with :rides => [], status: :no_content
     end
-
   end
 
   # GET api/v2/rides/ids
@@ -40,7 +39,6 @@ class Api::V2::RidesController < ApiController
   def get_user_rides
     user = User.find_by(id: params[:user_id])
     return respond_with :rides => [], :status => :not_found if user.nil?
-
 
     if params.has_key?(:past)
       return get_past_rides user
@@ -80,24 +78,40 @@ class Api::V2::RidesController < ApiController
 
   # POST /api/v2/users/11/rides/
   def create
-    begin
-      current_user_db = User.find_by(id: params[:user_id])
-      current_user = User.find_by(api_key: request.headers[:apiKey])
-      return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
+    current_user_db = User.find_by(id: params[:user_id])
+    current_user = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
 
-      @ride = Ride.create_ride_by_owner ride_params, current_user
+    @ride = Ride.create_ride_by_owner ride_params, current_user
 
-      unless @ride.nil?
-        # update distance and duration
-        # @ride.update_attributes(distance: distance(@ride[:departure_place], @ride[:destination]))
-        # @ride.update_attributes(duration: duration(@ride[:departure_place], @ride[:destination]))
-        respond_with @ride, status: :created
-      else
-        render json: {:ride => nil}, status: :bad_request
-      end
-    rescue
-      return respond_with json: {:ride => nil}, status: :bad_request
+    unless @ride.nil?
+      respond_with @ride, status: :created
+    else
+      render json: {:ride => nil}, status: :bad_request
     end
+  end
+
+  # UPDATE /api/v2/users/11/rides/:ride_id?removed_passenger=id
+  def update
+    if params.has_key?(:removed_passenger) # update ride -> remove passenger
+      ride = Ride.find_by(:id => params[:id])
+      return render json: {status: :not_found, message: "could not delete passenger"} if ride.nil?
+
+      ride.remove_passenger ride.ride_owner.id, params[:removed_passenger]
+      return render json: {status: :ok, message: "passenger deleted"}
+    else
+      @user = User.find_by(id: params[:user_id])
+      return respond_with status: :not_found, message: "Could not retrieve the user" if @user.nil?
+      @ride = Ride.find_by(id: params[:id])
+      return respond_with status: :not_found, message: "Could not retrieve the ride" if @ride.nil?
+      # here we need to do it manually, cause two params should be int
+
+      @ride.update_attributes!(meeting_point: params[:ride][:meeting_point], departure_place: params[:ride][:departure_place],
+                               destination: params[:ride][:destination], free_seats: params[:ride][:free_seats].to_i,
+                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i)
+      respond_with @ride, status: :ok
+    end
+
   end
 
   def destroy
@@ -127,29 +141,9 @@ class Api::V2::RidesController < ApiController
   end
 
   def ride_params
-    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats, :meeting_point, :ride_type, :is_driving)
-  end
-
-  # get distance of the ride from google api
-  def distance(start_point, end_point)
-    result = prepare_url(start_point, end_point)
-    return result["routes"].first["legs"].first["distance"]["value"]/1000
-  end
-
-  # get duration of the ride from google api
-  def duration(start_point, end_point)
-    result = prepare_url(start_point, end_point)
-    return result["routes"].first["legs"].first["duration"]["value"]/60
-  end
-
-  # call google api
-  def prepare_url(start_point, end_point)
-    url = URI.parse(URI.encode("http://maps.googleapis.com/maps/api/directions/json?origin=\"#{start_point}\"&destination=\"#{end_point}\"&sensor=false"))
-    req = Net::HTTP::Get.new(url.to_s)
-    res = Net::HTTP.start(url.host, url.port) { |http|
-      http.request(req)
-    }
-    return JSON.parse(res.body)
+    params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats,
+                                 :meeting_point, :ride_type, :is_driving, :car, :departure_latitude,
+                                 :departure_longitude, :destination_latitude, :destination_longitude)
   end
 
   def check_format

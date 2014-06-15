@@ -24,6 +24,8 @@ gem 'actionpack-xml_parser'
 gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
+# for getting location
+gem "geocoder"
 
 group :development, :production do
   # postgres database
