@@ -22,6 +22,7 @@ Tumitfahrer::Application.routes.draw do
     # API v2 Routes
     namespace :v2, :defaults => { :format => 'json' } do
       resources :activities
+      resource :forgot
       resource :search
       resource :feedback
       resources :users do

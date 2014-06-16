@@ -8,7 +8,7 @@ class Api::V2::FeedbacksController < ApiController
     if feedback.nil?
       return render json: {:message => "feedback could not be saved"}, status: :bad_request
     else
-      return render json: {:message => "feedback sent"}, status: :ok
+      return render json: {:message => "feedback sent"}, status: :created
     end
 
   end
