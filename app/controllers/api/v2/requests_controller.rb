@@ -20,14 +20,14 @@ class Api::V2::RequestsController < ApiController
   # POST /api/v2/rides/:ride_id/requests
   def create
     ride = Ride.find_by(id: params[:ride_id])
-    return render json: {status: :bad_request, request: []} if ride.requests.find_by(passenger_id: params[:passenger_id]) != nil
+    return render json: {request: []}, status: :bad_request if ride.requests.find_by(passenger_id: params[:passenger_id]) != nil
 
     @new_request = ride.requests.create!(request_params)
 
     unless @new_request.nil?
-      render json: {status: :created, request: @new_request}
+      render json: {request: @new_request}, status: :created
     else
-      render json: {status: :bad_request}
+      render json: {request: []}, status: :bad_request
     end
   end
 
@@ -63,25 +63,6 @@ class Api::V2::RequestsController < ApiController
 
 
   private
-
-  def send_android_push(type, new_ride)
-    user = new_ride.users.first
-    devices = user.devices.where(platform: "android")
-    registration_ids = []
-    devices.each do |d|
-      registration_ids.append(d[:token])
-    end
-
-    options = {}
-    options[:type] = type
-    options[:fahrt_id] = new_ride[:id]
-    options[:fahrer] = new_ride.driver.full_name
-    options[:ziel] = new_ride[:destination]
-
-    logger.debug "Sending push notification with reg_ids : #{registration_ids} and options: #{options}"
-    response = GcmUtils.send_android_push_notifications(registration_ids, options)
-    logger.debug "Response: #{response}"
-  end
 
   def request_params
     params.require(:request).permit(:passenger_id)
