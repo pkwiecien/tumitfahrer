@@ -64,7 +64,6 @@ class Api::V2::RidesController < ApiController
 
   end
 
-
   # GET /api/v2/rides/:id
   def show
     @ride = Ride.find_by(:id => params[:id])

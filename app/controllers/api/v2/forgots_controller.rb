@@ -2,7 +2,6 @@ class Api::V2::ForgotsController < ApiController
   respond_to :json, :xml
 
   # POST /api/v2/forgot?email=abc
-  # create new search query
   def create
     @user = User.find_by(email: params[:email])
 
