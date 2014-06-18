@@ -126,23 +126,38 @@ relationships.is_driving= false", self.user_id)
 
   end
 
-  def self.rides_nearby departure_place, departure_threshold, destination, destination_threshold, departure_time
+  def self.rides_nearby departure_place, departure_threshold, destination, destination_threshold, departure_time, ride_type
 
     request_departure_coordinates = Geocoder.coordinates(departure_place)
     request_destination_coordinates = Geocoder.coordinates(destination)
 
     rides = []
-    Ride.where("departure_time > ?", Time.now).each do |ride|
-      db_coordinates = [ride.departure_latitude, ride.destination_longitude]
+    Ride.where("departure_time > ? AND ride_type = ?", Time.zone.now, ride_type).each do |ride|
+      if ride.departure_latitude == 0
+        db_coordinates = Geocoder.coordinates(ride.departure_place)
+        Ride.find_by_id(ride.id).update_attributes!(departure_latitude: db_coordinates[0], departure_longitude: db_coordinates[1])
+      else
+        db_coordinates = [ride.departure_latitude, ride.departure_longitude]
+      end
+
       departure_distance = Geocoder::Calculations.distance_between(db_coordinates, request_departure_coordinates)
 
-      db_coordinates = [ride.destination_latitude, ride.destination_longitude]
+      if ride.destination_latitude == 0
+        db_coordinates = Geocoder.coordinates(ride.destination)
+        Ride.find_by_id(ride.id).update_attributes!(destination_latitude: db_coordinates[0], destination_longitude: db_coordinates[1])
+      else
+        db_coordinates = [ride.destination_latitude, ride.destination_longitude]
+      end
       destination_distance = Geocoder::Calculations.distance_between(db_coordinates, request_destination_coordinates)
 
-      if departure_distance <= departure_threshold && destination_distance <= destination_threshold
-        if departure_time.nil? || departure_time.empty? # no date specified, return all rides that match criteria
+      if departure_place.empty? && destination.empty?
+        continue
+      elsif (departure_place.empty? || (!departure_place.empty? && departure_distance <= departure_threshold)) &&
+          (destination.empty? || (!destination.empty? && destination_distance <= destination_threshold))
+        if departure_time.nil? # no date specified, return all rides that match criteria
           rides.append(ride)
-        elsif departure_time < Date.tomorrow && departure_time > Date.yesterday # otherwise the day should match
+        end
+        if departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
           rides.append(ride)
         end
       end
