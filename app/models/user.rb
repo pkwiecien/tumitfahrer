@@ -9,7 +9,7 @@ require 'securerandom'
 #  last_name              :boolean          default(TRUE)
 #  email                  :string
 #  phone_number           :string
-#  department             :integer
+#  department             :string
 #  car                    :string
 #  password_digest        :string
 #  remember_token         :string

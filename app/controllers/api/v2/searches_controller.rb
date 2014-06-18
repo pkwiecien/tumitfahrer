@@ -8,9 +8,9 @@ class Api::V2::SearchesController < ApiController
     departure_threshold = params[:departure_place_threshold].to_i
     destination = params[:destination]
     destination_threshold = params[:destination_threshold].to_i
-    departure_time = params[:departure_time]
+    departure_time = DateTime.parse(params[:departure_time])
     user = User.find_by(api_key: request.headers[:apiKey])
-    ride_type = params[:ride_type]
+    ride_type = params[:ride_type].to_i
 
     if user.nil?
       return render json: {:message => "user not found"}, status: :not_found
@@ -21,7 +21,7 @@ class Api::V2::SearchesController < ApiController
     end
 
     rides = Ride.rides_nearby departure_place, departure_threshold, destination,
-                              destination_threshold, departure_time
+                              destination_threshold, departure_time, ride_type
 
 
     if rides.count > 0
