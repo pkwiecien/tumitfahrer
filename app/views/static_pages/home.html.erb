@@ -1,38 +1,152 @@
-<div class="center main-section jumbo">
-  <h1>TUMitfahrer</h1>
+<!--<div class="center main-section jumbo">-->
+  <!--<h1>TUMitfahrer</h1>-->
 
-  <p>Car sharing platform for students</p>
+  <!--<p>Car sharing platform for students</p>-->
 
-  <table class="table table-borderless">
-    <tbody>
-    <tr>
-      <td><%= link_to image_tag("uni_icon.png", height: '170', width: '170', alt: "Drive to Uni"), '#' %></td>
-      <td><%= link_to image_tag("adventure_icon.png", height: '170', width: '170', alt: "Drive for weekend trips"), '#' %></td>
-      <td><%= link_to image_tag("friends_icon.png", height: '170', width: '170', alt: "Meet other students"), '#' %></td>
-    </tr>
-    <tr>
-      <td>Drive to Uni</td>
-      <td>Drive for weekend trips</td>
-      <td>Meet other students</td>
-    </tr>
-    </tbody>
-  </table>
-  <% if signed_in? %>
-      <%= link_to 'See all rides!', rides_path, class: "btn btn-xlarge btn-primary" %>
-  <% else %>
-      <%= link_to 'Sign up now!', signup_path, class: "btn btn-xlarge btn-primary" %>
-  <% end %>
+  <!--<table class="table table-borderless">-->
+    <!--<tbody>-->
+    <!--<tr>-->
+      <!--<td><%#= link_to image_tag("uni_icon.png", height: '170', width: '170', alt: "Drive to Uni"), '#' %></td>-->
+      <!--<td><%#= link_to image_tag("adventure_icon.png", height: '170', width: '170', alt: "Drive for weekend trips"), '#' %></td>-->
+      <!--<td><%#= link_to image_tag("friends_icon.png", height: '170', width: '170', alt: "Meet other students"), '#' %></td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+      <!--<td>Drive to Uni</td>-->
+      <!--<td>Drive for weekend trips</td>-->
+      <!--<td>Meet other students</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+  <!--</table>-->
+  <!--<%# if signed_in? %>-->
+      <!--<%#= link_to 'See all rides!', rides_path, class: "btn btn-xlarge btn-primary" %>-->
+  <!--<%# else %>-->
+      <!--<%#= link_to 'Sign up now!', signup_path, class: "btn btn-xlarge btn-primary" %>-->
+  <!--<%# end %>-->
+<!--</div>-->
+
+<!--<div class="even-section center">-->
+  <!--<h2>How does it work?</h2>-->
+  <!--<iframe src="//player.vimeo.com/video/58241549" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>-->
+<!--</div>-->
+
+<!--<div class="odd-section center">-->
+  <!--<h2>Download mobile app </h2>-->
+
+  <!--<%#= link_to image_tag("App_Store.png", height: '60', width: '170', alt: "App Store"), '#' %>-->
+  <!--<%#= link_to image_tag("Play_Store.png", height: '60', width: '170', alt: "Play Store"), '#' %>-->
+
+<!--</div>-->
+
+<div class="jumbotron container_main container main_page_image">
+  <div class="row">
+      <div class="col-md-12">
+      <div style="position: relative; width: 100%;"><img src="<%= asset_path "TUM_Visio.jpg"%>" class="container_main_child" style="height: 500px;"></div>
+      <div class="container container_main_child main_page_image_heading">
+        <h1 style="color: #c8c8c8"><%= t 'welcome.pic_heading' %></h1>
+        <p style="color: #c8c8c8"><%= t 'welcome.pic_paragraph' %></p>
+      </div>
+      </div>
+  </div>
+</div>
+<div style="clear: both"></div>
+<div class="container jumbotron container_main main_page_section" style="padding-top: 22px; background-color: black">
+  <div class="row" style="margin:0 auto">
+    <div class="col-md-2" style="text-align: center">
+        <p style="margin-top: 0px; color: #c8c8c8">Find a ride</p>
+      </div>
+      <form role="form">
+        <div class="form-group col-md-4">
+          <input placeholder="Location" class="form-control main_page_input" type="text" >
+        </div>
+        <div class="form-group col-md-4">
+          <input placeholder="Destination" class="form-control main_page_input" type="text">
+        </div>
+        <div class="col-md-2" style="text-align: center;">
+            <button type="submit" class="btn btn-info" style="height: 32px; padding-top: 2px;">Search</button>
+        </div>
+      </form>
+  </div>
 </div>
 
-<div class="even-section center">
-  <h2>How does it work?</h2>
-  <iframe src="//player.vimeo.com/video/58241549" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<div class="container jumbotron container_main main_page_section" style="background-color: #53A2d0;">
+  <div class="row" style="margin:0 auto">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-3">
+      <h3 class="light_blue">Use Case 1</h3>
+      <p class="main_page_uc_description">Some very boring and long stuff which does not bring anything at all.</p>
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4" >
+      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+    </div>
+    <div class="col-md-1">
+    </div>
+  </div>
 </div>
 
-<div class="odd-section center">
-  <h2>Download mobile app </h2>
+<div class="container jumbotron container_main" style="padding-bottom: 0px; margin-bottom: 0px; color: white; background-color: #0076b3;">
+  <div class="row" style="margin:0 auto">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4" >
+      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-3">
+      <h3 class="light_blue">Use Case 2</h3>
+      <p class="main_page_uc_description">Some very boring and long stuff which does not bring anything at all.</p>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
 
-  <%= link_to image_tag("App_Store.png", height: '60', width: '170', alt: "App Store"), '#' %>
-  <%= link_to image_tag("Play_Store.png", height: '60', width: '170', alt: "Play Store"), '#' %>
+<div class="container jumbotron container_main" style="padding-bottom: 0px; margin-bottom: 0px; color: white; background-color: #005c91;">
+  <div class="row" style="margin:0 auto">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-3">
+      <h3 class="light_blue">Use Case 1</h3>
+      <p class="main_page_uc_description">Some very boring and long stuff which does not bring anything at all.</p>
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4" >
+      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+    </div>
+    <div class="col-md-1">
+    </div>
+  </div>
+</div>
 
+<div class="container jumbotron container_main" style="padding-bottom: 0px; padding-top: 0px; margin-bottom: 0px; color: white; background-color: black;">
+  <div class="row" style="margin:0 auto">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+      <h3 class="light_grey">“I  really enjoyed this app. Thanks to TUMitfahrer I have met many ..... I hope i will meet more ... in the future”</h3>
+      <p class="light_grey" style="margin-top: 0px;">Michael S.</p>
+    </div>
+    <div class="col-md-2">
+    </div>
+  </div>
+</div>
+
+<div class="container jumbotron container_main" style=" margin-bottom: 0px; color: white;" >
+  <div class="row" style="margin:0 auto">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3" >
+      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-3">
+      <img src="<%= asset_path "google-play.png" %>" style="height: 100px">
+      <img src="<%= asset_path "apple-app-store.png" %>" style="height: 100px">
+    </div>
+    <div class="col-md-2"></div>
+  </div>
 </div>

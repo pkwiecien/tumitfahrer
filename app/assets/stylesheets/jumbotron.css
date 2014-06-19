@@ -1,0 +1,72 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+.container_main {
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 100% !important;
+}
+
+.container_main_child {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.main_page_image{
+    padding: 0px;
+    height: 500px;
+    position: relative;
+    margin-bottom: 0px;
+    text-align: center;
+    color: white;
+}
+
+.main_page_image_heading {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    color: white;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+    height: 500px;
+}
+
+.main_page_search {
+    padding-top: 22px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    color: white;
+    background-color: black;
+}
+
+.main_page_input {
+    margin-bottom: 0px;
+    background-color: #2B2B2B;
+    border: medium none;
+}
+
+.main_page_section {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    color: white;
+}
+
+.light_blue {
+    color: #beddf1;
+}
+
+.main_page_uc_description {
+    margin-top: 0px;
+    color: #0F3750;
+    line-height: 1.2;
+}
+
+.light_grey {
+    color: #c8c8c8
+}
+
+
