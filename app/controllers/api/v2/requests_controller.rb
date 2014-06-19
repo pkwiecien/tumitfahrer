@@ -40,6 +40,10 @@ class Api::V2::RequestsController < ApiController
                                                       free_seats: ride[:free_seats])
       Relationship.find_by(ride_id: new_ride.id).update_attributes(driver_ride_id: ride.id)
       # TODO: send push notification if request was confirmed
+
+      #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - Start
+      Notification.accept_request(passenger, ride)
+      #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - End
     end
     request.destroy
 

@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  driver_pickup_alert : "TUMitFahrer: Reminder for Pickup > Time: %{time} Location: %{departure}."
+  passenger_ride_alert: "TUMitFahrer: Passenger Ride Alert > Time: %{time} Location: %{departure} Driver: %{result}."
+  cancel_ride_alert: "TUMitFahrer: Ride Cancelled Driver > %{driver}, had cancelled the ride. Time: %{time} Location: %{departure} Reason: Due to an unexpected event."
+  reservation_cancelled_passenger_alert: "TUMitFahrer: Reservation Cancelled > Passenger %{username}, had cancelled the ride. Time: %{time} Location: %{departure} Reason: Due to an unexpected event."
+  accept_request: "TUMitFahrer: Request Accepted > Driver %{driver}, has accepted your request to join the ride."
+  decline_request: "TUMitFahrer: Request Declined > Driver %{driver}, has declined your request to join the ride."

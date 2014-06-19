@@ -50,6 +50,43 @@ class Notification < ActiveRecord::Base
     Notification.delete(id)
   end
 
+
+
+
+
+  def self.driver_pickup(current_user_id, ride_id, departure_time)
+    insert_notification(current_user_id ,ride_id,1,departure_time,'f') #TODO: fix the departure time based on the notification time set by user
+  end
+
+  def self.accept_request(passenger_id, ride_id)
+    insert_notification(passenger_id,ride_id,5, Time.zone.now , 'f')
+  end
+
+  #This function inserts the notification in the database table for cancel_ride_alert notification message.
+  def self.cancel_ride(ride_id,user_id)
+    # 1- We need to destroy the notification that was created to remind the driver about the upcoming ride
+    Notification.where(:ride_id => ride_id, :message_type => 1).destroy_all
+
+    # 2- We need to add notifications for passengers that user has canceled the ride
+    ride = Ride.new
+    ride.user_id = user_id
+    ride.id = ride_id
+    passenger_list = ride.passengers
+
+    #loop through all the passengers and insert notification for each passenger in notification table
+    passenger_list.each do |passenger|
+      insert_notification(passenger.id, ride_id, 3, Time.now  ,'f') #TODO: fix this 'f' thing because in postgres it is different
+    end
+  end
+
+
+
+
+
+
+
+
+
   #This function gets the list of notifications that the cron job has to send in next 5 mins.
   def self.get_notification_list
     startTime = Time.now
@@ -63,13 +100,18 @@ class Notification < ActiveRecord::Base
 
     result = Array.new
     notifications.each do |notification|  #loop through all the notifications
-      message = Notification.get_message(notification)  #get the constructed message based on message type
+      #message = Notification.get_message(notification)  #get the constructed message based on message type
 
       devices_list = notification.user.devices
 
       devices_list.each do |device|
         platform = device.platform  #get platform and device id
         device_id = device.token
+        #language = device.locale #TODO:when the locale thing will be inserted in the database table then enable this. So, that based on the device language we can automatically handle this.
+        language = "de" #TODO: Change this and get the value from code
+
+        #Each device can have different language. So, we have to construct the message again in the loop
+        message = Notification.get_message(notification, language)  #get the constructed message based on message type
 
         data = NotificationData.new(notification.id,message,device_id,platform) #initialize a custom object
 
@@ -82,23 +124,27 @@ class Notification < ActiveRecord::Base
 
   #This function lists all the possible message types and there corresponding functions. Each function generates a string message that
   #needs to be sent as a notification
-  def self.get_message(notification)
+  def self.get_message(notification, language)
     case notification.message_type
       when '1'
-        Notification.driver_pickup_alert(notification)
+        Notification.driver_pickup_alert(notification, language)
       when '2'
-        Notification.passenger_ride_alert(notification)
+        Notification.passenger_ride_alert(notification, language)
       when '3'
-        Notification.cancel_ride_alert(notification)
+        Notification.cancel_ride_alert(notification , language)
       when '4'
-        Notification.reservation_cancelled_passenger_alert(notification)
+        Notification.reservation_cancelled_passenger_alert(notification, language)
+      when '5'
+        Notification.accept_request_alert(notification, language)
+      when '6'
+        Notification.decline_request_alert(notification, language)
       else
-
+        #TODO: Handling this case
     end
   end
 
   #This functions generates a string notification for drivers that they have to pick up the passengers
-  def self.driver_pickup_alert(notification)
+  def self.driver_pickup_alert(notification, language)
     #2 - Driver Pick-up Alert
     #H=> TuMitfahrer: Alert
     #M=> Reminder for Pickup:
@@ -110,23 +156,30 @@ class Notification < ActiveRecord::Base
     user_id = notification.user_id
     ride_id = notification.ride_id
 
-    ride = Ride.new
-    ride.user_id = user_id
-    ride.id = ride_id
-    result = ride.passengers    #call passenger function from rides controller. A list of passengers is returned
+    I18n.locale = language
+    message = I18n.t(:driver_pickup_alert, time: time, departure: departure)
+    #message = "TUMitFahrer: Alert (Reminder for Pickup) Time: #{time} Location: #{departure}"
 
-    message = "TumMitFahrer: Alert (Reminder for Pickup) Time: #{time} Location: #{departure} Passenger: "
+    I18n.locale = :en
+
+    #Commented because we need simple notifications because of limited space on the mobile phones.
+    #ride = Ride.new
+    #ride.user_id = user_id
+    #ride.id = ride_id
+    #result = ride.passengers    #call passenger function from rides controller. A list of passengers is returned
+
+    #message = "TUMMitFahrer: Alert (Reminder for Pickup) Time: #{time} Location: #{departure} Passenger: "
 
     #if result is empty
-    result.each do |user|
-      message += user.last_name
-    end #return the final message generated
+    #result.each do |user|
+     # message += user.last_name
+    #end #return the final message generated
 
     message
   end
 
   #This function generates a string notification for passengers that they have an upcoming ride
-  def self.passenger_ride_alert(notification)
+  def self.passenger_ride_alert(notification, language)
     #Passenger Ride Alert
     #H=> TuMitfahrer: Alert
     #M=> Reminder for Ride:
@@ -142,13 +195,13 @@ class Notification < ActiveRecord::Base
     ride = Ride.new
     ride.user_id = user_id
     ride.id = ride_id
-    result = ride.driver    #get driver  -- Should only return 1 row
+    driver = ride.driver    #get driver  -- Should only return 1 row
 
-    message = "TumMitFahrer: Alert (Passenger Ride Alert) Time: #{time} Location: #{departure} Driver: #{result}"
+    message = "TUMitFahrer: Alert (Passenger Ride Alert) Time: #{time} Location: #{departure} Driver: #{driver}"
   end
 
   #This function generates a string notification for cancellation of ride. The notification is sent to all the passengers.
-  def self.cancel_ride_alert(notification)
+  def self.cancel_ride_alert(notification, language)
     #Cancel ride alert to passengers
     #H=> TuMitfahrer: Alert
     #M=> Ride Cancelled:
@@ -165,13 +218,13 @@ class Notification < ActiveRecord::Base
     ride = Ride.new
     ride.user_id = user_id
     ride.id = ride_id
-    result = ride.driver    #get driver  -- Should only return 1 row
+    driver = ride.driver    #get driver  -- Should only return 1 row
 
-    message = "TumMitFahrer: Alert (Ride Cancelled) Driver #{driver}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
+    message = "TUMitFahrer: Alert (Ride Cancelled) Driver #{driver}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
   end
 
   #This function generates a string notification for reservation cancellation. This notification is sent to the driver.
-  def self.reservation_cancelled_passenger_alert(notification)
+  def self.reservation_cancelled_passenger_alert(notification, language)
     #Reservation cancelled alert to driver
     #H=> TuMitfahrer: Alert
     #M=> Reservation Cancelled:
@@ -186,6 +239,47 @@ class Notification < ActiveRecord::Base
     ride_id = notification.ride_id
     username = notification.user.last_name + notification.user.first_name
 
-    message = "TumMitFahrer: Alert (Reservation Cancelled) Passenger #{username}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
+    message = "TUMitFahrer: Alert (Reservation Cancelled) Passenger #{username}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
+  end
+
+  #This function generates a string notification for acceptance of request by the driver. Message is sent to the passenger.
+  def self.accept_request_alert(notification, language)
+    #Accept request for ride from driver
+    #H=> TUMitfahrer: Alert
+    #M=> Request Accepted:
+    #Driver , has accepted your request to join the ride.
+
+    departure = notification.ride.departure_place
+    time = notification.ride.departure_time
+    user_id = notification.user_id
+    ride_id = notification.ride_id
+
+    ride = Ride.new
+    ride.user_id = user_id
+    ride.id = ride_id
+    driver = ride.driver    #get driver  -- Should only return 1 row
+
+    message = "TUMitFahrer: Alert (Request Accepted) Driver #{driver}, has accepted your request to join the ride."
+  end
+
+  #This function generates a string notification for declination of request by the driver. Message is sent to the passenger.
+  def self.decline_request_alert(notification, language)
+    #Accept request for ride from driver
+    #H=> TUMitfahrer: Alert
+    #M=> Request Accepted:
+    #Driver , has declined your request to join the ride.
+
+    departure = notification.ride.departure_place
+    time = notification.ride.departure_time
+    user_id = notification.user_id
+    ride_id = notification.ride_id
+    username = notification.user.last_name + notification.user.first_name
+
+    ride = Ride.new
+    ride.user_id = user_id
+    ride.id = ride_id
+    driver = ride.driver    #get driver  -- Should only return 1 row
+
+    message = "TUMitFahrer: Alert (Request Declined) Driver #{driver}, has declined your request to join the ride."
   end
 end
