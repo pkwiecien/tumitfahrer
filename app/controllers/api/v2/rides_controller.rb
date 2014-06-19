@@ -7,22 +7,31 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides
   def index
-    page = 0
-
-    if params.has_key?(:page)
-      page = params[:page].to_i
-    end
-
-    campus_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
-    activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 1, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
-        limit(@@num_page_results)
-
-    @rides = campus_rides + activity_rides
-    unless @rides.nil?
-      respond_with @rides, status: :ok
+    if params.has_key?(:from_date)
+      get_rides_from_date  DateTime.parse(params[:from_date]), params[:ride_type].to_i
     else
-      respond_with :rides => [], status: :no_content
+      page = 0
+
+      if params.has_key?(:page)
+        page = params[:page].to_i
+      end
+
+      campus_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
+      activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 1, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
+          limit(@@num_page_results)
+
+      @rides = campus_rides + activity_rides
+      unless @rides.nil?
+        respond_with @rides, status: :ok
+      else
+        respond_with :rides => [], status: :no_content
+      end
     end
+  end
+
+  def get_rides_from_date from_date, ride_type
+    @rides = Ride.where("ride_type = ? AND updated_at > ?", ride_type, from_date-2.hours)
+    respond_with @rides, status: :ok
   end
 
   # GET api/v2/rides/ids
@@ -115,19 +124,14 @@ class Api::V2::RidesController < ApiController
 
   def destroy
     ride = Ride.find_by(id: params[:id])
+    return render json: {status: :not_found, message: "could not delete passenger"} if ride.nil?
+    ride.destroy
 
-    begin
-      ride = Ride.find_by(id: params[:id]).destroy
-
-      respond_to do |format|
-        format.xml { render xml: {:status => :ok} }
-        format.any { render json: {:status => :ok} }
-      end
-    rescue
-      respond_to do |format|
-        format.xml { render xml: {:status => :not_found} }
-        format.any { render json: {:status => :not_found} }
-      end
+    reason = params[:reason]
+    # TODO send push notification with reason
+    respond_to do |format|
+      format.xml { render xml: {:status => :ok} }
+      format.any { render json: {:status => :ok} }
     end
   end
 

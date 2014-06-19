@@ -29,19 +29,19 @@ class Api::V2::ActivitiesController < ApplicationController
     my_rides_updated_at = params[:my_rides_updated_at]
 
     if campus_updated_at.nil?
-      campus_updated_at = Time.now
+      campus_updated_at = Time.zone.now
     end
 
     if activity_updated_at.nil?
-      activity_updated_at = Time.now
+      activity_updated_at = Time.zone.now
     end
 
     if timeline_updated_at.nil?
-      timeline_updated_at = Time.now
+      timeline_updated_at = Time.zone.now
     end
 
     if my_rides_updated_at.nil?
-      my_rides_updated_at = Time.now
+      my_rides_updated_at = Time.zone.now
     end
 
     user_id = params[:user_id]

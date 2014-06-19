@@ -23,6 +23,7 @@ class Ride < ActiveRecord::Base
   has_many :users, through: :relationships
   has_many :requests
   has_many :conversations
+  has_many :ratings
 
   # filters
   before_save :default_values
@@ -156,8 +157,7 @@ relationships.is_driving= false", self.user_id)
           (destination.empty? || (!destination.empty? && destination_distance <= destination_threshold))
         if departure_time.nil? # no date specified, return all rides that match criteria
           rides.append(ride)
-        end
-        if departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
+        elsif departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
           rides.append(ride)
         end
       end
