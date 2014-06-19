@@ -48,6 +48,9 @@ Each API call starts with `/api/v2` and is followed by a specific verb, e.g. htt
 
 If it's not clear what should be e.g. format of parameters, check out how is the API implemented and try to reverse engineer it. The API functions are [HERE](https://github.com/pkwiecien/tumitfahrer/tree/develop/app/controllers/api/v2). The output of API controllers is defined in serializers [HERE](https://github.com/pkwiecien/tumitfahrer/tree/develop/app/serializers).
 
+
+Currenlty not all API requests require api_key in request header, however, soon it will be added on backend so it will be required to get a response.
+
 #### Sessions
 
 TUMitfahrer has existing user base of over 1000 users. Their passwords are obviously encrypted and cannot be read. The idea is to create a authentication system that will enable old users as well as new ones to login in. Therefore the authentication mechanism is a bit complex.
@@ -82,11 +85,14 @@ http://tumitfahrer-staging.herokuapp.com/api/v2/rides
 
 Type | URI | Explanation
 --- | --- | ---
-*GET* | `/rides` | get all rides
-*GET* | `/rides/1` | get ride no. 1
-*GET* | `/users/1/rides` | get all rides of user no. 1. Optional parameter `is_paid=true (boolean)` returns rides that are paid for by the user
-*POST* | `/users/1/rides` | create a new ride for user no. 1. This user is a driver
-*PUT* | `/users/1/rides/2` |
+*GET* | `/rides?page=0` | get all rides by page.  Response `{ "rides": [ {"id": 1, ...} ] }`. 
+*GET* | `/rides?from_date` | get all rides that were updated after `from_date : date, ride_type : integer`. Ride type = 0 is campus ride, ride type = 1 is activity ride.
+*GET* | `/rides/ids` | get ids of rides that exists in webservice. This method is called on a mobile client to check which rides should be deleted from the local database
+*GET* | `/rides/1` | get ride no. 1.  Response `{ "ride": [ {"id": 1, ...} ] }`. 
+*GET* | `/users/1/rides` | get all rides of user no. 1. Optional parameters: `driver=true` returns rides where user is driver. `passenger=true` returns rides where user passenger. `past=true` return all past rides of the user.
+*POST* | `/users/1/rides` | create a new ride for user no. 1. This user will become ride owner (it can be ride as driver or ride request). Required header: `api_key: string`, which is api key of this user. Ride params: `"ride" : {"departure_place": string, "destination": string, "departure_time": date, "free_seats" : integer, "meeting_point" : string, "ride_type" : intger (0->campus, 1-> activity), "is_driving" : true, "car" : string, "departure_latitude" : double, "departure_longitude" : double, "destination_latitude": double, "destination_longitude":double }` 
+*PUT* | `/users/1/rides/2` | Parameters : `"ride" : {"departure_place": string, "destination": string, "departure_time": date, "free_seats" : integer, "meeting_point" : string, "ride_type" : intger (0->campus, 1-> activity)` 
+*PUT* | `/users/1/rides/2?removed_passenger=10` | Update a ride by removing a passenger with a given id.
 *DELETE* | `/users/1/rides/2` | delete a ride no. 2 for user no. 1  
 
 #### Devices
@@ -107,14 +113,6 @@ Type | URI | Explanation
 *POST* | `/users/1/messages/` | create a new message for user no. 1. Parameter: `receiver_id (integer), content (string)`
 *PUT* | `/messages/1` | update message no. 1 and mark it as seen. Paramter: `is_seen (boolean)`
 
-#### Passengers
-
-**still needs to be implemented in api/v2**
-
-Type | URI | Explanation
---- | --- | ---
-*GET* | `/rides/1/passengers` | get all passenger of the ride no. 1
-*PUT* | `/rides/1/passengers/2` | update a ride for a passenger no 2. Parameters: `contribution_mode, realtime_km`
 
 #### Ratings
 
@@ -129,8 +127,11 @@ Type | URI | Explanation
 
 Type | URI | Explanation
 --- | --- | ---
-*POST* | `/rides/1/requests` | create a new ride request for a ride no. 1. Parameters: `user_id (integer), requested_from (string), requested_to (string)`
-*PUT* | `/rides/1/requests` | handle ride request for a ride no. 1. Parameters: `passenger_id (integer), departure_place (string), destination (string), confirmed (boolean)`
+*GET* | `/rides/1/requests/` | Get all requests for a ride with given id.  Response `{ "requests": [ {"id": integer, "passenger_id" : integer, "ride" : Ride, created_at : date, updated_at : date} ] }`. 
+*GET* | `/users/1/requests/` | Get all user's requets. Response with Request (see above).
+*POST* | `/rides/1/requests` | create a new ride request for a ride no. 1. Parameters: `passenger_id : integer`. Response: newly created Request
+*PUT* | `/rides/1/requests` | handle ride request for a ride no. 1. Parameters: `passenger_id : integer, confirmed : boolean`
+*DELETE* | `/rides/1/requests` | delete a ride requests for a given ride.
 
 #### Search
 
@@ -147,6 +148,7 @@ Discarded API calls:
 * payments
 * contributions
 * projects
+* passnegers
 
 Contributions
 -------------
