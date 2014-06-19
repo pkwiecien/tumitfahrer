@@ -10,9 +10,9 @@ class Api::V2::MessagesController < ApiController
                                            params[:receiver_id])
 
     if @message.nil?
-      return render json: {status: :bad_request}
+      return render json: {message: "Could not save message"}, status: :bad_request
     else
-      render json: {:message => @message}
+      render json: {message: @message}, status: :created
     end
   end
 

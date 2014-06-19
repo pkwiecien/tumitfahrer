@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140609153019) do
+ActiveRecord::Schema.define(version: 20140616103222) do
 
   create_table "conversations", force: true do |t|
     t.integer  "ride_id"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20140609153019) do
     t.datetime "updated_at"
     t.boolean  "enabled"
     t.string   "platform"
+    t.string   "language"
   end
 
   create_table "feedbacks", force: true do |t|
@@ -145,6 +146,11 @@ ActiveRecord::Schema.define(version: 20140609153019) do
     t.datetime "realtime_arrival_time"
     t.boolean  "is_finished"
     t.integer  "ride_type"
+    t.float    "departure_latitude"
+    t.float    "departure_longitude"
+    t.float    "destination_latitude"
+    t.float    "destination_longitude"
+    t.string   "car"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
