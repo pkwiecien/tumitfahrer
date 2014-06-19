@@ -20,4 +20,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  welcome:
+      pic_heading: "Enjoy fun while driving"
+      pic_paragraph: "Create, share and invite"

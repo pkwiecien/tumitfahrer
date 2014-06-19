@@ -12,10 +12,11 @@ class SessionsController < ApplicationController
 
     if user && user.authenticate(hashed_password)
       sign_in user
-      redirect_back_or user
+      #redirect_back_or user
+      render :json => { :status => :ok, :message => "Success!" }
     else
       flash.now[:danger] = "Invalid user name or password!"
-      render 'new'
+      render :json => { :status => :not_ok, :message => "Invalid email or password!" }
     end
   end
 
