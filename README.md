@@ -3,8 +3,7 @@ TUMitfahrer
 
 [![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
 
-New backend for TUMitfahrer App build with Ruby on Rails.
-Any endpoint such as Android, iOS, Pebble apps can communicate with this backend via JSON or XML format.
+TUMitfahrer Web App as well as REST API for mobile clients. Backend is written in Ruby on Rails.
 
 System overview
 -------------
@@ -33,7 +32,6 @@ Roadmap:
 Elements being implemented:
 
 * backend in Rails and REST API (Pawel)
-* integration of backend with existing Android app (Pawel)
 * iOS app (Pawel)
 * web app using Haml/jQuery (Anuradha, Shahid)
 * Android app (Abhijith, Amr)
@@ -72,10 +70,10 @@ To create a new user, create a POST request to `/users`
 
 Type | URI | Explanation
 --- | --- | ---
-*GET* | `/users` | get all users
-*GET* | `/users/1` | get user no. 1
-*POST* | `/users` | create a new user, required parameters as json: `{"user" : { email : "xyz@tum.de", first_name: "Name", last_name: "Name", department: departmentNo(integer)}}`  where departmentNo is a number of faculty (faculties are taken is alpabethic order from : http://www.tum.de/en/about-tum/faculties/, so e.g. Architecture has departmentNo `0`)
-*PUT* | `/users/1` | update user no. 1.   Optional parameters `phone_number (string), rank (integer), exp (float), car (string), unbound_contributions (integer), department (integer), hashed_password (string), hashed_password_confirmation (string), gamification (boolean)`
+*GET* | `/users` | get all users. Response `{ "users": [ {"id": 1, ...} ] }`. 
+*GET* | `/users/1` | get user no. 1. Required header: `Authorization: Basic encrypted_email_and_password`. For encrypted password and email, see above. Response: `{"user": {"id": 1, ...} }`
+*POST* | `/users` | create a new user, required parameters as json: `{"user" : { "email" : "xyz@tum.de", "first_name": "Name", "last_name": "Name", "department": department_id}}`  where departmentNo is a number of faculty (faculties are taken is alpabethic order from : http://www.tum.de/en/about-tum/faculties/, so e.g. Architecture has departmentNo `0`)
+*PUT* | `/users/1` | update user no. 1. Required header: `Authorization: Basic encrypted_email_and_password`. For encrypted password and email, see above.  Parameters that can be updated: `phone_number:  string, car : string, department : integer, hashed_password : string, password_confirmation : string, first_name : string, last_name : string`. Password and password_confirmation are required parameters.
 
 
 #### Rides
