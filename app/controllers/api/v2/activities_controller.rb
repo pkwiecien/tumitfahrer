@@ -58,7 +58,7 @@ class Api::V2::ActivitiesController < ApplicationController
     news_counter = campus_counter + activity_counter + ride_searches_counter + requests_counter
     user_news = new_passenger + new_requests
 
-    @badge = { id: 0, created_at: Time.now}
+    @badge = { id: 0, created_at: Time.zone.now}
     @badge[:timeline_badge] = news_counter
     @badge[:timeline_updated_at] = timeline_updated_at
     @badge[:campus_badge] = campus_counter

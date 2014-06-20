@@ -14,11 +14,6 @@ class Api::V2::RatingsController < ApiController
 
   end
 
-  # GET /api/v2/users/:user_id/ratings?given=true
-  def get_rating_for_ride
-
-  end
-
   # POST /api/v2/users/:user_id/ratings?to_user_id=X&ride_id=Y&rating_type=Z
   def create
 
