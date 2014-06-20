@@ -46,11 +46,11 @@ class Api::V2::ActivitiesController < ApplicationController
 
     user_id = params[:user_id]
 
-    campus_counter = Ride.where("ride_type = 0 AND created_at > ?", campus_updated_at).count
-    activity_counter = Ride.where("ride_type = 1 AND created_at > ?", activity_updated_at).count
+    campus_counter = Ride.where("ride_type = 0 AND created_at > ? AND user_id <> ?", campus_updated_at, user_id).count
+    activity_counter = Ride.where("ride_type = 1 AND created_at > ? AND user_id <> ?", activity_updated_at, user_id).count
 
-    ride_searches_counter = RideSearch.where("created_at > ?", timeline_updated_at).count
-    requests_counter = Request.where("created_at > ?", timeline_updated_at).count
+    ride_searches_counter = RideSearch.where("created_at > ? AND user_id <> ?", timeline_updated_at, user_id).count
+    requests_counter = Request.where("created_at > ? AND passenger_id <> ?", timeline_updated_at, user_id).count
 
     new_passenger =  Ride.joins(:relationships).where("relationships.is_driving = false AND relationships.user_id = ? AND relationships.created_at > ?", user_id, my_rides_updated_at).count
     new_requests = Ride.joins(:requests).where("requests.passenger_id = ? AND requests.created_at > ?", user_id, my_rides_updated_at).count
