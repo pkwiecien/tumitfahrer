@@ -97,6 +97,8 @@ Type | URI | Explanation
 
 #### Activities
 
+http://tumitfahrer-staging.herokuapp.com/api/v2/activities
+
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/activities` | get all activities of what happened in a system. Parameters: `activity_id : integer`, where activity id is id of returned activities object. For a sample response see: [tumitfahrer](http://tumitfahrer-staging.herokuapp.com/api/v2/activities)
@@ -127,7 +129,6 @@ Type | URI | Explanation
 
 #### Ratings
 
-**still needs to be implemented in api/v2**
 
 Type | URI | Explanation
 --- | --- | ---
