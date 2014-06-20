@@ -116,7 +116,9 @@ class Api::V2::RidesController < ApiController
 
       @ride.update_attributes!(meeting_point: params[:ride][:meeting_point], departure_place: params[:ride][:departure_place],
                                destination: params[:ride][:destination], free_seats: params[:ride][:free_seats].to_i,
-                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i)
+                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i,
+                               departure_latitude: params[:ride][:departure_latitude].to_f, departure_longitude: params[:ride][:departure_longitude].to_f,
+                               destination_latitude: params[:ride][:destination_latitude].to_f, destination_longitude: params[:ride][:destination_longitude].to_f)
       respond_with @ride, status: :ok
     end
 
