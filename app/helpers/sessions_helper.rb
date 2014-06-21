@@ -43,7 +43,7 @@ module SessionsHelper
     unless signed_in?
       store_location
       flash[:warning] = "Please sign in"
-      redirect_to signin_url
+      redirect_to root_path
     end
   end
 end
