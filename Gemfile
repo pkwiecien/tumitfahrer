@@ -39,9 +39,13 @@ gem 'nifty-generators'
 gem 'gmaps4rails'
 group :development, :production do
   # postgres database
+<<<<<<< HEAD
   gem 'mysql2'
+=======
+  #gem 'pg', '0.15.1'
+>>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
   gem 'rails_12factor', '0.0.2'
-  #gem 'mysql2'
+  gem 'mysql2'
 
 end
 

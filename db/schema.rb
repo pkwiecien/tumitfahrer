@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20140617105537) do
+=======
+ActiveRecord::Schema.define(version: 20140619134853) do
+>>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
 
   create_table "conversations", force: true do |t|
     t.integer  "ride_id"
@@ -28,6 +32,7 @@ ActiveRecord::Schema.define(version: 20140617105537) do
     t.datetime "updated_at"
     t.boolean  "enabled"
     t.string   "platform"
+    t.string   "language"
   end
 
   create_table "feedbacks", force: true do |t|
@@ -38,6 +43,7 @@ ActiveRecord::Schema.define(version: 20140617105537) do
     t.datetime "updated_at"
   end
 
+<<<<<<< HEAD
   create_table "locations", force: true do |t|
     t.string   "address"
     t.float    "latitude"
@@ -46,6 +52,8 @@ ActiveRecord::Schema.define(version: 20140617105537) do
     t.datetime "updated_at"
   end
 
+=======
+>>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
   create_table "messages", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"

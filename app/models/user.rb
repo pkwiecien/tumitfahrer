@@ -3,6 +3,7 @@ require 'securerandom'
 
 # Schema Information
 # Table name: users
+<<<<<<< HEAD
 # id :integer not null, primary key
 # user_id :integer
 # first_name :string
@@ -18,6 +19,23 @@ require 'securerandom'
 # api_key :string
 # created_at :datetime not null
 # updated_at :datetime not null
+=======
+#  id                     :integer          not null, primary key
+#  user_id                :integer
+#  first_name             :string
+#  last_name              :boolean          default(TRUE)
+#  email                  :string
+#  phone_number           :string
+#  department             :string
+#  car                    :string
+#  password_digest        :string
+#  remember_token         :string
+#  is_admin               :boolean
+#  is_student             :boolean
+#  api_key                :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+>>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
 
 class User < ActiveRecord::Base
 

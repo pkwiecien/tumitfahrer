@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 
 <%= javascript_include_tag "typeahead.js" %>
@@ -5,6 +6,10 @@
 
 
 
+=======
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+<%= javascript_include_tag "jquery.geocomplete.min.js" %>
+>>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
 <% provide(:title, "New ride") %>
 <h1>Add a great ride</h1>
 
@@ -25,11 +30,29 @@
         <%= f.label :free_seats %>
         <%= f.text_field :free_seats %>
 
-        <%= f.label :meeting_point%>
+        <%= f.label :meeting_point %>
         <%= f.text_field :meeting_point %>
 
+<<<<<<< HEAD
         <%= f.label :ride_type%>
         <%= f.text_field :ride_type %>
+=======
+        <%= f.label :car %>
+        <%= f.text_field :car %>
+
+          <%= f.label :ride_type %><br />
+          <%= f.radio_button :ride_type, 0 %>
+          <%= f.label :ride_type, "Campus", :value => 0  %>
+          <%= f.radio_button :ride_type, 1, :checked => true %>
+          <%= f.label :ride_type, "Activity", :value => 1 %>   <br />
+          <span>
+          <%= label_tag :is_driving %><br /></span>
+          <%= radio_button_tag :is_driving, 1 %>
+          <%= label_tag :is_driving, "Driver", :value => 1  %>
+          <%= radio_button_tag :is_driving, 0, :checked => true %>
+          <%= label_tag :is_driving, "Passenger", :value => 0 %>
+
+>>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
 
         <%= f.submit "Add new ride", class: "btn btn-large btn-primary" %>
 
@@ -37,6 +60,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 
 
 
@@ -54,3 +78,9 @@
         });
     });
 </script>
+=======
+<script>
+    $("#ride_departure_place").geocomplete();
+    $("#ride_destination").geocomplete();
+</script>
+>>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc

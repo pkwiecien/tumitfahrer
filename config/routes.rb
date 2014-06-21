@@ -24,7 +24,9 @@ Tumitfahrer::Application.routes.draw do
     end
     # API v2 Routes
     namespace :v2, :defaults => { :format => 'json' } do
+      match '/activities/badges', to: 'activities#get_badge_counter', via: :get
       resources :activities
+      resource :forgot
       resource :search
       resource :feedback
       resources :users do
