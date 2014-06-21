@@ -1,42 +1,41 @@
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 
-
 <%= javascript_include_tag "typeahead.js" %>
 <%= javascript_include_tag "typeahead-addresspicker.js" %>
+
 
 
 <% provide(:title, "New ride") %>
 <h1>Add a great ride</h1>
 
-<%= form_tag rides_path, :method => :get do %>
-    <div class="field">
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <%= form_for(@ride) do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
 
-        <%= label_tag :departure_place %>
-        <%= text_field_tag :departure_place %>
+        <%= f.label :departure_place %>
+        <%= f.text_field :departure_place %>
 
-        <br>
+        <%= f.label :destination %>
+        <%= f.text_field :destination %>
 
+        <%= f.label :departure_time %>
+        <%= f.text_field :departure_time %>
 
-        <%= label_tag :destination %>
-        <%= text_field_tag :destination %>
+        <%= f.label :free_seats %>
+        <%= f.text_field :free_seats %>
 
-        <br>
-        <br>
+        <%= f.label :meeting_point%>
+        <%= f.text_field :meeting_point %>
 
-        <%= label_tag :departure_time %>
-        <%= text_field_tag :departure_time %>
+        <%= f.label :ride_type%>
+        <%= f.text_field :ride_type %>
 
-        <%= label_tag :free_seats %>
-        <%= text_field_tag :free_seats %>
+        <%= f.submit "Add new ride", class: "btn btn-large btn-primary" %>
 
-        <%= label_tag :meeting_point%>
-        <%= text_field_tag :meeting_point %>
-
-      <div class="actions"><%= submit_tag "Add a new ride" %></div>
-
+    <% end %>
+  </div>
 </div>
-
-<% end %>
 
 
 

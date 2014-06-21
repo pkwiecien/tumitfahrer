@@ -3,67 +3,42 @@ require 'securerandom'
 
 # Schema Information
 # Table name: users
-#  id                     :integer          not null, primary key
-#  user_id                :integer
-#  first_name             :string
-#  last_name              :boolean          default(TRUE)
-#  email                  :string
-#  phone_number           :string
-#  department             :integer
-#  car                    :string
-#  password_digest        :string
-#  remember_token         :string
-#  is_admin               :boolean
-#  is_student             :boolean
-#  api_key                :string
-#  rank                   :integer
-#  unbound_contributions  :integer
-#  exp                    :float
-#  gamification           :boolean
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
+# id :integer not null, primary key
+# user_id :integer
+# first_name :string
+# last_name :boolean default(TRUE)
+# email :string
+# phone_number :string
+# department :integer
+# car :string
+# password_digest :string
+# remember_token :string
+# is_admin :boolean
+# is_student :boolean
+# api_key :string
+# created_at :datetime not null
+# updated_at :datetime not null
 
 class User < ActiveRecord::Base
 
   # Active Record relationships
   has_many :relationships, foreign_key: :user_id
-  has_many :rides, through: :relationships, source: :ride, class_name: "Ride", dependent: :delete_all
-  has_many :rides_as_driver, -> { where(relationships: {is_driving: 'true'})},
-           through: :relationships, source: :ride, dependent: :delete_all
-  has_many :rides_as_passenger, -> { where(relationships: {is_driving: 'false'})},
-           through: :relationships, source: :ride
+  has_many :rides
+  has_many :devices
+  has_many :ride_searches
 
   has_many :ratings_given, foreign_key: :from_user_id, class_name: "Rating"
   has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
 
-  has_many :payments_given, foreign_key: :from_user_id, class_name: "Payment"
-  has_many :payments_received, foreign_key: :to_user_id, class_name: "Payment"
+  # user's avatar
+  has_attached_file :avatar, styles: {
+      thumb: '100x100>',
+      square: '200x200#',
+      medium: '300x300>'
+  }
 
-  has_many :contributions
-  has_many :offered_projects, foreign_key: :owner_id, class_name: "Project", source: :project
-  has_many :contributed_projects, through: :contributions, class_name: "Project", source: :project
-
-  has_many :friendships
-  has_many :friends, through: :friendships, source: :friend
-
-  has_many :friendship_requests, foreign_key: :from_user_id
-  has_many :sent_friendship_requests, foreign_key: :from_user_id, class_name: "FriendshipRequest" # requests received by this user from other users
-  has_many :pending_friends, through: :friendship_requests, source: :to_user, class_name: "User"
-
-  has_many :reverse_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest"
-  has_many :received_friendship_requests, foreign_key: :to_user_id, class_name: "FriendshipRequest" #this user sends a request to another user
-  has_many :requesting_friends, through: :reverse_friendship_requests, source: :from_user, class_name: "User"
-
-  has_many :messages
-  has_many :sent_messages, foreign_key: :sender_id, class_name: "Message"
-  has_many :received_messages, foreign_key: :receiver_id, class_name: "Message"
-
-  has_many :devices
-
-  # TODO: avatars
-  ## https://github.com/thoughtbot/paperclip
-  #has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
-  #validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+  # Validate the attached image is image/jpg, image/png, etc
+  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   # filters
   before_create :create_remember_token, :generate_api_key
@@ -76,7 +51,7 @@ class User < ActiveRecord::Base
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
   has_secure_password
-  #validates :password, length: {minimum: 4}
+  validates :password, length: {minimum: 6}
 
   # generate remember token used by web app to remember user session
   def User.new_remember_token
@@ -95,6 +70,14 @@ class User < ActiveRecord::Base
     SecureRandom.hex(4)
   end
 
+  def messages_send_to receiver_id, ride_id
+    self.messages.where(receiver_id: receiver_id, ride_id:ride_id)
+  end
+
+  def messages_received_from sender_id, ride_id
+    Message.where(receiver_id: self.id, sender_id: sender_id, ride_id: ride_id)
+  end
+
   # each password stored in DB is encrypted with SHA512 and salt
   def User.generate_hashed_password(password)
     Digest::SHA512.hexdigest(password+Tumitfahrer::Application::SALT)
@@ -108,41 +91,6 @@ class User < ActiveRecord::Base
     self.relationships.create!(ride_id: new_ride_id)
   end
 
-  def friend?(other_user)
-    friendships.find_by(friend_id: other_user.id)
-  end
-
-  def befriend!(other_user)
-    friendships.create!(friend_id: other_user.id)
-  end
-
-  def unfriend!(other_user)
-    friendships.find_by(friend_id: other_user.id).destroy
-  end
-
-  def send_friend_request!(to_user)
-    self.sent_friendship_requests.create!(to_user_id: to_user.id, from_user_id: self.id)
-  end
-
-  def handle_friend_request(other_user, shouldAccept)
-    logger.debug "Accepting friendship from #{self.id} to other user: #{other_user.id}"
-    if shouldAccept == true
-      self.befriend!(other_user)
-    end
-    friendship = FriendshipRequest.find_by(from_user_id: other_user.id, to_user_id: self.id)
-    unless friendship.nil?
-      friendship.destroy
-    end
-  end
-
-  def pending_payments
-    self.rides_as_passenger.where(is_paid: false)
-  end
-
-  def new_project()
-    Project.create(owner_id: self.id, )
-  end
-
   def request_ride!(ride, from, to)
     ride.requests.create!(ride_id: ride.id, passenger_id: self.id, requested_from: from, request_to: to)
   end
@@ -153,6 +101,46 @@ class User < ActiveRecord::Base
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def rides_as_driver
+    if self.rides.count > 0
+      self.rides.joins(:relationships).where(relationships: {is_driving: true})
+    else
+      []
+    end
+  end
+
+  # ride as passenger is when user is not owner of the ride and is not driving
+  def rides_as_passenger
+    ride_ids = self.relationships.select(:ride_id).where(is_driving: false).joins(:ride).where("rides.user_id <> ?", self.id)
+    if ride_ids.count > 0
+      Ride.where("id in (?)", ride_ids)
+    else
+      []
+    end
+  end
+
+  # requests_for_driver is a ride, where user is owner of the ride, however he's not driving
+  def requests_for_driver
+    self.rides.joins(:relationships).where(relationships: {is_driving: false})
+  end
+
+  def all_rides
+    rides_as_driver + requests_for_driver + rides_as_passenger + requested_rides
+  end
+
+  def requested_rides
+    Ride.where(id: Request.where(passenger_id: self.id).select(:ride_id))
+  end
+
+  def compute_avg_rating
+    num_all_rating = self.ratings_received.count
+    if num_all_rating == 0
+      0
+    else
+      self.ratings_received.where('rating_type=?', 1)/num_all_rating
+    end
   end
 
   def to_s
@@ -170,15 +158,10 @@ class User < ActiveRecord::Base
   end
 
   def default_values
-    self.rank ||= 0
-    self.exp ||= 0
-    self.unbound_contributions ||= 0
-    self.gamification ||= true
     self.is_student ||= true
+    self.rating_avg ||= 0.0
     nil
   end
-
-  
 
 
 end

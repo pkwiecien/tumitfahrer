@@ -4,6 +4,17 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:edit, :update, :show]
   before_action :right_user, only: [:edit, :update]
 
+  def check_email
+    @user = User.find_by_email(params[:user][:email])
+
+    respond_to do |format|
+      format.json { render :json => !@user }
+    end
+  end
+
+
+
+
   def new
     if signed_in?
       redirect_to current_user
@@ -14,23 +25,26 @@ class UsersController < ApplicationController
 
   def create
 
-    # todo: add salt to config
-    params[:user][:password] = Digest::SHA512.hexdigest(params[:user][:password]+'toj369sbz1f316sx')
+    params[:user][:password] = Digest::SHA512.hexdigest(params[:user][:password]+Tumitfahrer::Application::SALT)
     params[:user][:password_confirmation] = params[:user][:password]
+
+    logger.debug "Env variable is: "
+    logger.debug "here: #{ENV['S3_BUCKET_NAME']}"
 
     @user = User.new(user_params)
     if @user.save
         sign_in @user
         flash[:success] = "Welcome to TUMitfahrer!"
-	UserMailer.welcome_email(@user,'12341234').deliver
+	
         redirect_to @user
     else
       render 'new'
     end
+
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
     @rides = @user.rides.paginate(page: params[:page])
   end
 
@@ -51,7 +65,8 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :department, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :last_name, :email, :department,
+                                 :password, :password_confirmation, :avatar)
   end
 
   def right_user

@@ -10,16 +10,9 @@ Tumitfahrer::Application.routes.draw do
       resources :users do
         match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
-          match '/contributions', to: 'contributions#contribute_to_ride', via: :post
-          resources :contributions
           resources :requests
         end
         resources :devices
-        resources :payments
-        resources :friends
-        resources :friend_requests
-        resources :contributions
-        resources :projects
         resources :ratings
         resources :messages
       end
@@ -33,12 +26,22 @@ Tumitfahrer::Application.routes.draw do
     namespace :v2, :defaults => { :format => 'json' } do
       resources :activities
       resource :search
+      resource :feedback
       resources :users do
         resources :devices
+        match '/requests', to: 'requests#get_user_requests', via: :get
         match '/rides', to: 'rides#get_user_rides', via: :get
+        resources :rides do
+          resources :requests
+        end
       end
+      match '/rides/ids', to: 'rides#get_ids_existing_rides', via: :get
       resources :rides do
         resources :requests
+        resources :conversations do
+          resources :messages do
+          end
+        end
       end
       resource :sessions
     end
@@ -63,6 +66,12 @@ Tumitfahrer::Application.routes.draw do
   match "/contact", to: "static_pages#contact", via: 'get'
   match "/about", to: "static_pages#about", via: 'get'
   match "/discover", to: "static_pages#discover", via: 'get'
+
+
+  #map.check_email "users/check_email", :controller => "users", :action => "check_email"
+  #map.resources :users
+
+  #map.resources :users, :collection => { :check_email => :get }
 
 
   # HOW TO:

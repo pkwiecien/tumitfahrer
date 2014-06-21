@@ -1,0 +1,91 @@
+<script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
+
+
+<%= javascript_include_tag "typeahead.js" %>
+<%= javascript_include_tag "typeahead-addresspicker.js" %>
+
+<%= form_tag searches_path, :method => :get do %>
+    <div class="field">
+
+
+
+      <%= label_tag :departure_place %>
+      <%= text_field_tag :departure_place, params[:departure_place] %>
+
+      <br>
+      <br>
+     
+      <%= label_tag :departure_place_threshold %>
+      <%= text_field_tag :departure_place_threshold, params[:departure_place_threshold] %> 
+
+
+
+      <%= label_tag :destination %>
+      <%= text_field_tag :destination, params[:destination] %>
+
+
+
+      <br>
+      <br>
+
+
+      <%= label_tag :departure_time %>
+      <%= text_field_tag :departure_time, params[:departure_time] %>
+
+
+    </div>
+    <div class="actions"><%= submit_tag "Search Ride" %></div>
+
+    <div class="row">
+
+      <div class="col-xs-10 col-xs-offset-1">
+        
+        <table class="table table-condensed table-striped table-hover">
+          <thead>
+          <tr>
+            <th class="col-sm-2">From</th>
+            <th class="col-sm-2">Destination</th>
+            <th class="col-sm-2">Date</th>
+            <th class="col-sm-2">Seats</th>
+            <th class="col-sm-2">Driver</th>
+          </tr>
+          </thead>
+          <tbody>
+          <%= @nearbyrides.count %>
+                   <% @nearbyrides.each do |ride| %>
+              <tr onclick="document.location='/ride_details/<%= ride.id %>'" style="cursor:pointer">
+                <td><span><%= ride.departure_place %></span></td>
+                <td><span><%= ride.destination %></span></td>
+                <td><span><%= ride.departure_time %></span></td>
+                <td><span><%= pluralize(ride.free_seats, "seat") %></td>
+
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+<% end %>
+<p>
+  The distance between departure place and that of the destination is <%= @distance.round(2) %> miles.
+  the departure place is <%= @departure_place1 %>
+  The destination is <%= @departure_place2 %>
+</p>
+
+
+
+<script>
+
+    $(document).ready(function () {
+        var addressPicker = new AddressPicker();
+        $('#departure_place').typeahead(null, {
+            displayKey: 'description',
+            source: addressPicker.ttAdapter()
+        });
+        $('#destination').typeahead(null, {
+            displayKey: 'description',
+            source: addressPicker.ttAdapter()
+        });
+    });
+</script>

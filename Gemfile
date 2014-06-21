@@ -21,17 +21,28 @@ gem 'grocer'
 gem 'houston', '~> 2.0.2', :require => 'houston'
 # used for parsing xml requests
 gem 'actionpack-xml_parser'
-#gem "paperclip", "~> 4.1"
 gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
+# for getting location
+gem "geocoder"
 
-gem 'geocoder'
+# gem 'ruby-debug-ide'
+#gem 'linecache','0.46'
+#gem 'ruby-debug-base19x'
+ # gem 'linecache19', '>= 0.5.13', :git => 'https://github.com/robmathews/linecache19-0.5.13.git'
+# gem 'ruby-debug-base19x', '0.11.30.pre10'
+# gem 'ruby-debug-ide', '0.4.17.beta14'
+gem "debase"
 gem 'nifty-generators'
+
+gem 'gmaps4rails'
 group :development, :production do
   # postgres database
   gem 'mysql2'
   gem 'rails_12factor', '0.0.2'
+  #gem 'mysql2'
+
 end
 
 group :development do
@@ -65,6 +76,8 @@ gem 'therubyracer', :platforms => :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+#gem 'angularjs-rails'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 #gem 'turbolinks'
 
@@ -77,6 +90,9 @@ group :doc do
 end
 
 gem 'active_model_serializers'
+# for storing images
+gem 'paperclip'
+gem 'aws-sdk'
 
 # Use unicorn as the app server
 # gem 'unicorn'

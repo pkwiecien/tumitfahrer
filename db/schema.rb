@@ -11,21 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140609144755) do
+ActiveRecord::Schema.define(version: 20140617105537) do
 
-  create_table "FriendshipRequests", force: true do |t|
-    t.integer  "from_user_id"
-    t.integer  "to_user_id"
+  create_table "conversations", force: true do |t|
+    t.integer  "ride_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "contributions", force: true do |t|
     t.integer  "user_id"
-    t.integer  "project_id"
-    t.float    "amount"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "other_user_id"
   end
 
   create_table "devices", force: true do |t|
@@ -37,16 +30,13 @@ ActiveRecord::Schema.define(version: 20140609144755) do
     t.string   "platform"
   end
 
-  create_table "friendships", force: true do |t|
+  create_table "feedbacks", force: true do |t|
     t.integer  "user_id"
-    t.integer  "friend_id"
+    t.string   "title"
+    t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
-  add_index "friendships", ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true, using: :btree
-  add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
 
   create_table "locations", force: true do |t|
     t.string   "address"
@@ -57,33 +47,13 @@ ActiveRecord::Schema.define(version: 20140609144755) do
   end
 
   create_table "messages", force: true do |t|
-    t.integer  "sender_id"
-    t.integer  "receiver_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_seen"
     t.string   "content"
-  end
-
-  create_table "payments", force: true do |t|
-    t.integer  "from_user_id"
-    t.integer  "to_user_id"
-    t.integer  "ride_id"
-    t.float    "amount"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "projects", force: true do |t|
-    t.integer  "phase"
-    t.float    "fundings_target"
-    t.integer  "owner_id"
-    t.string   "description"
-    t.string   "title"
-    t.datetime "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "ride_id"
+    t.integer  "conversation_id"
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
   end
 
   create_table "push_configurations", force: true do |t|
@@ -144,7 +114,6 @@ ActiveRecord::Schema.define(version: 20140609144755) do
     t.boolean  "is_driving"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "driver_ride_id"
   end
 
   add_index "relationships", ["ride_id"], name: "index_relationships_on_ride_id", using: :btree
@@ -154,10 +123,18 @@ ActiveRecord::Schema.define(version: 20140609144755) do
   create_table "requests", force: true do |t|
     t.integer  "ride_id"
     t.integer  "passenger_id"
-    t.string   "requested_from"
-    t.string   "request_to"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "ride_searches", force: true do |t|
+    t.integer  "user_id"
+    t.string   "departure_place"
+    t.string   "destination"
+    t.datetime "departure_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "ride_type"
   end
 
   create_table "rides", force: true do |t|
@@ -174,10 +151,13 @@ ActiveRecord::Schema.define(version: 20140609144755) do
     t.datetime "realtime_departure_time"
     t.float    "duration"
     t.datetime "realtime_arrival_time"
-    t.integer  "contribution_mode"
-    t.boolean  "is_paid"
     t.boolean  "is_finished"
-    t.float    "distance"
+    t.integer  "ride_type"
+    t.float    "departure_latitude"
+    t.float    "departure_longitude"
+    t.float    "destination_latitude"
+    t.float    "destination_longitude"
+    t.string   "car"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
@@ -196,13 +176,11 @@ ActiveRecord::Schema.define(version: 20140609144755) do
     t.boolean  "admin"
     t.string   "api_key"
     t.boolean  "is_student"
-    t.integer  "rank"
-    t.float    "unbound_contributions"
-    t.integer  "exp"
-    t.boolean  "gamification"
-    t.string   "password_reset_token"
-    t.datetime "password_reset_sent_at"
-    t.string   "auth_token"
+    t.float    "rating_avg"
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

@@ -1,29 +1,86 @@
-<% provide(:title, "Find a ride") %>
-<div class="row">
+<div id="container" style="width:500px">
 
-  <div class="col-xs-10 col-xs-offset-1">
-    <h3>All Rides (<%= Ride.all.count %>)</h3>
-    <table class="table table-condensed table-striped table-hover">
-      <thead>
-      <tr>
-        <th class="col-sm-2">From</th>
-        <th class="col-sm-2">Destination</th>
-        <th class="col-sm-2">Date</th>
-        <th class="col-sm-2">Seats</th>
-        <th class="col-sm-2">Driver</th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @rides.each do |ride| %>
-          <tr onclick="document.location='/ride_details/<%= ride.id %>'" style="cursor:pointer">
-            <td><span><%= ride.departure_place %></span></td>
-            <td><span><%= ride.destination %></span></td>
-            <td><span><%= ride.departure_time %></span></td>
-            <td><span><%= pluralize(ride.free_seats, "seat") %></td>
+  <div id="header">
+    <h1 style="margin-bottom:0;">Different types of Rides</h1></div>
 
+
+    <div id="Campus" style="width:100px;float:left;">
+      <a href>Campus</a><br>
+     </div>
+    <div id="All" style="width: 100px;float:left;">
+      <a href="#" id="all">All</a>
+    </div>
+  <div id="Yours" style="width: 100px;float:left;">
+    <a href="#" id="yours">Yours</a>
+  </div>
+  <div id="all_div" style="display: none">
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <h3>All Rides (<%= Ride.all.count %>)</h3>
+        <table class="table table-condensed table-striped table-hover">
+          <thead>
+          <tr>
+            <th class="col-sm-2">From</th>
+            <th class="col-sm-2">Destination</th>
+            <th class="col-sm-2">Date</th>
+            <th class="col-sm-2">Seats</th>
+            <th class="col-sm-2">RideType</th>
           </tr>
-      <% end %>
-      </tbody>
-    </table>
+          </thead>
+          <tbody>
+          <% @rides.each do |ride| %>
+              <tr onclick="document.location='/ride_details/<%= ride.id %>'" style="cursor:pointer">
+                <td><span><%= ride.departure_place %></span></td>
+                <td><span><%= ride.destination %></span></td>
+                <td><span><%= ride.departure_time %></span></td>
+                <td><span><%= pluralize(ride.free_seats, "seat") %></td>
+                <td><span><%= ride.ride_type %></span></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+</div>
+
+<div id="yours_div" style="display: none">
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1">
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="col-sm-2">From</th>
+          <th class="col-sm-2">Destination</th>
+          <th class="col-sm-2">Date</th>
+          <th class="col-sm-2">Seats</th>
+          <th class="col-sm-2">RideType</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @rides.each do |ride| %>
+            <tr onclick="document.location='/ride_details/<%= ride.id %>'" style="cursor:pointer">
+              <td><span><%= ride.departure_place %></span></td>
+              <td><span><%= ride.destination %></span></td>
+              <td><span><%= ride.departure_time %></span></td>
+              <td><span><%= pluralize(ride.free_seats, "seat") %></td>
+              <td><span><%= ride.ride_type %></span></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+</div>
+
+<script>
+  $("#all").click(function(){
+      $("#all_div").css("display", "block");
+      $("#yours_div").css("display", "none");
+  })
+  $("#yours").click(function(){
+      $("#all_div").css("display", "none");
+      $("#yours_div").css("display", "block");
+  });
+</script>
