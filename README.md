@@ -140,10 +140,10 @@ Type | URI | Explanation
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/rides/:ride_id/requests/` | Get all requests for a ride with given id.  Response `{ "requests": [ {"id": integer, "passenger_id" : integer, "ride" : Ride, created_at : date, updated_at : date} ] }`. 
-*GET* | `/users/:ride_id/requests/` | Get all user's requets. Response with Request (see above).
+*GET* | `/users/:ride_id/requests/` | Get all user's requests. Response with Request (see above).
 *POST* | `/rides/:ride_id/requests` | create a new ride request for a specific ride. Parameters: `passenger_id : integer`. Response: newly created Request
-*PUT* | `/rides/:ride_id/requests` | handle ride request for a specific ride. Parameters: `passenger_id : integer, confirmed : boolean`
-*DELETE* | `/rides/:ride_id/requests` | delete a ride requests for a given ride.
+*PUT* | `/rides/:ride_id/requests/:id` | handle ride request for a specific ride. Parameters: `passenger_id : integer, confirmed : boolean`
+*DELETE* | `/rides/:ride_id/requests/:id` | delete a ride requests for a given ride.
 
 #### Search
 
