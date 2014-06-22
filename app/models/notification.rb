@@ -134,7 +134,7 @@ class Notification < ActiveRecord::Base
     startTime = Time.zone.now
     endTime = Time.zone.now + 5*60  #next 5 mins
     #@notifications = Notification.where(:status => false).where(:date_time => startTime...endTime)
-    notifications = Notification.where(:status=>false) #TODO: revert it back to 5 min thing
+    notifications = Notification.where(:status=>'not sent') #TODO: revert it back to 5 min thing
 
     #Pass this notification object to another function. That can generate a string message
     # based on message type.
