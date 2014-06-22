@@ -8,9 +8,10 @@ require 'notification_data'
 #  ride_id                 :integer
 #  message_type            :integer          #The type of message we have to send.
 #  date_time               :datetime         #datetime at which we have to send the message
-#  status                  :boolean          #current status of notificatino. false means that message not sent. true means message sent.
+#  status                  :string           #current status of notificatino. 'sent', 'not sent' are two values that can be stored in the table
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  message                 :string
 
 class Notification < ActiveRecord::Base
   validates :user_id, presence: true
@@ -21,10 +22,12 @@ class Notification < ActiveRecord::Base
   belongs_to :user
   belongs_to :ride
 
+
   def self.get_all_notifications
     Notification.all
   end
 
+  #This function fetches the notification object from database based on its id
   def self.get_notification(id)
     Notification.find(id)
   end
@@ -51,6 +54,7 @@ class Notification < ActiveRecord::Base
     end
   end
 
+  #This function deletes a notification based on its id
   def self.delete_notification(id)
     Notification.delete(id)
   end
@@ -341,6 +345,7 @@ class Notification < ActiveRecord::Base
     message
   end
 
+  #This function generates a string notification for driver when a passenger joins the ride.
   def self.user_join_alert(notification, language)
     #Accept request for ride from driver
     #H=> TUMitfahrer: Alert
@@ -355,6 +360,7 @@ class Notification < ActiveRecord::Base
     message
   end
 
+  #This function takes the ride object as input and returns the name of the driver as output
   def get_driver_name(ride)
     user_driver = ride.driver
     user_driver.last_name + "," + user_driver.first_name

@@ -3,6 +3,7 @@ require 'gcm'
 #class to send messages. Cron job will call this class.
 class MessageSender
 
+  #This function is called by Cron job to fetch the next batch of notifications to send. After fetching it sends the messages to different platforms
   def self.send_next_batch
    notification_list = Notification.get_notification_list
    send_message(notification_list)
@@ -36,6 +37,7 @@ class MessageSender
     end
   end
 
+  #This function sends push notificaiton to android devices. It takes the token of android device and notification message as output.
   def self.send_android_notification(token, message)
     gcm = GCM.new('AIzaSyDNjxSCSc_zRBlC8jHpqxWgP1crx41B0IA') #TODO Initialize it only one time at app start
     registration_id = [token]
@@ -58,6 +60,7 @@ class MessageSender
     end
   end
 
+  #This function sends push notificaiton to iPhone devices. It takes the token of android device and notification message as output.
   def self.send_iphone_notification(token,message)
     pusher = Grocer.pusher(certificate: Rails.root + "/config/certificate/cert_apple_development.pem", passphrase: "", gateway: "gateway.sandbox.push.apple.com", port: 2195, retries: 3)
 
