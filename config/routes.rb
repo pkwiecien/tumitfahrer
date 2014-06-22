@@ -21,11 +21,15 @@ Tumitfahrer::Application.routes.draw do
     end
     # API v2 Routes
     namespace :v2, :defaults => { :format => 'json' } do
+      match '/activities/badges', to: 'activities#get_badge_counter', via: :get
       resources :activities
+      resource :forgot
       resource :search
       resource :feedback
       resources :users do
         resources :devices
+        resources :ratings
+        match '/requests', to: 'requests#get_user_requests', via: :get
         match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
           resources :requests

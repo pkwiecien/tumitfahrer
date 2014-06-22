@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619183844) do
+
+ActiveRecord::Schema.define(version: 20140619072059) do
 
   create_table "FriendshipRequests", force: true do |t|
     t.integer  "from_user_id"
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(version: 20140619183844) do
     t.datetime "updated_at"
     t.boolean  "enabled"
     t.string   "platform"
+    t.string   "language"
   end
 
   create_table "feedbacks", force: true do |t|
@@ -207,6 +209,12 @@ ActiveRecord::Schema.define(version: 20140619183844) do
     t.boolean  "is_finished"
     t.float    "distance"
     t.integer  "ride_type"
+    t.float    "departure_latitude"
+    t.float    "departure_longitude"
+    t.float    "destination_latitude"
+    t.float    "destination_longitude"
+    t.string   "car"
+    t.integer  "rating_id"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id"

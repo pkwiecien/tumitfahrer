@@ -9,7 +9,7 @@ require 'securerandom'
 #  last_name              :boolean          default(TRUE)
 #  email                  :string
 #  phone_number           :string
-#  department             :integer
+#  department             :string
 #  car                    :string
 #  password_digest        :string
 #  remember_token         :string
@@ -30,9 +30,7 @@ class User < ActiveRecord::Base
   has_many :rides
   has_many :devices
   has_many :ride_searches
-
-  has_many :ratings_given, foreign_key: :from_user_id, class_name: "Rating"
-  has_many :ratings_received, foreign_key: :to_user_id, class_name: "Rating"
+  has_many :ratings, foreign_key: :from_user_id, class_name: "Rating"
 
   # user's avatar
   has_attached_file :avatar, styles: {
@@ -99,6 +97,14 @@ class User < ActiveRecord::Base
     ride.requests.create!(ride_id: ride.id, passenger_id: self.id, requested_from: from, request_to: to)
   end
 
+  def ratings_received
+    Rating.where(to_user_id: self.id)
+  end
+
+  def give_rating_to_user user_id, ride_id, rating_type
+    self.ratings.create!(to_user_id: user_id, ride_id: ride_id, rating_type: rating_type)
+  end
+
   def register_device!(token, is_enabled, platform)
     self.devices.create!(token: token, enabled: is_enabled, platform: platform)
   end
@@ -125,26 +131,34 @@ class User < ActiveRecord::Base
     end
   end
 
-  def all_rides
-    rides_as_driver + rides_as_passenger
+  # requests_for_driver is a ride, where user is owner of the ride, however he's not driving
+  def requests_for_driver
+    self.rides.joins(:relationships).where(relationships: {is_driving: false})
   end
 
-  # ride request is a ride, where user is owner of the ride, however he's not driving
-  def ride_requests
-    if self.rides.count > 0
-      self.rides.joins(:relationships).where(relationships: {is_driving: false})
-    else
-      nil
-    end
+  def all_rides
+    rides_as_driver + requests_for_driver + rides_as_passenger + requested_rides
+  end
+
+  def requested_rides
+    Ride.where(id: Request.where(passenger_id: self.id).select(:ride_id))
   end
 
   def compute_avg_rating
-    num_all_rating = self.ratings_received.count
-    if num_all_rating == 0
-      0
-    else
-      self.ratings_received.where('rating_type=?', 1)/num_all_rating
+    positive = 0
+    received_total = self.ratings_received.count
+
+    if received_total < 1
+      return -1
     end
+
+    self.ratings_received.each do |rating|
+      if rating.rating_type == 1
+        positive+=1
+      end
+    end
+
+    return positive/received_total
   end
 
   def to_s
@@ -163,9 +177,8 @@ class User < ActiveRecord::Base
 
   def default_values
     self.is_student ||= true
-    self.rating_avg ||= 0.0
+    self.rating_avg ||= -1.0
     nil
   end
-
 
 end

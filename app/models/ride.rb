@@ -14,6 +14,8 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 
+require 'geocoder'
+
 class Ride < ActiveRecord::Base
 
   # Active Record relationships
@@ -25,6 +27,7 @@ class Ride < ActiveRecord::Base
   has_many :users, through: :relationships
   has_many :requests
   has_many :conversations
+  has_many :ratings
 
   # filters
   before_save :default_values
@@ -72,6 +75,13 @@ class Ride < ActiveRecord::Base
   def self.create_ride_by_owner ride_params, current_user
     is_driving = ride_params[:is_driving].to_i
     ride_params.delete("is_driving")
+
+    ride_params[:departure_latitude] = ride_params[:departure_latitude].to_f
+    ride_params[:departure_longitude] = ride_params[:departure_longitude].to_f
+
+    ride_params[:destination_latitude] = ride_params[:destination_latitude].to_f
+    ride_params[:destination_longitude] = ride_params[:destination_longitude].to_f
+
     @ride = current_user.rides.create!(ride_params)
     if @ride.save
       @ride.relationships.create!(user: current_user, is_driving: is_driving)
@@ -91,14 +101,76 @@ class Ride < ActiveRecord::Base
     self.requests.create!(passenger_id: passenger_id)
   end
 
-  def accept_ride_request passenger_id
+  def accept_ride_request driver_id, passenger_id, is_confirmed
     request = self.requests.where(passenger_id: passenger_id).first
     if request != nil
-      relationship = self.relationships.create(user_id: user_id)
-      if relationship.save
+      if is_confirmed.to_i == 0
         request.destroy
+      else
+        relationship = self.relationships.create(user_id: passenger_id)
+        if relationship.save
+          self.create_conversation driver_id, passenger_id
+          request.destroy
+        end
       end
     end
+  end
+
+  def remove_ride_request request_id
+    request = self.requests.find_by(id: request_id)
+    if request != nil
+      request.destroy
+    end
+  end
+
+  def remove_passenger driver_id, passenger_id
+    relationships = self.relationships.where("relationships.user_id <> ? AND relationships
+.is_driving = false", driver_id)
+
+    passenger = relationships.where("user_id = ? AND is_driving = false", passenger_id).first
+    if passenger != nil
+      passenger.destroy
+    end
+
+  end
+
+  def self.rides_nearby departure_place, departure_threshold, destination, destination_threshold, departure_time, ride_type
+
+    request_departure_coordinates = Geocoder.coordinates(departure_place)
+    request_destination_coordinates = Geocoder.coordinates(destination)
+
+    rides = []
+    Ride.where("departure_time > ? AND ride_type = ?", Time.zone.now, ride_type).each do |ride|
+      if ride.departure_latitude == 0
+        db_coordinates = Geocoder.coordinates(ride.departure_place)
+        Ride.find_by_id(ride.id).update_attributes!(departure_latitude: db_coordinates[0], departure_longitude: db_coordinates[1])
+      else
+        db_coordinates = [ride.departure_latitude, ride.departure_longitude]
+      end
+
+      departure_distance = Geocoder::Calculations.distance_between(db_coordinates, request_departure_coordinates)
+
+      if ride.destination_latitude == 0
+        db_coordinates = Geocoder.coordinates(ride.destination)
+        Ride.find_by_id(ride.id).update_attributes!(destination_latitude: db_coordinates[0], destination_longitude: db_coordinates[1])
+      else
+        db_coordinates = [ride.destination_latitude, ride.destination_longitude]
+      end
+      destination_distance = Geocoder::Calculations.distance_between(db_coordinates, request_destination_coordinates)
+
+      if departure_place.empty? && destination.empty?
+        continue
+      elsif (departure_place.empty? || (!departure_place.empty? && departure_distance <= departure_threshold)) &&
+          (destination.empty? || (!destination.empty? && destination_distance <= destination_threshold))
+        if departure_time.nil? # no date specified, return all rides that match criteria
+          rides.append(ride)
+        elsif departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
+          rides.append(ride)
+        end
+      end
+    end
+
+    return rides
   end
 
   def create_conversation user_id, other_user_id
@@ -124,6 +196,7 @@ class Ride < ActiveRecord::Base
     self.is_paid ||= false
     self.price ||= 0
     self.ride_type ||= 0
+    self.car ||= ""
     nil
   end
 
