@@ -78,7 +78,7 @@ class Notification < ActiveRecord::Base
   #This function inserts the notification in the database table for cancel_ride_alert notification message.
   def self.cancel_ride(ride_id,user_id)
     # 1- We need to destroy the notification that was created to remind the driver about the upcoming ride
-    Notification.where(:ride_id => ride_id, :message_type => 1).destroy_all
+    Notification.where(:ride_id => ride_id, :message_type => 1).destroy_all #TODO: check the notification exist or not
 
     # 2- We need to add notifications for passengers that user has canceled the ride
     ride = Ride.new
@@ -117,8 +117,8 @@ class Notification < ActiveRecord::Base
     devices_list.each do |device|
       platform = device.platform  #get platform and device id
       device_id = device.token
-      #language = device.locale #TODO: When the locale thing will be inserted in the database table then enable this. So, that based on the device language we can automatically handle this.
-      language = "de" #TODO: Change this and get the value from code
+      language = device.language
+
       message = Notification.get_message(notification, language)  #get the constructed message based on message type
 
       result << NotificationData.new(1,message,device_id,platform) #initialize a custom object
@@ -136,21 +136,16 @@ class Notification < ActiveRecord::Base
     #@notifications = Notification.where(:status => false).where(:date_time => startTime...endTime)
     notifications = Notification.where(:status=>'not sent') #TODO: revert it back to 5 min thing
 
-    #Pass this notification object to another function. That can generate a string message
-    # based on message type.
     #TODO: Error handling
 
     result = Array.new
     notifications.each do |notification|  #loop through all the notifications
-      #message = Notification.get_message(notification)  #get the constructed message based on message type
-
       devices_list = notification.user.devices
 
       devices_list.each do |device|
         platform = device.platform  #get platform and device id
         device_id = device.token
-        #language = device.locale #TODO: When the locale thing will be inserted in the database table then enable this. So, that based on the device language we can automatically handle this.
-        language = "de" #TODO: Change this and get the value from code
+        language = device.language
 
         #Each device can have different language. So, we have to construct the message again in the loop
         message = Notification.get_message(notification, language)  #get the constructed message based on message type
