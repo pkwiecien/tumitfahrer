@@ -21,9 +21,10 @@
 
 de:
   hello: "Hallo welt"
-  driver_pickup_alert : "TUMitFahrer: Erinnerung für Pickup > Zeit: %{time} Lage: %{departure}."
-  passenger_ride_alert: "TUMitFahrer: Mitfahrt Alarm > Zeit: %{time} Lage: %{departure} Fahrer: %{result}."
-  cancel_ride_alert: "TUMitFahrer: fahren Abgesagt > Fahrer %{driver}, hatte die Fahrt abgesagt. Zeit: %{time} Lage: %{departure} Grund: Wegen eines unerwarteten Ereignisses."
-  reservation_cancelled_passenger_alert: "TUMitFahrer: Reservierung Abgesagt > Passagier %{username}, hatte die Fahrt abgesagt. Zeit: %{time} Lage: %{departure} Grund: Wegen eines unerwarteten Ereignisses."
-  accept_request: "TUMitFahrer: Anfrage akzeptiert > Fahrer %{driver}, Ihren Antrag, die Fahrt zu kommen akzeptiert."
-  decline_request: "TUMitFahrer: Abgelehnt Antrag > Fahrer %{driver}, Ihren Antrag, die Fahrt zu kommen gesunken."
+  driver_pickup_alert : "TUMitfahrer: Erinnerung für die Fahrt > Zeit: %{time} Ort: %{departure}."
+  passenger_ride_alert: "TUMitfahrer: Mitfahrt Alarm > Zeit: %{time} Ort: %{departure} Fahrer: %{result}."
+  cancel_ride_alert: "TUMitfahrer: Fahrt abgesagt > Fahrer %{driver} hat die Fahrt abgesagt. Zeit: %{time} Ort: %{departure} Grund: Wegen eines unerwarteten Ereignisses."
+  reservation_cancelled_passenger_alert: "TUMitfahrer: Reservierung abgesagt > Mitfahrer %{passenger_name} hat die Fahrt abgesagt. Zeit: %{time} Ort: %{departure} Grund: Wegen eines unerwarteten Ereignisses."
+  accept_request: "TUMitfahrer: Anfrage akzeptiert > Fahrer %{driver} hat deine Anfrage für die Fahrt akzeptiert."
+  decline_request: "TUMitfahrer: Antrag abgelehnt > Fahrer %{driver} hat deine Anfrage für die Fahrt  abgelehnt."
+  user_join_alert: "TUMitfahrer: Fahrt Anfrage > Ein Passagier will, um Ihre Fahrt kommen."

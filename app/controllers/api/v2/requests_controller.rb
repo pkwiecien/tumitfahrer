@@ -15,6 +15,10 @@ class Api::V2::RequestsController < ApiController
     @new_request = ride.requests.create!(request_params)
 
     unless @new_request.nil?
+      #Added by Behroz - Send notification to driver that user wants to join the ride - 16-06-2014 - Start
+      Notification.user_join(params[:ride_id])
+      #Added by Behroz - 16-06-2014 - End
+
       render json: {status: :created, request: @new_request}
     else
       render json: {status: :bad_request}
@@ -39,10 +43,9 @@ class Api::V2::RequestsController < ApiController
                                                       meeting_point: ride[:meeting_point], departure_time: ride[:departure_time],
                                                       free_seats: ride[:free_seats])
       Relationship.find_by(ride_id: new_ride.id).update_attributes(driver_ride_id: ride.id)
-      # TODO: send push notification if request was confirmed
 
       #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - Start
-      Notification.accept_request(passenger, ride)
+      Notification.accept_request(passenger, ride, ride[:departure_time])
       #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - End
     end
     request.destroy
@@ -55,7 +58,15 @@ class Api::V2::RequestsController < ApiController
 
   def destroy
     begin
-      request = Request.find_by(id: params[:id]).destroy
+      #Changed by Behroz - When request is declined by driver. We need to insert the notification. Start 18-06-2014
+
+      #request = Request.find_by(id: params[:id]).destroy
+      request = Request.find_by(id: params[:id])
+      Notification.decline_request(request.ride_id, request.passenger_id)
+      request.destroy
+
+      #Changed by Behroz - When request is declined by driver. We need to insert the notifacation. End 18-06-2014
+
       respond_to do |format|
         format.xml { render xml: {:status => :ok} }
         format.any { render json: {:status => :ok} }

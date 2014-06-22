@@ -8,6 +8,11 @@ class MessageSender
    send_message(notification_list)
   end
 
+  def self.send_single_message(notification)
+    notification_list = Notification.get_single_notification_data(notification)
+    send_message(notification_list)
+  end
+
   #Method to send messages to different platforms based on the platform information in the object.``
   def self.send_message(notificationDataList)
     notificationDataList.each do |notification|
@@ -16,11 +21,11 @@ class MessageSender
         result = MessageSender.send_android_notification(notification.device_id, notification.message)
         if (result == 1)
           #Update the database
-          Notification.update_status(notification.notification_id, true)
+          Notification.update_status(notification.notification_id, notification.message)
         end
       else if(notification.device_type == 'iPhone')
-          MessageSender.send_iphone_notification(notification.device_id, notification.message)
-          Notification.update_status(notification.notification_id, true)
+          MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
+          Notification.update_status(notification.notification_id, notification.message)
 
       #TODO: Add check for visiom
       end

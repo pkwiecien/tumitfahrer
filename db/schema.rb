@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140609153019) do
+ActiveRecord::Schema.define(version: 20140619183844) do
 
   create_table "FriendshipRequests", force: true do |t|
     t.integer  "from_user_id"
@@ -79,9 +79,10 @@ ActiveRecord::Schema.define(version: 20140609153019) do
     t.integer  "ride_id"
     t.string   "message_type"
     t.datetime "date_time"
-    t.boolean  "status"
+    t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "message"
   end
 
   create_table "payments", force: true do |t|
