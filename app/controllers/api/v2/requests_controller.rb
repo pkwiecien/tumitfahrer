@@ -22,7 +22,7 @@ class Api::V2::RequestsController < ApiController
     ride = Ride.find_by(id: params[:ride_id])
     return render json: {request: []}, status: :bad_request if ride.requests.find_by(passenger_id: params[:passenger_id]) != nil
 
-    @new_request = ride.requests.create!(request_params)
+    @new_request = ride.create_ride_request params[:passenger_id]
 
     unless @new_request.nil?
       render json: {request: @new_request}, status: :created
@@ -31,7 +31,7 @@ class Api::V2::RequestsController < ApiController
     end
   end
 
-  # PUT /api/v2/rides/:ride_id/requests?passenger_id=X
+  # PUT /api/v2/rides/:ride_id/requests/:id?passenger_id=X
   def update
 
     ride = Ride.find_by(id: params[:ride_id])
@@ -64,8 +64,5 @@ class Api::V2::RequestsController < ApiController
 
   private
 
-  def request_params
-    params.require(:request).permit(:passenger_id)
-  end
 
 end

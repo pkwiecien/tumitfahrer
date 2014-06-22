@@ -8,7 +8,7 @@ class Api::V2::RidesController < ApiController
   # GET /api/v2/rides
   def index
     if params.has_key?(:from_date)
-      get_rides_from_date  DateTime.parse(params[:from_date]), params[:ride_type].to_i
+      get_rides_from_date  Time.zone.parse(params[:from_date]), params[:ride_type].to_i
     else
       page = 0
 
@@ -30,7 +30,10 @@ class Api::V2::RidesController < ApiController
   end
 
   def get_rides_from_date from_date, ride_type
-    @rides = Ride.where("ride_type = ? AND updated_at > ?", ride_type, from_date-2.hours)
+    @rides = Ride.where("ride_type = ? AND updated_at > ? ", ride_type, from_date)
+    @rides.each do |r|
+      logger.debug "ride with id #{r.id} , updated_at : #{r.updated_at} , from date: #{from_date}, comparison: #{from_date>r.updated_at}"
+    end
     respond_with @rides, status: :ok
   end
 
@@ -148,7 +151,7 @@ class Api::V2::RidesController < ApiController
   def ride_params
     params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats,
                                  :meeting_point, :ride_type, :is_driving, :car, :departure_latitude,
-                                 :departure_longitude, :destination_latitude, :destination_longitude)
+                                 :departure_longitude, :destination_latitude, :destination_longitude, :repeat_dates)
   end
 
   def check_format
