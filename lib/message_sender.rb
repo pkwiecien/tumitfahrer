@@ -16,26 +16,28 @@ class MessageSender
   #Method to send messages to different platforms based on the platform information in the object.``
   def self.send_message(notificationDataList)
     notificationDataList.each do |notification|
+      begin
+        if(notification.device_type == 'Android')
+          result = MessageSender.send_android_notification(notification.device_id, notification.message)
+          if (result == 1)
+            #Update the database
+            Notification.update_status(notification.notification_id, notification.message)
+          end
+        else if(notification.device_type == 'iPhone')
+            MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
+            Notification.update_status(notification.notification_id, notification.message)
 
-      if(notification.device_type == 'Android')
-        result = MessageSender.send_android_notification(notification.device_id, notification.message)
-        if (result == 1)
-          #Update the database
-          Notification.update_status(notification.notification_id, notification.message)
+        #TODO: Add check for visiom
         end
-      else if(notification.device_type == 'iPhone')
-          MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
-          Notification.update_status(notification.notification_id, notification.message)
-
-      #TODO: Add check for visiom
+      end
+      rescue
+        puts("ERROR: While sending push notification: "+notification.notification_id)
       end
     end
   end
 
-  end
-
   def self.send_android_notification(token, message)
-    gcm = GCM.new('AIzaSyDNjxSCSc_zRBlC8jHpqxWgP1crx41B0IA')
+    gcm = GCM.new('AIzaSyDNjxSCSc_zRBlC8jHpqxWgP1crx41B0IA') #TODO Initialize it only one time at app start
     registration_id = [token]
     options = {
         'data' => {
@@ -47,10 +49,12 @@ class MessageSender
     #http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     #http.get("www.google.com/");
     response = gcm.send_notification(registration_id, options)
-    if( response.success == 1)
+    if(  JSON.parse(response[:body])["success"] == 1 )
       return 1
     else
-      #TODO: Handle what to do if the messsage is not sent
+      #TODO: Handle what to do if the messsage is not sent/ Log it and retur 1
+      puts("ERROR: While sending android push notification"+response)
+      return 1
     end
   end
 
@@ -63,7 +67,9 @@ class MessageSender
     notification = Grocer::Notification.new(device_token:token, alert: message, badge: 42, content_available: true, sound: "siren.aiff", expiry: Time.now + 60*60, identifier: 1234)
 
     response = pusher.push(notification)
-    #TODO: handle the response
+    if(response < 11 && response > 0) #TODO: Handle response
+      puts("ERROR: While sending iOS push notification"+response)
+    end
   end
 
 end
