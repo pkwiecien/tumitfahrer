@@ -103,15 +103,26 @@ relationships.is_driving= false", self.user_id)
       if is_confirmed.to_i == 0
         request.destroy
       else
-        relationship = self.relationships.create(user_id: passenger_id)
-        if relationship.save
-          self.update_attributes(updated_at: Time.zone.now)
-          if !self.conversation_exists? driver_id, passenger_id
-            self.create_conversation driver_id, passenger_id
-          end
+        relationship = self.add_passenger passenger_id
+        if !relationship.nil?
           request.destroy
         end
       end
+    end
+  end
+
+  def add_passenger passenger_id
+    if self.relationships.find_by(user_id: passenger_id, is_driving: false).nil?
+      relationship = self.relationships.create(user_id: passenger_id)
+      if relationship.save
+        self.update_attributes(updated_at: Time.zone.now)
+        if !self.conversation_exists? driver_id, passenger_id
+          self.create_conversation driver_id, passenger_id
+        end
+      end
+    else
+      logger.debug "is deleted"
+      return nil
     end
   end
 
@@ -131,7 +142,7 @@ relationships.is_driving= false", self.user_id)
     if passenger != nil
       passenger.destroy
       self.remove_conversation_between_users driver_id, passenger_id
-      self.update_attributes(updated_at: Time.zone.now)
+      self.update_attributes(updated_at: Time.zone.now, last_cancel_time: Time.zone.now)
     end
   end
 
