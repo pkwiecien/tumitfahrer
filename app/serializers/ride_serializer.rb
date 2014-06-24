@@ -1,7 +1,7 @@
 class RideSerializer < ActiveModel::Serializer
   attributes :id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time,
-   :price, :ride_owner, :is_ride_request, :requests, :passengers, :is_paid, :ride_type, :created_at,
-      :updated_at
+   :price, :ride_owner, :is_ride_request, :requests, :passengers, :conversations, :ratings, :is_paid, :ride_type, :car,
+   :created_at, :updated_at
 
   def ride_owner
     object.ride_owner

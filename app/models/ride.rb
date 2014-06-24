@@ -23,6 +23,7 @@ class Ride < ActiveRecord::Base
   has_many :users, through: :relationships
   has_many :requests
   has_many :conversations
+  has_many :ratings
 
   # filters
   before_save :default_values
@@ -90,7 +91,10 @@ relationships.is_driving= false", self.user_id)
   end
 
   def create_ride_request passenger_id
-    self.requests.create!(passenger_id: passenger_id)
+    request = self.requests.create!(passenger_id: passenger_id)
+    # self.create_conversation self.ride_owner.id, passenger_id
+    self.update_attributes(updated_at: Time.zone.now)
+    return request
   end
 
   def accept_ride_request driver_id, passenger_id, is_confirmed
@@ -101,7 +105,10 @@ relationships.is_driving= false", self.user_id)
       else
         relationship = self.relationships.create(user_id: passenger_id)
         if relationship.save
-          self.create_conversation driver_id, passenger_id
+          self.update_attributes(updated_at: Time.zone.now)
+          if !self.conversation_exists? driver_id, passenger_id
+            self.create_conversation driver_id, passenger_id
+          end
           request.destroy
         end
       end
@@ -111,6 +118,7 @@ relationships.is_driving= false", self.user_id)
   def remove_ride_request request_id
     request = self.requests.find_by(id: request_id)
     if request != nil
+      self.update_attributes(updated_at: Time.zone.now)
       request.destroy
     end
   end
@@ -122,8 +130,9 @@ relationships.is_driving= false", self.user_id)
     passenger = relationships.where("user_id = ? AND is_driving = false", passenger_id).first
     if passenger != nil
       passenger.destroy
+      self.remove_conversation_between_users driver_id, passenger_id
+      self.update_attributes(updated_at: Time.zone.now)
     end
-
   end
 
   def self.rides_nearby departure_place, departure_threshold, destination, destination_threshold, departure_time, ride_type
@@ -156,8 +165,7 @@ relationships.is_driving= false", self.user_id)
           (destination.empty? || (!destination.empty? && destination_distance <= destination_threshold))
         if departure_time.nil? # no date specified, return all rides that match criteria
           rides.append(ride)
-        end
-        if departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
+        elsif departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
           rides.append(ride)
         end
       end
@@ -171,12 +179,24 @@ relationships.is_driving= false", self.user_id)
   end
 
   def conversation_exists? user_id, other_user_id
-    if self.conversations.where(user_id: user_id, other_user_id: other_user_id) || self
-    .conversations.where(user_id: other_user_id, other_user_id: user_id)
-      return TRUE
-    else
+    if self.conversations.where(user_id: user_id, other_user_id: other_user_id).count == 0 && self
+    .conversations.where(user_id: other_user_id, other_user_id: user_id).count == 0
       return FALSE
+    else
+      return TRUE
     end
+  end
+
+  def remove_conversation_between_users user_id, other_user_id
+    conversation = self.conversations.where(user_id: user_id, other_user_id: other_user_id)
+    if conversation.nil?
+      conversation = self.conversations.where(user_id: other_user_id, other_user_id: user_id)
+    end
+
+    if !conversation.first.nil?
+      conversation.first.destroy
+    end
+
   end
 
   def to_s

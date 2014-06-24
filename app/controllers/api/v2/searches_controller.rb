@@ -8,7 +8,9 @@ class Api::V2::SearchesController < ApiController
     departure_threshold = params[:departure_place_threshold].to_i
     destination = params[:destination]
     destination_threshold = params[:destination_threshold].to_i
-    departure_time = DateTime.parse(params[:departure_time])
+    if params.has_key?(:departure_time)
+      departure_time = Time.zone.parse(params[:departure_time])
+    end
     user = User.find_by(api_key: request.headers[:apiKey])
     ride_type = params[:ride_type].to_i
 

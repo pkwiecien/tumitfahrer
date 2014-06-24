@@ -63,11 +63,9 @@ class Api::V2::UsersController < ApiController
     end
 
     begin
-      logger.debug "password changed for user: #{@user.to_s}"
       @user.update_attributes!(update_params)
       respond_with @user, status: :ok
     rescue
-      logger.debug "could not change password"
       respond_with status: :bad_request, message: "Could not retrieve the user"
     end
 
