@@ -6,13 +6,13 @@ class Api::V2::MessagesController < ApiController
     conversation = Conversation.find_by(id: params[:conversation_id])
     return render json: {status: :not_found} if conversation.nil?
 
-    @message = conversation.create_message(params[:content], params[:sender_id],
+    message = conversation.create_message(params[:content], params[:sender_id],
                                            params[:receiver_id])
 
-    if @message.nil?
+    if message.nil?
       return render json: {message: "Could not save message"}, status: :bad_request
     else
-      render json: {message: @message}, status: :created
+      render json: message, status: :ok
     end
   end
 

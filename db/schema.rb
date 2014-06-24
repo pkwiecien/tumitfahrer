@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619072059) do
+ActiveRecord::Schema.define(version: 20140624085028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,8 @@ ActiveRecord::Schema.define(version: 20140619072059) do
     t.integer  "user_id"
     t.integer  "other_user_id"
   end
+
+  add_index "conversations", ["user_id", "other_user_id", "ride_id"], name: "index_conversations_on_user_id_and_other_user_id_and_ride_id", using: :btree
 
   create_table "devices", force: true do |t|
     t.integer  "user_id"
@@ -222,6 +224,7 @@ ActiveRecord::Schema.define(version: 20140619072059) do
     t.float    "destination_longitude"
     t.string   "car"
     t.integer  "rating_id"
+    t.datetime "last_cancel_time"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree

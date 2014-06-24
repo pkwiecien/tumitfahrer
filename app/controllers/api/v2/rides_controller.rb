@@ -110,6 +110,12 @@ class Api::V2::RidesController < ApiController
 
       ride.remove_passenger ride.ride_owner.id, params[:removed_passenger]
       return render json: {status: :ok, message: "passenger deleted"}
+    elsif params.has_key?(:added_passenger)
+      ride = Ride.find_by(:id => params[:id])
+      return render json: {status: :not_found, message: "could not add passenger"} if ride.nil?
+
+      ride.add_passenger params[:added_passenger]
+      return render json: {status: :ok, message: "passenger added"}
     else
       @user = User.find_by(id: params[:user_id])
       return respond_with status: :not_found, message: "Could not retrieve the user" if @user.nil?
