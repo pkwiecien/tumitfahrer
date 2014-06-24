@@ -29,28 +29,28 @@ class Api::V2::ActivitiesController < ApplicationController
     my_rides_updated_at = params[:my_rides_updated_at]
 
     if campus_updated_at.nil?
-      campus_updated_at = Time.now
+      campus_updated_at = Time.zone.now
     end
 
     if activity_updated_at.nil?
-      activity_updated_at = Time.now
+      activity_updated_at = Time.zone.now
     end
 
     if timeline_updated_at.nil?
-      timeline_updated_at = Time.now
+      timeline_updated_at = Time.zone.now
     end
 
     if my_rides_updated_at.nil?
-      my_rides_updated_at = Time.now
+      my_rides_updated_at = Time.zone.now
     end
 
     user_id = params[:user_id]
 
-    campus_counter = Ride.where("ride_type = 0 AND created_at > ?", campus_updated_at).count
-    activity_counter = Ride.where("ride_type = 1 AND created_at > ?", activity_updated_at).count
+    campus_counter = Ride.where("ride_type = 0 AND created_at > ? AND user_id <> ?", campus_updated_at, user_id).count
+    activity_counter = Ride.where("ride_type = 1 AND created_at > ? AND user_id <> ?", activity_updated_at, user_id).count
 
-    ride_searches_counter = RideSearch.where("created_at > ?", timeline_updated_at).count
-    requests_counter = Request.where("created_at > ?", timeline_updated_at).count
+    ride_searches_counter = RideSearch.where("created_at > ? AND user_id <> ?", timeline_updated_at, user_id).count
+    requests_counter = Request.where("created_at > ? AND passenger_id <> ?", timeline_updated_at, user_id).count
 
     new_passenger =  Ride.joins(:relationships).where("relationships.is_driving = false AND relationships.user_id = ? AND relationships.created_at > ?", user_id, my_rides_updated_at).count
     new_requests = Ride.joins(:requests).where("requests.passenger_id = ? AND requests.created_at > ?", user_id, my_rides_updated_at).count
@@ -58,7 +58,7 @@ class Api::V2::ActivitiesController < ApplicationController
     news_counter = campus_counter + activity_counter + ride_searches_counter + requests_counter
     user_news = new_passenger + new_requests
 
-    @badge = { id: 0, created_at: Time.now}
+    @badge = { id: 0, created_at: Time.zone.now}
     @badge[:timeline_badge] = news_counter
     @badge[:timeline_updated_at] = timeline_updated_at
     @badge[:campus_badge] = campus_counter

@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20140619134853) do
   end
 
   add_index "relationships", ["ride_id"], name: "index_relationships_on_ride_id", using: :btree
-  add_index "relationships", ["user_id", "ride_id"], name: "index_relationships_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "relationships", ["user_id", "ride_id", "is_driving"], name: "index_relationships_on_user_id_and_ride_id_and_is_driving", unique: true, using: :btree
   add_index "relationships", ["user_id"], name: "index_relationships_on_user_id", using: :btree
 
   create_table "requests", force: true do |t|
@@ -139,18 +139,17 @@ ActiveRecord::Schema.define(version: 20140619134853) do
     t.string   "meeting_point"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "realtime_km"
     t.float    "price"
-    t.datetime "realtime_departure_time"
-    t.float    "duration"
-    t.datetime "realtime_arrival_time"
-    t.boolean  "is_finished"
+    t.boolean  "is_paid"
+    t.integer  "rideType"
+    t.float    "distance"
     t.integer  "ride_type"
     t.float    "departure_latitude"
     t.float    "departure_longitude"
     t.float    "destination_latitude"
     t.float    "destination_longitude"
     t.string   "car"
+    t.integer  "rating_id"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
@@ -169,11 +168,11 @@ ActiveRecord::Schema.define(version: 20140619134853) do
     t.boolean  "admin"
     t.string   "api_key"
     t.boolean  "is_student"
-    t.float    "rating_avg"
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.float    "rating_avg"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

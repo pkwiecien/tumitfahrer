@@ -7,22 +7,34 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides
   def index
-    page = 0
-
-    if params.has_key?(:page)
-      page = params[:page].to_i
-    end
-
-    campus_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
-    activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 1, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
-        limit(@@num_page_results)
-
-    @rides = campus_rides + activity_rides
-    unless @rides.nil?
-      respond_with @rides, status: :ok
+    if params.has_key?(:from_date)
+      get_rides_from_date  Time.zone.parse(params[:from_date]), params[:ride_type].to_i
     else
-      respond_with :rides => [], status: :no_content
+      page = 0
+
+      if params.has_key?(:page)
+        page = params[:page].to_i
+      end
+
+      campus_rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
+      activity_rides = Ride.where("ride_type = ? AND departure_time > ?", 1, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).
+          limit(@@num_page_results)
+
+      @rides = campus_rides + activity_rides
+      unless @rides.nil?
+        respond_with @rides, status: :ok
+      else
+        respond_with :rides => [], status: :no_content
+      end
     end
+  end
+
+  def get_rides_from_date from_date, ride_type
+    @rides = Ride.where("ride_type = ? AND updated_at > ? ", ride_type, from_date)
+    @rides.each do |r|
+      logger.debug "ride with id #{r.id} , updated_at : #{r.updated_at} , from date: #{from_date}, comparison: #{from_date>r.updated_at}"
+    end
+    respond_with @rides, status: :ok
   end
 
   # GET api/v2/rides/ids
@@ -107,7 +119,9 @@ class Api::V2::RidesController < ApiController
 
       @ride.update_attributes!(meeting_point: params[:ride][:meeting_point], departure_place: params[:ride][:departure_place],
                                destination: params[:ride][:destination], free_seats: params[:ride][:free_seats].to_i,
-                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i)
+                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i,
+                               departure_latitude: params[:ride][:departure_latitude].to_f, departure_longitude: params[:ride][:departure_longitude].to_f,
+                               destination_latitude: params[:ride][:destination_latitude].to_f, destination_longitude: params[:ride][:destination_longitude].to_f)
       respond_with @ride, status: :ok
     end
 
@@ -115,19 +129,14 @@ class Api::V2::RidesController < ApiController
 
   def destroy
     ride = Ride.find_by(id: params[:id])
+    return render json: {status: :not_found, message: "could not delete passenger"} if ride.nil?
+    ride.destroy
 
-    begin
-      ride = Ride.find_by(id: params[:id]).destroy
-
-      respond_to do |format|
-        format.xml { render xml: {:status => :ok} }
-        format.any { render json: {:status => :ok} }
-      end
-    rescue
-      respond_to do |format|
-        format.xml { render xml: {:status => :not_found} }
-        format.any { render json: {:status => :not_found} }
-      end
+    reason = params[:reason]
+    # TODO send push notification with reason
+    respond_to do |format|
+      format.xml { render xml: {:status => :ok} }
+      format.any { render json: {:status => :ok} }
     end
   end
 
@@ -142,7 +151,7 @@ class Api::V2::RidesController < ApiController
   def ride_params
     params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats,
                                  :meeting_point, :ride_type, :is_driving, :car, :departure_latitude,
-                                 :departure_longitude, :destination_latitude, :destination_longitude)
+                                 :departure_longitude, :destination_latitude, :destination_longitude, :repeat_dates)
   end
 
   def check_format
