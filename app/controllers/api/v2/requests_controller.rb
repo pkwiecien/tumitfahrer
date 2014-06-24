@@ -1,7 +1,7 @@
 class Api::V2::RequestsController < ApiController
   respond_to :xml, :json
 
-  # GET /api/v2/rides/1/requests
+  # GET /api/v2/rides/:ride_id/requests
   def index
     ride = Ride.find_by(id: params[:ride_id])
     return respond_with ride: [], status: :not_found if ride.nil?
@@ -9,7 +9,7 @@ class Api::V2::RequestsController < ApiController
     respond_with requests: requests, status: :ok
   end
 
-  # GET /api/v2/users/1/requests
+  # GET /api/v2/users/:user_id/requests/:id
   def get_user_requests
     user = User.find_by(id: params[:user_id])
     return respond_with :requests => [], :status => :not_found if user.nil?

@@ -116,12 +116,11 @@ relationships.is_driving= false", self.user_id)
       relationship = self.relationships.create(user_id: passenger_id)
       if relationship.save
         self.update_attributes(updated_at: Time.zone.now)
-        if !self.conversation_exists? driver_id, passenger_id
-          self.create_conversation driver_id, passenger_id
+        if !self.conversation_exists? self.ride_owner.id, passenger_id
+          self.create_conversation self.ride_owner.id, passenger_id
         end
       end
     else
-      logger.debug "is deleted"
       return nil
     end
   end
