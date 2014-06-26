@@ -10,4 +10,12 @@
 
 class Device < ActiveRecord::Base
   belongs_to :user
+
+  private
+
+  def default_values
+    self.language ||= "en"
+    nil
+  end
+
 end

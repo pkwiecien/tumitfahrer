@@ -26,14 +26,12 @@ config.action_mailer.delivery_method = :smtp
 config.action_mailer.smtp_settings = {
   address:              'smtp.gmail.com',
   port:                 587,
-  #domain:               'tumitfahrer.de'
-  domain:		 'gmail.com',
+  #domain:              'tumitfahrer.de'
+  domain:		            'gmail.com',
   user_name:            ENV["EMAIL"],
   password:             ENV["PASSWORD"],
   authentication:       'plain',
   enable_starttls_auto: true  }
-
-
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -45,7 +43,6 @@ config.action_mailer.smtp_settings = {
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
-
   config.log_level = :debug
 
   config.paperclip_defaults = {
@@ -54,7 +51,7 @@ config.action_mailer.smtp_settings = {
       :s3_credentials => {
           :bucket => ENV['S3_BUCKET_NAME'],
           :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
-          :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+          :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'],
       }
   }
 

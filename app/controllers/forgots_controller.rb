@@ -1,0 +1,2 @@
+class ForgotsController < ApplicationController
+end

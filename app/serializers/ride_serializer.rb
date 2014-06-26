@@ -1,35 +1,24 @@
 class RideSerializer < ActiveModel::Serializer
   attributes :id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time,
-   :price, :realtime_departure_time, :realtime_km, :driver, :requests, :passengers,
-   :contribution_mode, :is_paid, :duration, :pending_payments, :distance, :ride_type, :created_at, :updated_at
+   :price, :ride_owner, :is_ride_request, :requests, :passengers, :conversations, :ratings, :is_paid,
+   :ride_type, :car, :last_cancel_time, :created_at, :updated_at
 
-  def project_id
-    unless object.project.nil?
-      object.project.id
-    else
-      ""
-    end
+  has_many :conversations, serializer: SimpleConversationSerializer
+
+  def ride_owner
+    object.ride_owner
   end
 
-  def driver
-    unless object.driver.nil?
-      object.driver
-    else
-      nil
-    end
-  end
-
-  def pending_payments
-    object.pending_payments
+  def is_ride_request
+    object.is_ride_request
   end
 
   def passengers
-    object.passengers_of_ride
+    object.passengers
   end
 
   def requests
     object.requests
   end
-
 
 end

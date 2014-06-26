@@ -1,3 +1,4 @@
 class RequestSerializer < ActiveModel::Serializer
-  attributes :id, :requested_from, :request_to, :passenger_id, :ride_id, :created_at, :updated_at
+  attributes :id, :passenger_id, :ride, :created_at, :updated_at
+
 end

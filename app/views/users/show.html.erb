@@ -9,22 +9,6 @@
     </section>
   </aside>
 
-  <%= form_for(@user, multipart: true) do |f| %>
-
-      <div class="field">
-        <%= f.label :avatar %>
-        <%= f.file_field :avatar %>
-      </div>
-      <div class="actions">
-        <%= f.submit 'Make a friend' %>
-        <%= link_to 'Nevermind', users_path, class: 'button' %>
-      </div>
-  <% end %>
-
-
-  <%= image_tag @user.avatar.url(:square) %>
-
-
   <% if @user.rides.any? %>
       <h3>Rides (<%= @user.rides.count %>)</h3>
 

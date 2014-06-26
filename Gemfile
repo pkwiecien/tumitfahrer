@@ -24,6 +24,8 @@ gem 'actionpack-xml_parser'
 gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
+# for getting location
+gem "geocoder"
 
 group :development, :production do
   # postgres database
@@ -64,7 +66,6 @@ gem 'therubyracer', :platforms => :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
-gem 'therubyracer'
 #gem 'angularjs-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -81,6 +82,7 @@ end
 gem 'active_model_serializers'
 # for storing images
 gem 'paperclip'
+# S3 contains user images
 gem 'aws-sdk'
 
 # Use unicorn as the app server
