@@ -1,7 +1,7 @@
 class Api::V2::RequestsController < ApiController
   respond_to :xml, :json
 
-  # GET /api/v2/rides/1/requests
+  # GET /api/v2/rides/:ride_id/requests
   def index
     ride = Ride.find_by(id: params[:ride_id])
     return respond_with ride: [], status: :not_found if ride.nil?
@@ -9,86 +9,60 @@ class Api::V2::RequestsController < ApiController
     respond_with requests: requests, status: :ok
   end
 
+  # GET /api/v2/users/:user_id/requests/:id
+  def get_user_requests
+    user = User.find_by(id: params[:user_id])
+    return respond_with :requests => [], :status => :not_found if user.nil?
+
+    respond_with Request.where(ride_id: user.requested_rides), status: :ok
+  end
+
   # POST /api/v2/rides/:ride_id/requests
   def create
     ride = Ride.find_by(id: params[:ride_id])
-    @new_request = ride.requests.create!(request_params)
+    return render json: {request: []}, status: :bad_request if ride.requests.find_by(passenger_id: params[:passenger_id]) != nil
+
+    @new_request = ride.create_ride_request params[:passenger_id]
 
     unless @new_request.nil?
-      logger.debug "Created ride request for ride with id: #{ride.id} adnd reuqest id: #{@new_request.id}"
-      render json: {status: :created, request: @new_request}
+      render json: {request: @new_request}, status: :created
     else
-      render json: {status: :bad_request}
+      render json: {request: []}, status: :bad_request
     end
   end
 
-  # PUT /api/v2/rides/:ride_id/requests?passenger_id=X&departure_place=Y&destination=Z
+  # PUT /api/v2/rides/:ride_id/requests/:id?passenger_id=X
   def update
-    # if driver confirmed a ride then add a new passenger, if not then just delete the request
+
     ride = Ride.find_by(id: params[:ride_id])
     passenger = User.find_by(id: params[:passenger_id])
-    if ride.nil? || passenger.nil?
-      respond_to do |format|
-        format.xml { render xml: {:status => :not_found} }
-        format.any { render json: {:status => :not_found} }
-      end
-    end
+    return render json: {status: :not_found} if ride.nil? || passenger.nil?
 
-    request = ride.requests.find_by(ride_id: ride.id, passenger_id: passenger.id)
-    if params[:id] && params[:confirmed] == true
-      new_ride = passenger.rides_as_passenger.create!(departure_place: params[:departure_place], destination: params[:destination],
-                                                      meeting_point: ride[:meeting_point], departure_time: ride[:departure_time],
-                                                      free_seats: ride[:free_seats])
-      Relationship.find_by(ride_id: new_ride.id).update_attributes(driver_ride_id: ride.id)
-      # TODO: send push notification if request was confirmed
+    ride.accept_ride_request ride.ride_owner.id, passenger.id, params[:confirmed].to_i
+    # TODO: send push notification if request was confirmed or rejected
+
+    respond_to do |format|
+      format.xml { render xml: {:status => :ok, :message => "request handled successfully"} }
+      format.any { render json: {:status => :ok, :message => "request handled successfully"} }
     end
-    request.destroy
+  end
+
+  # DELETE /api/v2/rides/:ride_id/requests/:id
+  def destroy
+    ride = Ride.find_by(id: params[:ride_id])
+    return render json: {status: :not_found, message: "ride not found"} if ride.nil?
+
+    ride.remove_ride_request params[:id]
 
     respond_to do |format|
       format.xml { render xml: {:status => :ok} }
       format.any { render json: {:status => :ok} }
     end
-  end
 
-  def destroy
-    begin
-      request = Request.find_by(id: params[:id]).destroy
-      respond_to do |format|
-        format.xml { render xml: {:status => :ok} }
-        format.any { render json: {:status => :ok} }
-      end
-    rescue
-      respond_to do |format|
-        format.xml { render xml: {:status => :not_found} }
-        format.any { render json: {:status => :not_found} }
-      end
-    end
   end
 
 
   private
 
-  def send_android_push(type, new_ride)
-    user = new_ride.users.first
-    devices = user.devices.where(platform: "android")
-    registration_ids = []
-    devices.each do |d|
-      registration_ids.append(d[:token])
-    end
-
-    options = {}
-    options[:type] = type
-    options[:fahrt_id] = new_ride[:id]
-    options[:fahrer] = new_ride.driver.full_name
-    options[:ziel] = new_ride[:destination]
-
-    logger.debug "Sending push notification with reg_ids : #{registration_ids} and options: #{options}"
-    response = GcmUtils.send_android_push_notifications(registration_ids, options)
-    logger.debug "Response: #{response}"
-  end
-
-  def request_params
-    params.require(:request).permit(:requested_from, :request_to, :passenger_id)
-  end
 
 end

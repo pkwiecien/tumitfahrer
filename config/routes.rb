@@ -7,16 +7,9 @@ Tumitfahrer::Application.routes.draw do
       resources :users do
         match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
-          match '/contributions', to: 'contributions#contribute_to_ride', via: :post
-          resources :contributions
           resources :requests
         end
         resources :devices
-        resources :payments
-        resources :friends
-        resources :friend_requests
-        resources :contributions
-        resources :projects
         resources :ratings
         resources :messages
       end
@@ -28,16 +21,27 @@ Tumitfahrer::Application.routes.draw do
     end
     # API v2 Routes
     namespace :v2, :defaults => { :format => 'json' } do
+      match '/activities/badges', to: 'activities#get_badge_counter', via: :get
       resources :activities
+      resource :forgot
       resource :search
+      resource :feedback
       resources :users do
         resources :devices
+        resources :ratings
+        match '/requests', to: 'requests#get_user_requests', via: :get
         match '/rides', to: 'rides#get_user_rides', via: :get
         resources :rides do
           resources :requests
-        end        end
+        end
+      end
+      match '/rides/ids', to: 'rides#get_ids_existing_rides', via: :get
       resources :rides do
         resources :requests
+        resources :conversations do
+          resources :messages do
+          end
+        end
       end
       resource :sessions
     end

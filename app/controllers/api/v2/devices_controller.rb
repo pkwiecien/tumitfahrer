@@ -8,8 +8,8 @@ class Api::V2::DevicesController < ApplicationController
     user = User.find_by(id: params[:user_id])
     if user.nil?
       respond_to do |format|
-        format.json { render json: {:devices => nil}, status: :not_found }
-        format.xml { render xml: {:devices => nil}, status: :not_found }
+        format.json { render json: {:devices => []}, status: :not_found }
+        format.xml { render xml: {:devices => []}, status: :not_found }
       end
     else
       if params.has_key?(:platform)
@@ -44,8 +44,7 @@ class Api::V2::DevicesController < ApplicationController
   private
 
   def device_params
-    params.require(:device).permit(:token, :enabled, :platform)
+    params.require(:device).permit(:token, :enabled, :platform, :language)
   end
-
 
 end
