@@ -3,7 +3,7 @@ TUMitfahrer
 
 [![Build Status](https://travis-ci.org/pkwiecien/tumitfahrer.png?branch=master)](https://travis-ci.org/pkwiecien/tumitfahrer)
 
-TUMitfahrer Web App as well as REST API for mobile clients. Backend is written in Ruby on Rails.
+TUMitfahrer Web App as well as REST API for mobile clients. Backend is written in Ruby on Rails and uses many additional technologies such as web sockets.
 
 System overview
 -------------
@@ -89,10 +89,12 @@ Type | URI | Explanation
 *GET* | `/rides?from_date` | get all rides that were updated after `from_date : date, ride_type : integer`. Ride type = 0 is campus ride, ride type = 1 is activity ride.
 *GET* | `/rides/ids` | get ids of rides that exists in webservice. This method is called on a mobile client to check which rides should be deleted from the local database
 *GET* | `/rides/:ride_id` | get a specific ride.  Response `{ "ride": [ {"id": 1, ...} ] }`. 
+*GET* | `/rides/:ride_id?from_date='2012-02-03 12:30'&ride_type=0` | get all rides that were added or updated after from date.  Response is a list of rides as in /rides controller. 
 *GET* | `/users/:user_id/rides` | get all rides of specific user. Optional parameters: `driver=true` returns rides where user is driver. `passenger=true` returns rides where user passenger. `past=true` return all past rides of the user.
 *POST* | `/users/:ride_id/rides` | create a new ride for specific user. This user will become ride owner (it can be ride as driver or ride request). Required header: `api_key: string`, which is api key of this user. Ride params: `"ride" : {"departure_place": string, "destination": string, "departure_time": date, "free_seats" : integer, "meeting_point" : string, "ride_type" : intger (0->campus, 1-> activity), "is_driving" : true, "car" : string, "departure_latitude" : double, "departure_longitude" : double, "destination_latitude": double, "destination_longitude":double }` 
 *PUT* | `/users/:user_id/rides/:ride_id` | Update a specific ride. Parameters : `"ride" : {"departure_place": string, "destination": string, "departure_time": date, "free_seats" : integer, "meeting_point" : string, "ride_type" : integer (0->campus, 1-> activity), "car" : string, "departure_latitude" : double, "departure_longitude" : double, "destination_latitude": double, "destination_longitude":double } ` 
 *PUT* | `/users/:user_id/rides/:id?removed_passenger=id` | Update a ride by removing a passenger with a given id.
+*PUT* | `/users/:user_id/rides/:id?added_passenger=id` | Update a ride by adding a passenger with a given id.
 *DELETE* | `/users/:user_id/rides/:ride_id` | delete a given ride. 
 
 #### Activities
