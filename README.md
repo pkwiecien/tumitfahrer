@@ -86,7 +86,6 @@ http://tumitfahrer-staging.herokuapp.com/api/v2/rides
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/rides?page=0` | get all rides by page.  Response `{ "rides": [ {"id": 1, ...} ] }`. For full response see [HERE](http://tumitfahrer-staging.herokuapp.com/api/v2/rides)
-*GET* | `/rides?from_date` | get all rides that were updated after `from_date : date, ride_type : integer`. Ride type = 0 is campus ride, ride type = 1 is activity ride.
 *GET* | `/rides/ids` | get ids of rides that exists in webservice. This method is called on a mobile client to check which rides should be deleted from the local database
 *GET* | `/rides/:ride_id` | get a specific ride.  Response `{ "ride": [ {"id": 1, ...} ] }`. 
 *GET* | `/rides/:ride_id?from_date='2012-02-03 12:30'&ride_type=0` | get all rides that were added or updated after from date.  Response is a list of rides as in /rides controller. 
@@ -142,7 +141,7 @@ Type | URI | Explanation
 Type | URI | Explanation
 --- | --- | ---
 *GET* | `/rides/:ride_id/requests/` | Get all requests for a ride with given id.  Response `{ "requests": [ {"id": integer, "passenger_id" : integer, "ride" : Ride, created_at : date, updated_at : date} ] }`. 
-*GET* | `/users/:ride_id/requests/` | Get all user's requests. Response with Request (see above).
+*GET* | `/users/:user_id/requests/` | Get all user's requests. Response with Request (see above).
 *POST* | `/rides/:ride_id/requests` | create a new ride request for a specific ride. Parameters: `passenger_id : integer`. Response: newly created Request
 *PUT* | `/rides/:ride_id/requests/:id` | handle ride request for a specific ride. Parameters: `passenger_id : integer, confirmed : boolean`
 *DELETE* | `/rides/:ride_id/requests/:id` | delete a ride requests for a given ride.
