@@ -103,6 +103,7 @@ class Api::V2::RidesController < ApiController
   end
 
   # UPDATE /api/v2/users/11/rides/:ride_id?removed_passenger=id
+  # UPDATE /api/v2/users/11/rides/:ride_id?added_passenger=id
   def update
     if params.has_key?(:removed_passenger) # update ride -> remove passenger
       ride = Ride.find_by(:id => params[:id])
@@ -135,7 +136,7 @@ class Api::V2::RidesController < ApiController
 
   def destroy
     ride = Ride.find_by(id: params[:id])
-    return render json: {status: :not_found, message: "could not delete passenger"} if ride.nil?
+    return render json: {status: :not_found, message: "could not destroy a ride"} if ride.nil?
     ride.destroy
 
     reason = params[:reason]

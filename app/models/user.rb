@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
   has_many :devices
   has_many :ride_searches
   has_many :ratings, foreign_key: :from_user_id, class_name: "Rating"
+  has_many :feedbacks
 
   # user's avatar
   has_attached_file :avatar, styles: {
