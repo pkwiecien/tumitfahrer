@@ -20,10 +20,9 @@ class Ride < ActiveRecord::Base
 
   # Active Record relationships
   has_many :relationships, dependent: :delete_all
-  has_many :users, through: :relationships
+  has_many :users
   has_many :requests
   has_many :conversations
-  has_many :ratings
 
   # filters
   before_save :default_values
@@ -46,8 +45,7 @@ class Ride < ActiveRecord::Base
   end
 
   def is_ride_request
-    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND
-relationships.is_driving= false", self.user_id)
+    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND relationships.is_driving= false", self.user_id)
     if ride_request_relationship.empty?
       return FALSE
     else
@@ -82,6 +80,7 @@ relationships.is_driving= false", self.user_id)
 
     @ride = current_user.rides.create!(ride_params)
     if @ride.save
+      @ride.update_attributes!(user_id: current_user.id)
       @ride.relationships.create!(user: current_user, is_driving: is_driving)
       if @ride.save
         return @ride
@@ -206,7 +205,10 @@ relationships.is_driving= false", self.user_id)
     if !conversation.first.nil?
       conversation.first.destroy
     end
+  end
 
+  def ratings
+    Rating.where(ride_id: self.id)
   end
 
   def to_s
