@@ -23,7 +23,7 @@ class Api::V2::RatingsController < ApiController
     @rating = user.give_rating_to_user params[:to_user_id], params[:ride_id], params[:rating_type].to_i
 
     unless @rating.nil?
-      render json: @rating, status: :created
+      render json: @rating, status: :ok
     else
       respond_with rating: [], status: :bad_request
     end

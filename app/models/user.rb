@@ -99,8 +99,9 @@ class User < ActiveRecord::Base
   end
 
   def give_rating_to_user user_id, ride_id, rating_type
-    self.ratings.create!(to_user_id: user_id, ride_id: ride_id, rating_type: rating_type)
+    rating = self.ratings.create!(to_user_id: user_id, ride_id: ride_id, rating_type: rating_type)
     Ride.find_by(id: ride_id).update_attributes(updated_at: Time.zone.now)
+    return rating
   end
 
   def register_device!(token, is_enabled, platform)
