@@ -172,9 +172,12 @@ class Ride < ActiveRecord::Base
         continue
       elsif (departure_place.empty? || (!departure_place.empty? && departure_distance <= departure_threshold)) &&
           (destination.empty? || (!destination.empty? && destination_distance <= destination_threshold))
+        logger.debug "#{ride.departure_time.tomorrow} and #{ride.departure_time.yesterday}"
         if departure_time.nil? # no date specified, return all rides that match criteria
           rides.append(ride)
-        elsif departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
+        elsif departure_time.day == ride.departure_time.day  && \
+         departure_time.month == ride.departure_time.month &&  \
+         departure_time.year == ride.departure_time.year # otherwise the day should match
           rides.append(ride)
         end
       end
