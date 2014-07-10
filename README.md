@@ -32,7 +32,7 @@ Roadmap:
 Elements being implemented:
 
 * backend in Rails and REST API (Pawel)
-* iOS app (Pawel)
+* [iOS app](https://github.com/pkwiecien/tumitfahrer-ios) (Pawel)
 * web app using Haml/jQuery (Anuradha, Shahid)
 * Android app (Abhijith, Amr)
 * Pebble app and VisioM intergration(Saqib, Behroz)
