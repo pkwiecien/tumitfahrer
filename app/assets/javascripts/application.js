@@ -10,19 +10,6 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-<<<<<<< HEAD
-//= require jquery
-//= require typeahead
-//= require typeahead-addresspicker
-//= require jquery_ujs
-//= require bootstrap
-//= require_tree .
-=======
 //= require_tree .
 //= require jquery_ujs
 //= require bootstrap
-//= require turbolinks
-
-
-
->>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc

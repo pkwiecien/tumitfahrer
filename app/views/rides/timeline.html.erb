@@ -1,0 +1,211 @@
+<%= javascript_include_tag "jquery.bootpag.min.js" %>
+<div class="container" style="margin-top: 100px">
+
+
+
+  <div class="row">
+
+    <div class="col-sm-7">
+
+    <div class =  "col-sm-12 Categories">
+        <div id="All" class="col-md-4" style="background: #0F3750;color: #beddf1;text-align : center">
+          <p><a href="#" id="all">All</a></p>
+        </div>
+
+        <div id="Yours" class="col-md-4" style="background: #0F3750;color: #beddf1;text-align : center">
+          <p><a href="#" id="yours">Yours</a></p>
+        </div>
+
+        <div id="Lastminute" class="col-md-4" style="background: #0F3750;color: #beddf1;text-align : center">
+          <p><a href="#" id="LastMinute">Lastminute</a></p>
+        </div>
+
+      </div>
+
+
+
+        <div id="All_div" class="col-sm-12" >
+
+          <div id="content" class="well col-sm-12">
+              <% @all.each_with_index do |ride1, index| %>
+              <div class="col-sm-1">
+                <% if ride1.ride_type == 0 %>
+                    <img src="<%= asset_path "DriverIcon@2x.png" %>" style="height: 40px; margin-top:15px;">
+                <% elsif ride1.ride_type == 1 %>
+                    <img src="<%= asset_path "PassengerIcon.png" %>" style="height: 40px; margin-top:15px;">
+                <% end %>
+              </div>
+              <div class="col-sm-7">
+                <p> Ride offer to <%= ride1.departure_place %>
+                <p> <%= ride1.departure_time.strftime("%d-%m-%Y")%>  <%= ride1.departure_time.strftime("%I:%M %P")%> </p>
+              </div>
+              <div class="col-sm-4">
+                <% if @time_diff_components[index] <= 30 %>
+                    <input type="button" id="30mins" class="btn btn-danger" value="Join within 30 mins" onClick="window.location='/rides/<%= ride1.id %>' "/>
+                <% elsif @time_diff_components[index] <= 60 && @time_diff_components[index] >30%>
+                    <input type="button" id="2hours" class="btn btn-warning" value="Join within 2 hours" onClick="window.location='/rides/<%= ride1.id %>' " />
+                <% else @time_diff_components[index] <= 4320 %>
+                    <input type="button" id="3days" class="btn btn-success" value="Join within 3 days" onClick="window.location='/rides/<%= ride1.id %>' "/>
+                <% end %>
+                </p>
+               </div>
+                  <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+            <% end %>
+          </div>
+      </div>
+
+        <div id="Yours_div" class="col-md-12">
+          <div class="well  col-sm-12">
+
+            <% @all.each_with_index do |ride1, index| %>
+            <div class="col-sm-1"><img src="<%= asset_path "DriverIcon@2x.png" %>" style="height: 40px; margin-top:15px;"></div>
+            <div class="col-sm-7">
+                  <p> Ride offer to <%= ride1.departure_place %>
+                  <p> <%= ride1.departure_time.strftime("%d-%m-%Y")%>  <%= ride1.departure_time.strftime("%I:%M %P")%> </p>
+                  </div>
+                  <div class="col-sm-4">
+                    <% if @time_diff_components[index] <= 30 %>
+                        <input type="button" id="30mins" class="btn btn-danger" value="Join within 30 mins" onClick="window.location='/rides/<%= ride1.id %>' "/>
+                    <% elsif @time_diff_components[index] <= 60 && @time_diff_components[index] >=30%>
+                        <input type="button" id="2hours" class="btn btn-warning" value="Join within 2 hours" onClick="window.location='/rides/<%= ride1.id %>' " />
+                    <% else @time_diff_components[index] <= 4320 %>
+                        <input type="button" id="3days" class="btn btn-success" value="Join within 3 days" onClick="window.location='/rides/<%= ride1.id %>' "/>
+                    <% end %>
+                    </p>
+                  </div>
+                <br><br><br> <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+            <% end %>
+            <ul class="pagination">
+
+
+              <li><a href="#">1</a></li>
+
+
+            </ul>
+          </div>
+
+        </div>
+
+        <div id="Lastminute_div" class="col-md-12">
+          <div class="well col-sm-12">
+            <% @lastminute_rides.each_with_index do |ride1, index| %>
+                <div class="col-sm-1"><img src="<%= asset_path "DriverIcon@2x.png" %>" style="height: 40px; margin-top:15px;"></div>
+                <div class="col-sm-7">
+                  <p> Ride offer to <%= ride1.departure_place %>
+                  <p> <%= ride1.departure_time.strftime("%d-%m-%Y")%>  <%= ride1.departure_time.strftime("%I:%M %P")%> </p>
+                </div>
+                <div class="col-sm-4">
+                  <% if @time_diff_components[index] <= 30 %>
+                      <input type="button" id="30mins" class="btn btn-danger" value="Join within 30 mins" onClick="window.location='/rides/<%= ride1.id %>' "/>
+                  <% elsif @time_diff_components[index] <= 300 && @time_diff_components[index] >=30%>
+                      <input type="button" id="2hours" class="btn btn-warning" value="Join within 2 hours" onClick="window.location='/rides/<%= ride1.id %>' " />
+                  <% end %>
+                  </p>
+                </div>
+                <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+            <% end %>
+
+          </div>
+        </div>
+      <div id="page-selection"></div>
+
+
+
+    </div><!-- /.blog-main -->
+
+    <div class="col-sm-5">
+      <div class="sidebar-module ">
+        <div class="panel panel-primary" >
+          <div class="panel-heading" style="background: #0F3750;color: #beddf1;text-align : center">
+            <h3 class="panel-title " >Today</h3>
+          </div>
+          <div class="panel-body">
+            <% @today_rides.each_with_index do |ride1, index| %>
+                <div class="col-sm-2">
+                  <img src="<%= asset_path "DriverIcon@2x.png" %>" style="height: 40px; margin-top:15px;">
+                </div>
+                <div class="col-sm-10">
+                  <p> <%= ride1.departure_place %>
+                  <p> <%= ride1.departure_time.strftime("%I:%M %P")%> </p>
+                </div>
+                <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+            <%end %>
+          </div>
+        </div>
+        <div class="panel panel-primary" >
+          <div class="panel-heading" style="background: #0F3750;color: #beddf1;text-align : center">
+            <h3 class="panel-title " >Tomorrow</h3>
+          </div>
+          <div class="panel-body">
+            <% @tomorrow_rides.each_with_index do |ride1, index| %>
+                <div class="col-sm-2">
+                  <img src="<%= asset_path "DriverIcon@2x.png" %>" style="height: 40px; margin-top:15px;">
+                </div>
+                <div class="col-sm-10">
+                  <p> <%= ride1.departure_place %>
+                  <p> <%= ride1.departure_time.strftime("%I:%M %P")%> </p>
+                </div>
+                <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+            <%end %>
+          </div>
+        </div>
+        <div class="panel panel-primary">
+          <div class="panel-heading" style="background: #0F3750;color: #beddf1;text-align : center">
+            <h3 class="panel-title">TUM News</h3>
+          </div>
+          <div class="panel-body">
+            <% @all.each_with_index do |ride1, index| %>
+                <%= ride1.departure_place %>
+                <br>
+            <%end %>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.blog-sidebar -->
+
+  </div><!-- /.row -->
+
+</div><!-- /.container -->
+
+  <script>
+  $("#All").click(function(){
+  $("#All_div").css("display", "block");
+  $("#Yours_div").css("display", "none");
+  $("#Lastminute_div").css("display","none");
+  $("#All").css('background-color','#0F3750');
+  $("#Yours").css('background-color','black');
+  $("#Lastminute").css('background-color','black');
+  })
+  $("#Yours").click(function(){
+  $("#All_div").css("display", "none");
+  $("#Yours_div").css("display", "block");
+  $("#Lastminute_div").css("display","none");
+  $("#Yours").css('background-color','#0F3750');
+  $("#All").css('background-color','black');
+  $("#Lastminute").css('background-color','black');
+  })
+  $("#Lastminute").click(function(){
+  $("#All_div").css("display","none");
+  $("#Yours_div").css("display","none")
+  $("#Lastminute_div").css("display","block");
+  $("#Lastminute").css('background-color','#0F3750');
+  $("#All").css('background-color','black');
+  $("#Yours").css('background-color','black');
+  });
+          $(document).ready(function(){
+              $("#All_div").css("display", "block");
+              $("#Yours_div").css("display", "none");
+              $("#Lastminute_div").css("display","none");
+          });
+  $('#page-selection').bootpag({
+      total: 5
+  }).on("page", function(event, num){
+      $("#content").html("Insert content"); // some ajax content loading...
+  });
+  </script>
+
+<style type="text/css">
+  #all:link{color :#ffffff;}
+
+</style>

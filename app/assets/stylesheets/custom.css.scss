@@ -8,6 +8,7 @@ $grayMediumLight: #eaeaea;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+
 }
 
 /* universal */
@@ -29,6 +30,22 @@ p {
   margin-top: 10px;
 }
 
+a:link{
+
+  color : #ffffff;
+}
+a:visited{
+
+  color : #ffffff;
+}
+a:hover{
+
+  color : #ffffff;
+}
+a:active{
+
+  color : #ffffff;
+}
 h1 {
   text-align: center;
 }

@@ -192,10 +192,6 @@ relationships.is_driving= false", self.user_id)
   private
 
   def default_values
-<<<<<<< HEAD
-   
-=======
->>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
     self.price ||= 0
     self.ride_type ||= 0
     self.car ||= ""

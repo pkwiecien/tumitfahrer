@@ -62,12 +62,12 @@ Tumitfahrer::Application.routes.draw do
   match "/signup", to: "users#new", via: 'get'
   match "/signin", to: "sessions#new", via: 'get'
   match "/signout", to: "sessions#destroy", via: 'delete'
-  match "/ride_details/:id", to: "rides#ride_details", via: 'get'
   match "/search1", to: "searches#search", via: 'get'
   match "/help", to: "static_pages#help", via: 'get'
   match "/contact", to: "static_pages#contact", via: 'get'
   match "/about", to: "static_pages#about", via: 'get'
   match "/discover", to: "static_pages#discover", via: 'get'
+  match "/timeline", to: "rides#timeline", via: 'get'
 
 
   #map.check_email "users/check_email", :controller => "users", :action => "check_email"

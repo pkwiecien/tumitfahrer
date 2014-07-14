@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-<script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 
-<%= javascript_include_tag "typeahead.js" %>
-<%= javascript_include_tag "typeahead-addresspicker.js" %>
-
-
-
-=======
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
 <%= javascript_include_tag "jquery.geocomplete.min.js" %>
->>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
+<%= javascript_include_tag "jquery.datetimepicker.js" %>
+
 <% provide(:title, "New ride") %>
 <h1>Add a great ride</h1>
 
@@ -33,10 +26,10 @@
         <%= f.label :meeting_point %>
         <%= f.text_field :meeting_point %>
 
-<<<<<<< HEAD
+
         <%= f.label :ride_type%>
         <%= f.text_field :ride_type %>
-=======
+
         <%= f.label :car %>
         <%= f.text_field :car %>
 
@@ -52,35 +45,15 @@
           <%= radio_button_tag :is_driving, 0, :checked => true %>
           <%= label_tag :is_driving, "Passenger", :value => 0 %>
 
->>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
-
         <%= f.submit "Add new ride", class: "btn btn-large btn-primary" %>
 
     <% end %>
   </div>
 </div>
 
-<<<<<<< HEAD
-
-
-
-<script>
-
-    $(document).ready(function () {
-        var addressPicker = new AddressPicker();
-        $('#departure_place').typeahead(null, {
-            displayKey: 'description',
-            source: addressPicker.ttAdapter()
-        });
-        $('#destination').typeahead(null, {
-            displayKey: 'description',
-            source: addressPicker.ttAdapter()
-        });
-    });
-</script>
-=======
 <script>
     $("#ride_departure_place").geocomplete();
     $("#ride_destination").geocomplete();
+    $('#ride_departure_time').datetimepicker();
 </script>
->>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
+
