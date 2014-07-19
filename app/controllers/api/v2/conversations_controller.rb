@@ -42,6 +42,4 @@ class Api::V2::ConversationsController < ApiController
 
   end
 
-  private
-
 end

@@ -1,6 +1,5 @@
 class Api::V2::RidesController < ApiController
   respond_to :json, :xml, :html
-  before_filter :check_format, only: [:show]
   #before_filter :restrict_access, only: [:index, :create]
 
   @@num_page_results = 10
@@ -159,15 +158,6 @@ class Api::V2::RidesController < ApiController
     params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats,
                                  :meeting_point, :ride_type, :is_driving, :car, :departure_latitude,
                                  :departure_longitude, :destination_latitude, :destination_longitude, :repeat_dates)
-  end
-
-  def check_format
-    puts request.format.inspect
-    if request.format.to_s == "application/json"
-      puts "hello"
-    else
-      puts "world"
-    end
   end
 
 end
