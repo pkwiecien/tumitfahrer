@@ -7,6 +7,9 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides
   def index
+    current_user = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil?
+
     if params.has_key?(:from_date)
       get_rides_from_date  Time.zone.parse(params[:from_date]), params[:ride_type].to_i
     else
@@ -39,6 +42,9 @@ class Api::V2::RidesController < ApiController
 
   # GET api/v2/rides/ids
   def get_ids_existing_rides
+    current_user = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil?
+
     ride_ids = Ride.select(:id).map(&:id)
     respond_to do |format|
       format.xml { render xml: {ids: ride_ids}, :status => :ok }
@@ -50,7 +56,8 @@ class Api::V2::RidesController < ApiController
   # optional @param is_paid=true/false - get rides of the user that are paid or not
   def get_user_rides
     user = User.find_by(id: params[:user_id])
-    return respond_with :rides => [], :status => :not_found if user.nil?
+    current_user = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil? || user.id != current_user.id
 
     if params.has_key?(:past)
       return get_past_rides user
@@ -70,14 +77,15 @@ class Api::V2::RidesController < ApiController
 
   #GET /api/v2/rides?past
   def get_past_rides user
-
     @rides = user.rides.where("departure_time < ?", Time.now)
     respond_with @rides, status: :ok
-
   end
 
   # GET /api/v2/rides/:id
   def show
+    current_user = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil? || user.id != current_user.id
+
     @ride = Ride.find_by(:id => params[:id])
     if @ride.nil?
       @ride = {:ride => nil}
@@ -91,7 +99,7 @@ class Api::V2::RidesController < ApiController
   def create
     current_user_db = User.find_by(id: params[:user_id])
     current_user = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
+    return render json: {:ride => []}, status: :unauthorized if current_user.nil? || current_user != current_user_db
 
     @ride = Ride.create_ride_by_owner ride_params, current_user
 
@@ -105,6 +113,9 @@ class Api::V2::RidesController < ApiController
   # UPDATE /api/v2/users/11/rides/:ride_id?removed_passenger=id
   # UPDATE /api/v2/users/11/rides/:ride_id?added_passenger=id
   def update
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:ride => [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+
     if params.has_key?(:removed_passenger) # update ride -> remove passenger
       ride = Ride.find_by(:id => params[:id])
       return render json: {status: :not_found, message: "could not delete passenger"} if ride.nil?
@@ -135,15 +146,19 @@ class Api::V2::RidesController < ApiController
   end
 
   def destroy
+
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+
     ride = Ride.find_by(id: params[:id])
-    return render json: {status: :not_found, message: "could not destroy a ride"} if ride.nil?
+    return render json: {message: "could not destroy a ride"}, status: :not_found if ride.nil?
     ride.destroy
 
     reason = params[:reason]
     # TODO send push notification with reason
     respond_to do |format|
-      format.xml { render xml: {:status => :ok} }
-      format.any { render json: {:status => :ok} }
+      format.xml { render xml: {message: "invalid api key"}, :status => :ok }
+      format.any { render json: {message: "invalid api key"}, :status => :ok }
     end
   end
 
