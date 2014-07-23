@@ -7,5 +7,9 @@ class UserMailer < ActionMailer::Base
     mail(to: @user.email, subject: 'Welcome to TUMitfahrer')
   end
 
-
+  def forgot_email(user, new_password)
+    @user = user
+    @new_password = new_password
+    mail(to: @user.email, subject: 'TUMitfahrer: Password reminder')
+  end
 end

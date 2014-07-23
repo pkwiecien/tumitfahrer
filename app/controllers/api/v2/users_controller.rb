@@ -3,6 +3,9 @@ class Api::V2::UsersController < ApiController
 
   # GET /api/v2/users/
   def index
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {users: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+
     @users = User.all
     respond_with @users, status: :ok
   end

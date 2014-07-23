@@ -4,6 +4,10 @@ class Api::V2::SearchesController < ApiController
   # POST /api/v2/search
   # create new search query
   def create
+
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {rides: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+
     departure_place = params[:departure_place]
     departure_threshold = params[:departure_place_threshold].to_i
     destination = params[:destination]

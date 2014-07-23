@@ -29,16 +29,6 @@ class User < ActiveRecord::Base
   has_many :ratings, foreign_key: :from_user_id, class_name: "Rating"
   has_many :feedbacks
 
-  # user's avatar
-  has_attached_file :avatar, styles: {
-      thumb: '100x100>',
-      square: '200x200#',
-      medium: '300x300>'
-  }
-
-  # Validate the attached image is image/jpg, image/png, etc
-  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
-
   # filters
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
