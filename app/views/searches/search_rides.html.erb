@@ -1,0 +1,71 @@
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+<%= javascript_include_tag "jquery.geocomplete.min.js" %>
+
+<% provide(:title, "Search Rides") %>
+<h1>Search Rides</h1>
+<div class="container">
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <%= form_tag("/search_rides", method: :get) do %>
+
+        <%= label_tag :departure_place %>
+        <%= text_field_tag :departure_place, @departure_place %>
+
+        <%= label_tag :departure_place_threshold %>
+        <%= text_field_tag :departure_place_threshold, @departure_threshold %>
+
+        <%= label_tag :destination %>
+        <%= text_field_tag :destination, @destination %>
+
+        <%= label_tag :destination_threshold %>
+        <%= text_field_tag :destination_threshold, @destination_threshold %>
+
+        <%= label_tag :departure_time %>
+        <%= text_field_tag :departure_time, @departure_time %>
+
+        <%= radio_button_tag(:ride_type, 0, @ride_type.equal?(0) ? "style: checked" : "" ) %>
+        <%= label_tag(:type, "Campus") %>
+        <%= radio_button_tag(:ride_type, 1, @ride_type.equal?(1) ? "style: checked" : "") %>
+        <%= label_tag(:type, "Activity") %>
+
+        <br>
+        <%= submit_tag "Search", class: "btn btn-large btn-primary" %>
+
+    <% end %>
+  </div>
+</div>
+
+<% if @rides.any? %>
+    <h3>Rides (<%= @rides.count %>)</h3>
+
+    <div class="col-xs-8">
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="col-sm-2">From</th>
+          <th class="col-sm-2">Destination</th>
+          <th class="col-sm-2">Date</th>
+          <th class="col-sm-2">Seats</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @rides.each do |ride| %>
+            <tr>
+              <td><span><%= ride.departure_place %></span></td>
+              <td><span><%= ride.destination %></span></td>
+              <td><span><%= ride.departure_time %></span></td>
+              <td><span><%= pluralize(ride.free_seats, "seat") %></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+<% else %>
+
+<% end %>
+</div>
+
+<script>
+    $("#departure_place").geocomplete();
+    $("#destination").geocomplete();
+</script>
