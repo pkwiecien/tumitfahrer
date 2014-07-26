@@ -80,8 +80,6 @@ group :doc do
 end
 
 gem 'active_model_serializers'
-# for storing images
-gem 'paperclip'
 # S3 contains user images
 gem 'aws-sdk'
 

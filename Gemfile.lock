@@ -51,10 +51,6 @@ GEM
       xpath (~> 2.0)
     childprocess (0.5.3)
       ffi (~> 1.0, >= 1.0.11)
-    climate_control (0.0.3)
-      activesupport (>= 3.0)
-    cocaine (0.5.4)
-      climate_control (>= 0.0.3, < 1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -101,11 +97,6 @@ GEM
     newrelic_rpm (3.9.0.229)
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
-    paperclip (4.1.1)
-      activemodel (>= 3.0.0)
-      activesupport (>= 3.0.0)
-      cocaine (~> 0.5.3)
-      mime-types
     pg (0.15.1)
     polyglot (0.3.5)
     push-core (1.0.4)
@@ -219,7 +210,6 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   newrelic_rpm
-  paperclip
   pg (= 0.15.1)
   push-gcm
   railroady
