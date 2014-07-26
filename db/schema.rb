@@ -11,7 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619134853) do
+ActiveRecord::Schema.define(version: 20140725082712) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "adminpack"
+
+  create_table "api_keys", force: true do |t|
+    t.string   "access_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contributions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.float    "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "conversations", force: true do |t|
     t.integer  "ride_id"
@@ -20,6 +38,8 @@ ActiveRecord::Schema.define(version: 20140619134853) do
     t.integer  "user_id"
     t.integer  "other_user_id"
   end
+
+  add_index "conversations", ["user_id", "other_user_id", "ride_id"], name: "index_conversations_on_user_id_and_other_user_id_and_ride_id", using: :btree
 
   create_table "devices", force: true do |t|
     t.integer  "user_id"
@@ -39,6 +59,32 @@ ActiveRecord::Schema.define(version: 20140619134853) do
     t.datetime "updated_at"
   end
 
+  create_table "friendship_requests", force: true do |t|
+    t.integer  "from_user_id"
+    t.integer  "to_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "friendships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "friend_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
+  add_index "friendships", ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true, using: :btree
+  add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
+
+  create_table "gcms", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "host"
+    t.string   "format"
+    t.string   "key"
+  end
+
   create_table "messages", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -47,6 +93,34 @@ ActiveRecord::Schema.define(version: 20140619134853) do
     t.integer  "conversation_id"
     t.integer  "sender_id"
     t.integer  "receiver_id"
+  end
+
+  create_table "organized_rides", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "payments", force: true do |t|
+    t.integer  "from_user_id"
+    t.integer  "to_user_id"
+    t.integer  "ride_id"
+    t.float    "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "projects", force: true do |t|
+    t.integer  "phase"
+    t.float    "fundings_target"
+    t.integer  "owner_id"
+    t.string   "description"
+    t.string   "title"
+    t.datetime "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "ride_id"
   end
 
   create_table "push_configurations", force: true do |t|
@@ -150,9 +224,33 @@ ActiveRecord::Schema.define(version: 20140619134853) do
     t.float    "destination_longitude"
     t.string   "car"
     t.integer  "rating_id"
+    t.datetime "last_cancel_time"
+    t.integer  "regular_ride_id"
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
+
+  create_table "rides_as_drivers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rides_as_drivers", ["ride_id"], name: "index_rides_as_drivers_on_ride_id", using: :btree
+  add_index "rides_as_drivers", ["user_id", "ride_id"], name: "index_rides_as_drivers_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "rides_as_drivers", ["user_id"], name: "index_rides_as_drivers_on_user_id", using: :btree
+
+  create_table "rides_as_passengers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rides_as_passengers", ["ride_id"], name: "index_rides_as_passengers_on_ride_id", using: :btree
+  add_index "rides_as_passengers", ["user_id", "ride_id"], name: "index_rides_as_passengers_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "rides_as_passengers", ["user_id"], name: "index_rides_as_passengers_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first_name"

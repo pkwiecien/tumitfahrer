@@ -20,10 +20,9 @@ class Ride < ActiveRecord::Base
 
   # Active Record relationships
   has_many :relationships, dependent: :delete_all
-  has_many :users, through: :relationships
+  has_many :users
   has_many :requests
   has_many :conversations
-  has_many :ratings
 
   # filters
   before_save :default_values
@@ -46,8 +45,7 @@ class Ride < ActiveRecord::Base
   end
 
   def is_ride_request
-    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND
-relationships.is_driving= false", self.user_id)
+    ride_request_relationship = self.relationships.where("relationships.user_id = ? AND relationships.is_driving= false", self.user_id)
     if ride_request_relationship.empty?
       return FALSE
     else
@@ -70,8 +68,19 @@ relationships.is_driving= false", self.user_id)
     passengers
   end
 
-  def self.create_ride_by_owner ride_params, current_user
-    is_driving = ride_params[:is_driving].to_i
+  def self.create_regular_rides regular_ride_dates, ride_params, current_user
+    ride_params.delete("repeat_dates")
+    @rides = []
+    regular_ride_dates.each do |ride_date|
+      ride_params[:departure_time] = ride_date
+      @ride = Ride.create_ride_by_owner ride_params, current_user, true
+      @rides.append(@ride)
+      @ride.update_attributes!(regular_ride_id: @rides.first.id)
+    end
+    return @rides
+  end
+
+  def self.create_ride_by_owner ride_params, current_user, is_driving
     ride_params.delete("is_driving")
 
     ride_params[:departure_latitude] = ride_params[:departure_latitude].to_f
@@ -82,6 +91,7 @@ relationships.is_driving= false", self.user_id)
 
     @ride = current_user.rides.create!(ride_params)
     if @ride.save
+      @ride.update_attributes!(user_id: current_user.id)
       @ride.relationships.create!(user: current_user, is_driving: is_driving)
       if @ride.save
         return @ride
@@ -103,15 +113,25 @@ relationships.is_driving= false", self.user_id)
       if is_confirmed.to_i == 0
         request.destroy
       else
-        relationship = self.relationships.create(user_id: passenger_id)
-        if relationship.save
-          self.update_attributes(updated_at: Time.zone.now)
-          if !self.conversation_exists? driver_id, passenger_id
-            self.create_conversation driver_id, passenger_id
-          end
+        relationship = self.add_passenger passenger_id
+        if !relationship.nil?
           request.destroy
         end
       end
+    end
+  end
+
+  def add_passenger passenger_id
+    if self.relationships.find_by(user_id: passenger_id, is_driving: false).nil?
+      relationship = self.relationships.create(user_id: passenger_id)
+      if relationship.save
+        self.update_attributes(updated_at: Time.zone.now)
+        if !self.conversation_exists? self.ride_owner.id, passenger_id
+          self.create_conversation self.ride_owner.id, passenger_id
+        end
+      end
+    else
+      return nil
     end
   end
 
@@ -131,7 +151,7 @@ relationships.is_driving= false", self.user_id)
     if passenger != nil
       passenger.destroy
       self.remove_conversation_between_users driver_id, passenger_id
-      self.update_attributes(updated_at: Time.zone.now)
+      self.update_attributes(updated_at: Time.zone.now, last_cancel_time: Time.zone.now)
     end
   end
 
@@ -163,9 +183,12 @@ relationships.is_driving= false", self.user_id)
         continue
       elsif (departure_place.empty? || (!departure_place.empty? && departure_distance <= departure_threshold)) &&
           (destination.empty? || (!destination.empty? && destination_distance <= destination_threshold))
+        logger.debug "#{ride.departure_time.tomorrow} and #{ride.departure_time.yesterday}"
         if departure_time.nil? # no date specified, return all rides that match criteria
           rides.append(ride)
-        elsif departure_time < ride.departure_time.tomorrow && departure_time > (ride.departure_time.yesterday+24.hours) # otherwise the day should match
+        elsif departure_time.day == ride.departure_time.day  && \
+         departure_time.month == ride.departure_time.month &&  \
+         departure_time.year == ride.departure_time.year # otherwise the day should match
           rides.append(ride)
         end
       end
@@ -196,7 +219,10 @@ relationships.is_driving= false", self.user_id)
     if !conversation.first.nil?
       conversation.first.destroy
     end
+  end
 
+  def ratings
+    Rating.where(ride_id: self.id)
   end
 
   def to_s

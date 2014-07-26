@@ -5,6 +5,9 @@ class Api::V2::DevicesController < ApplicationController
 
   # GET /api/v2/users/:user_id/devices
   def index
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {devices: [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
+
     user = User.find_by(id: params[:user_id])
     if user.nil?
       respond_to do |format|
@@ -22,6 +25,9 @@ class Api::V2::DevicesController < ApplicationController
 
   # POST /api/v2/users/:user_id/devices
   def create
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
+
     user = User.find_by(id: params[:user_id])
     if user.nil?
       return respond_to do |format|
@@ -36,8 +42,8 @@ class Api::V2::DevicesController < ApplicationController
     end
 
     respond_to do |format|
-      format.xml { render xml: {:status => :created} }
-      format.any { render json: {:status => :created} }
+      format.xml { render xml: {message: "device saved"}, :status => :created }
+      format.any { render json: {message: "device saved"}, :status => :created }
     end
   end
 
