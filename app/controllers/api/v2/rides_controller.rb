@@ -1,14 +1,11 @@
 class Api::V2::RidesController < ApiController
   respond_to :json, :xml, :html
-  before_filter :check_format, only: [:show]
   #before_filter :restrict_access, only: [:index, :create]
 
   @@num_page_results = 10
 
   # GET /api/v2/rides
   def index
-    current_user = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil?
 
     if params.has_key?(:from_date)
       get_rides_from_date  Time.zone.parse(params[:from_date]), params[:ride_type].to_i
@@ -42,8 +39,6 @@ class Api::V2::RidesController < ApiController
 
   # GET api/v2/rides/ids
   def get_ids_existing_rides
-    current_user = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil?
 
     ride_ids = Ride.select(:id).map(&:id)
     respond_to do |format|
@@ -57,7 +52,7 @@ class Api::V2::RidesController < ApiController
   def get_user_rides
     user = User.find_by(id: params[:user_id])
     current_user = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil? || user.id != current_user.id
+    return render json: {:rides => [], message: "Access denied"}, status: :unauthorized if current_user.nil? || user.id != current_user.id
 
     if params.has_key?(:past)
       return get_past_rides user
@@ -83,8 +78,6 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides/:id
   def show
-    current_user = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {:rides => [], message: "invalid api key"}, status: :unauthorized if current_user.nil? || user.id != current_user.id
 
     @ride = Ride.find_by(:id => params[:id])
     if @ride.nil?
@@ -101,12 +94,19 @@ class Api::V2::RidesController < ApiController
     current_user = User.find_by(api_key: request.headers[:apiKey])
     return render json: {:ride => []}, status: :unauthorized if current_user.nil? || current_user != current_user_db
 
-    @ride = Ride.create_ride_by_owner ride_params, current_user
-
-    unless @ride.nil?
-      respond_with @ride, status: :created
+    regular_ride_dates = params[:ride][:repeat_dates]
+    if !regular_ride_dates.nil? && regular_ride_dates.count > 0
+      @rides = Ride.create_regular_rides regular_ride_dates, ride_params, current_user
+      render json: @rides, each_serializer: RideSerializer, status: :created
     else
-      render json: {:ride => nil}, status: :bad_request
+      @ride = Ride.create_ride_by_owner ride_params, current_user, params[:ride][:is_driving].to_i
+
+      unless @ride.nil?
+        respond_with @ride, status: :created
+      else
+        render json: {:ride => nil}, status: :bad_request
+      end
+
     end
   end
 
@@ -114,7 +114,7 @@ class Api::V2::RidesController < ApiController
   # UPDATE /api/v2/users/11/rides/:ride_id?added_passenger=id
   def update
     user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {:ride => [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+    return render json: {:ride => [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
 
     if params.has_key?(:removed_passenger) # update ride -> remove passenger
       ride = Ride.find_by(:id => params[:id])
@@ -137,7 +137,7 @@ class Api::V2::RidesController < ApiController
 
       @ride.update_attributes!(meeting_point: params[:ride][:meeting_point], departure_place: params[:ride][:departure_place],
                                destination: params[:ride][:destination], free_seats: params[:ride][:free_seats].to_i,
-                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i,
+                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i, car: params[:ride][:car],
                                departure_latitude: params[:ride][:departure_latitude].to_f, departure_longitude: params[:ride][:departure_longitude].to_f,
                                destination_latitude: params[:ride][:destination_latitude].to_f, destination_longitude: params[:ride][:destination_longitude].to_f)
       respond_with @ride, status: :ok
@@ -148,17 +148,22 @@ class Api::V2::RidesController < ApiController
   def destroy
 
     user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+    return render json: {message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
 
-    ride = Ride.find_by(id: params[:id])
-    return render json: {message: "could not destroy a ride"}, status: :not_found if ride.nil?
-    ride.destroy
+    if params.has_key?(:regular_ride_id)
+      rides = Ride.where(regular_ride_id: params[:regular_ride_id])
+      rides.destroy_all
+    else
+      ride = Ride.find_by(id: params[:id])
+      return render json: {message: "Could not destroy a ride"}, status: :not_found if ride.nil?
+      ride.destroy
+    end
 
     reason = params[:reason]
     # TODO send push notification with reason
     respond_to do |format|
-      format.xml { render xml: {message: "invalid api key"}, :status => :ok }
-      format.any { render json: {message: "invalid api key"}, :status => :ok }
+      format.xml { render xml: {message: "Ride was successfully deleted"}, :status => :ok }
+      format.any { render json: {message: "Ride was successfully deleted"}, :status => :ok }
     end
   end
 
@@ -174,15 +179,6 @@ class Api::V2::RidesController < ApiController
     params.require(:ride).permit(:departure_place, :destination, :departure_time, :free_seats,
                                  :meeting_point, :ride_type, :is_driving, :car, :departure_latitude,
                                  :departure_longitude, :destination_latitude, :destination_longitude, :repeat_dates)
-  end
-
-  def check_format
-    puts request.format.inspect
-    if request.format.to_s == "application/json"
-      puts "hello"
-    else
-      puts "world"
-    end
   end
 
 end

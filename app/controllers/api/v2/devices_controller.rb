@@ -6,7 +6,7 @@ class Api::V2::DevicesController < ApplicationController
   # GET /api/v2/users/:user_id/devices
   def index
     user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {devices: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+    return render json: {devices: [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
 
     user = User.find_by(id: params[:user_id])
     if user.nil?
@@ -26,7 +26,7 @@ class Api::V2::DevicesController < ApplicationController
   # POST /api/v2/users/:user_id/devices
   def create
     user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+    return render json: {message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
 
     user = User.find_by(id: params[:user_id])
     if user.nil?

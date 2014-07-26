@@ -4,7 +4,7 @@ class Api::V2::RatingsController < ApiController
   # GET /api/v2/users/:user_id/ratings?given=true
   def index
     user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {ratings: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+    return render json: {ratings: [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
 
     user = User.find_by(id: params[:user_id])
     return respond_with :ratings => [], :status => :not_found if user.nil?
@@ -20,7 +20,7 @@ class Api::V2::RatingsController < ApiController
   # POST /api/v2/users/:user_id/ratings?to_user_id=X&ride_id=Y&rating_type=Z
   def create
     user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {rating: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+    return render json: {rating: [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
 
     user = User.find_by(id: params[:user_id])
     return respond_with rating: [], :status => :not_found if user.nil?

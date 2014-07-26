@@ -6,7 +6,7 @@ class Api::V2::SearchesController < ApiController
   def create
 
     user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {rides: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
+    return render json: {rides: [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
 
     departure_place = params[:departure_place]
     departure_threshold = params[:departure_place_threshold].to_i
@@ -19,7 +19,7 @@ class Api::V2::SearchesController < ApiController
     ride_type = params[:ride_type].to_i
 
     if user.nil?
-      return render json: {:message => "user not found"}, status: :not_found
+      return render json: {:message => "User not found"}, status: :not_found
     else
       # add this search to table ride_searches which is displayed as a timeline
       user.ride_searches.create!(departure_place: departure_place, destination: destination,

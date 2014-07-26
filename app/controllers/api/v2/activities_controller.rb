@@ -7,8 +7,6 @@ class Api::V2::ActivitiesController < ApplicationController
 
   # GET /api/v2/activities
   def index
-    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {activities: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
 
     @activities = {id: params[:activity_id].to_i}
     campus_rides = Ride.order(created_at: :desc).where("ride_type = ? AND departure_time > ?", 0, Time.now).limit(@@num_page_results)
@@ -33,8 +31,6 @@ class Api::V2::ActivitiesController < ApplicationController
 
   # GET /api/v2/activities/badges?campus_updated_at='2012-02-03 12:30'&user_id=id
   def get_badge_counter
-    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {badge_counter: [], message: "invalid api key"}, status: :unauthorized if user_from_api_key.nil?
 
     campus_updated_at = params[:campus_updated_at]
     activity_updated_at = params[:activity_updated_at]
