@@ -129,6 +129,12 @@ class Ride < ActiveRecord::Base
 
     passenger = relationships.where("user_id = ? AND is_driving = false", passenger_id).first
     if passenger != nil
+
+      #Changed by Behroz - 27 June-2014 - Start
+      #Since, we are deleting the passenger from the passenger list. We need to inform the driver that passenger has left the ride
+      notifications.reservation_cancelled(driver_id,passenger_id, self.id )
+      #Changed by Behroz - 27 June-2014 - End
+
       passenger.destroy
     end
 

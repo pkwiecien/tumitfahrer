@@ -1,4 +1,6 @@
 require 'gcm'
+require "uri"
+require "net/http"
 
 #class to send messages. Cron job will call this class.
 class MessageSender
@@ -25,12 +27,16 @@ class MessageSender
             Notification.update_status(notification.notification_id, notification.message)
           end
         else if(notification.device_type == 'iPhone')
-            MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
-            Notification.update_status(notification.notification_id, notification.message)
-
-        #TODO: Add check for visiom
+                MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
+                Notification.update_status(notification.notification_id, notification.message)
+             end
+        else if(notification.device_type == 'VisioM')
+               #Send a post request to the VisioM server. Url is of the format 'http://thewebsite.net'
+               #device_id should be the URL of the car
+                MessageSender.send_visiom_notification(notification.device_id, notification.message)
+                Notification.update_status(notification.notification_id, notification.message)
+             end
         end
-      end
       rescue
         puts("ERROR: While sending push notification: "+notification.notification_id)
       end
@@ -75,4 +81,10 @@ class MessageSender
     end
   end
 
+  #Thsi function sends a POST request to the URL of the car. Car fetches the message from the POST request and puts it on the bus
+  def self.send_visiom_notification(url,message)
+    response = Net::HTTP.post_form(URI.parse(url), {'notification'=>message})
+    #response.code #TODO: Add check if required based on the code
+    #puts response.body
+  end
 end

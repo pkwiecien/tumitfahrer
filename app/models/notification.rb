@@ -1,4 +1,5 @@
 require 'ride'
+require 'user'
 require 'notification_data'
 
 # Schema Information
@@ -40,14 +41,21 @@ class Notification < ActiveRecord::Base
     notification.save
   end
 
+  def self.update_message(id,message)
+    notification = Notification.find(id)
+    notification.message = message
+    notification.save
+  end
+
   #This function inserts the notification and sets the status to "not sent"
-  def self.insert_notification(user_id,ride_id,message_type,datetime)
+  def self.insert_notification(user_id,ride_id,message_type,datetime,driver_id)
     notification = Notification.new
     notification.user_id = user_id
     notification.ride_id = ride_id
     notification.message_type = message_type
     notification.date_time = datetime
     notification.status = "not sent"
+    notification.extra = driver_id    #This field stores the extra data regarding the notification.
 
     if notification.save
       return notification
@@ -64,19 +72,21 @@ class Notification < ActiveRecord::Base
 
   #This functions inserts the notification for driver_pickup_alert message.
   def self.driver_pickup(current_user_id, ride_id, departure_time)
-    insert_notification(current_user_id , ride_id, 1, departure_time - 15*60) #Send notification to user 15 minutes before the pickup
+    insert_notification(current_user_id , ride_id, 1, departure_time - 15*60,-1) #Send notification to user 15 minutes before the pickup
   end
 
   #This function inserts the notification in the database table if the driver has accepted the request of a user. This notification will
   #be handled by accept_request_alert
   def self.accept_request(passenger_id, ride_id, ride_departure_time)
-    notification = insert_notification(passenger_id,ride_id,5, Time.zone.now + 5*60) #Send notification to user within 5 minutes of acceptance of request
-    insert_notification(passenger_id,ride_id,2, ride_departure_time - 15*60) #Send user reminder 15 min before the ride
+    notification = insert_notification(passenger_id,ride_id,5, Time.zone.now + 5*60,-1) #Send notification to user within 5 minutes of acceptance of request
+    insert_notification(passenger_id,ride_id,2, ride_departure_time - 15*60,-1) #Send user reminder 15 min before the ride
   end
 
   #Controller method to insert decline_request_alert notification
   def self.decline_request(ride_id, passenger_id)
-    insert_notification(passenger_id,ride_id,6, Time.zone.now + 5*60) #Send the notification to user within 5 minute of rejection of request
+    #Get driver id
+    user_driver = ride.find(ride_id).driver
+    insert_notification(passenger_id,ride_id,6, Time.zone.now + 5*60,user_driver.id) #Send the notification to user within 5 minute of rejection of request
   end
 
   #This function inserts the notification in the database table for cancel_ride_alert notification message.
@@ -92,7 +102,9 @@ class Notification < ActiveRecord::Base
 
     #loop through all the passengers and insert notification for each passenger in notification table
     passenger_list.each do |passenger|
-      insert_notification(passenger.id, ride_id, 3, Time.zone.now + 5*60) #Send users notification within 5 minutes of cancellation of ride
+      notification = insert_notification(passenger.id, ride_id, 3, Time.zone.now + 5*60,user_id) #Send users notification within 5 minutes of cancellation of ride
+      message = cancel_ride_alert(notification, notification.user.devices.language)   #generate a mesage right now because the ride will be deleted
+      Notification.update_message(notification.id,message) #update the generated message in the database
     end
   end
 
@@ -100,11 +112,12 @@ class Notification < ActiveRecord::Base
     #Since the message should be sent to the driver. Get his user id and insert in the notification table
     ride = Ride.find(ride_id)
     user = ride.driver
-    insert_notification(user.id , ride_id, 1, Time.zone.now + 5*60) #Send notification to user 5 minutes
+    insert_notification(user.id , ride_id, 1, Time.zone.now + 5*60,-1) #Send notification to user 5 minutes
   end
 
-  #def self.reservation_cancelled() #Update method in rides_controller.... update the code and put the function over there
-  #end
+  def self.reservation_cancelled(driver_id,passenger_id,ride_id) #Update method in rides_controller.... update the code and put the function over there
+    insert_notification(driver_id,ride_id,4, Time.zone.now + 5*60,passenger_id) #Send the notification to user within 5 minute of rejection of request
+  end
 
 
 
@@ -247,6 +260,10 @@ class Notification < ActiveRecord::Base
     #Location:
     #Reason: due to an unexpected event.
 
+    if( !notification.message.nil? ) #Check if message is already generated or not. If it is already generated the pick the message from the db and return
+      return notification.message
+    end
+
     departure = notification.ride.departure_place
     time = notification.ride.departure_time
     user_id = notification.user_id
@@ -278,9 +295,12 @@ class Notification < ActiveRecord::Base
 
     departure = notification.ride.departure_place
     time = notification.ride.departure_time
-    user_id = notification.user_id
-    ride_id = notification.ride_id
-    passenger_name = notification.user.last_name + ", " + notification.user.first_name
+    #user_id = notification.user_id
+    #ride_id = notification.ride_id
+    #passenger_name = notification.user.last_name + ", " + notification.user.first_name
+
+    user_passenger = User.find(notification.extra) #TODO:Add exception handling
+    passenger_name = user_passenger.last_name + ", " + user_passenger.first_name
 
     default_language = I18n.locale
     I18n.locale = language
@@ -324,22 +344,29 @@ class Notification < ActiveRecord::Base
     #M=> Request Declined:
     #Driver , has declined your request to join the ride.
 
-    departure = notification.ride.departure_place
-    time = notification.ride.departure_time
-    user_id = notification.user_id
-    ride_id = notification.ride_id
-    username = notification.user.last_name + notification.user.first_name
+    #departure = notification.ride.departure_place
+    #time = notification.ride.departure_time
+    #user_id = notification.user_id
+    #ride_id = notification.ride_id
+    #username = notification.user.last_name + notification.user.first_name
 
-    ride = Ride.new
-    ride.user_id = user_id
-    ride.id = ride_id
-    driver = get_driver_name(ride)
+    #get driver name
+    #user_driver = User.find(notification.extra)
+    #username = user_driver.last_name + ", " + user_driver.first_name
+
+    #ride = Ride.new
+    #ride.user_id = user_id
+    #ride.id = ride_id
+    #driver = get_driver_name(ride)
+
+    ride = Ride.find(ride_id)
+    driver_name = get_driver_name(ride)
 
     #message = "TUMitFahrer: Alert (Request Declined) Driver #{driver}, has declined your request to join the ride."
 
     default_language = I18n.locale
     I18n.locale = language
-    message = I18n.t(:decline_request_alert, driver: driver)
+    message = I18n.t(:decline_request_alert, driver: driver_name)
     I18n.locale = default_language
 
     message
