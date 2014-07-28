@@ -45,7 +45,7 @@ class Api::V2::RequestsController < ApiController
     ride.accept_ride_request ride.ride_owner.id, passenger.id, params[:confirmed].to_i
 
     #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - Start
-    Notification.accept_request(passenger, ride, ride[:departure_time])
+    Notification.accept_request(passenger.id, ride.id, ride[:departure_time])
     #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - End
     
     respond_to do |format|

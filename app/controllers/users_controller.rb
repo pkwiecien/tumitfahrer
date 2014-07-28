@@ -46,7 +46,7 @@ class UsersController < ApplicationController
   def show
     #TODO: REMOVE THE FOLLOWING CODE JUST FOR TESTING BY BEHROZ
     #@result = Notification.get_notification_list
-    MessageSender.send_next_batch()
+    #MessageSender.send_next_batch()
 
     #TODO: END
     @user = User.find_by(id: params[:id])

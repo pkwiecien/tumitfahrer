@@ -26,16 +26,14 @@ class MessageSender
             #Update the database
             Notification.update_status(notification.notification_id, notification.message)
           end
-        else if(notification.device_type == 'iPhone')
+        elsif(notification.device_type == 'iPhone')
                 MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
                 Notification.update_status(notification.notification_id, notification.message)
-             end
-        else if(notification.device_type == 'VisioM')
+        elsif(notification.device_type == 'VisioM')
                #Send a post request to the VisioM server. Url is of the format 'http://thewebsite.net'
                #device_id should be the URL of the car
-                MessageSender.send_visiom_notification(notification.device_id, notification.message)
-                Notification.update_status(notification.notification_id, notification.message)
-             end
+            MessageSender.send_visiom_notification(notification.device_id, notification.message)
+            Notification.update_status(notification.notification_id, notification.message)
         end
       rescue
         puts("ERROR: While sending push notification: "+notification.notification_id)
