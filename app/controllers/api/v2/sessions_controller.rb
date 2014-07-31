@@ -17,8 +17,8 @@ class Api::V2::SessionsController < ApiController
     else
       respond_to do |format|
         message = "Can't create session for requested user. Check credentials."
-        format.json { render json: {status: :bad_request, message: message} }
-        format.xml { render xml: {status: :bad_request, message: message} }
+        format.json { render json: {message: message}, status: :bad_request }
+        format.xml { render xml: {message: message}, status: :bad_request }
       end
 
     end

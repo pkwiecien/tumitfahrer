@@ -6,6 +6,7 @@ class Api::V2::RidesController < ApiController
 
   # GET /api/v2/rides
   def index
+
     if params.has_key?(:from_date)
       get_rides_from_date  Time.zone.parse(params[:from_date]), params[:ride_type].to_i
     else
@@ -38,6 +39,7 @@ class Api::V2::RidesController < ApiController
 
   # GET api/v2/rides/ids
   def get_ids_existing_rides
+
     ride_ids = Ride.select(:id).map(&:id)
     respond_to do |format|
       format.xml { render xml: {ids: ride_ids}, :status => :ok }
@@ -49,7 +51,8 @@ class Api::V2::RidesController < ApiController
   # optional @param is_paid=true/false - get rides of the user that are paid or not
   def get_user_rides
     user = User.find_by(id: params[:user_id])
-    return respond_with :rides => [], :status => :not_found if user.nil?
+    current_user = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:rides => [], message: "Access denied"}, status: :unauthorized if current_user.nil? || user.id != current_user.id
 
     if params.has_key?(:past)
       return get_past_rides user
@@ -69,14 +72,13 @@ class Api::V2::RidesController < ApiController
 
   #GET /api/v2/rides?past
   def get_past_rides user
-
     @rides = user.rides.where("departure_time < ?", Time.now)
     respond_with @rides, status: :ok
-
   end
 
   # GET /api/v2/rides/:id
   def show
+
     @ride = Ride.find_by(:id => params[:id])
     if @ride.nil?
       @ride = {:ride => nil}
@@ -90,20 +92,30 @@ class Api::V2::RidesController < ApiController
   def create
     current_user_db = User.find_by(id: params[:user_id])
     current_user = User.find_by(api_key: request.headers[:apiKey])
-    return render json: {:ride => nil}, status: :bad_request if current_user.nil? || current_user != current_user_db
+    return render json: {:ride => []}, status: :unauthorized if current_user.nil? || current_user != current_user_db
 
-    @ride = Ride.create_ride_by_owner ride_params, current_user
-
-    unless @ride.nil?
-      respond_with @ride, status: :created
+    regular_ride_dates = params[:ride][:repeat_dates]
+    if !regular_ride_dates.nil? && regular_ride_dates.count > 0
+      @rides = Ride.create_regular_rides regular_ride_dates, ride_params, current_user
+      render json: @rides, each_serializer: RideSerializer, status: :created
     else
-      render json: {:ride => nil}, status: :bad_request
+      @ride = Ride.create_ride_by_owner ride_params, current_user, params[:ride][:is_driving].to_i
+
+      unless @ride.nil?
+        respond_with @ride, status: :created
+      else
+        render json: {:ride => nil}, status: :bad_request
+      end
+
     end
   end
 
   # UPDATE /api/v2/users/11/rides/:ride_id?removed_passenger=id
   # UPDATE /api/v2/users/11/rides/:ride_id?added_passenger=id
   def update
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {:ride => [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
+
     if params.has_key?(:removed_passenger) # update ride -> remove passenger
       ride = Ride.find_by(:id => params[:id])
       return render json: {status: :not_found, message: "could not delete passenger"} if ride.nil?
@@ -125,7 +137,7 @@ class Api::V2::RidesController < ApiController
 
       @ride.update_attributes!(meeting_point: params[:ride][:meeting_point], departure_place: params[:ride][:departure_place],
                                destination: params[:ride][:destination], free_seats: params[:ride][:free_seats].to_i,
-                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i,
+                               departure_time: params[:ride][:departure_time], ride_type: params[:ride][:ride_type].to_i, car: params[:ride][:car],
                                departure_latitude: params[:ride][:departure_latitude].to_f, departure_longitude: params[:ride][:departure_longitude].to_f,
                                destination_latitude: params[:ride][:destination_latitude].to_f, destination_longitude: params[:ride][:destination_longitude].to_f)
       respond_with @ride, status: :ok
@@ -134,15 +146,24 @@ class Api::V2::RidesController < ApiController
   end
 
   def destroy
-    ride = Ride.find_by(id: params[:id])
-    return render json: {status: :not_found, message: "could not destroy a ride"} if ride.nil?
-    ride.destroy
+
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
+
+    if params.has_key?(:regular_ride_id)
+      rides = Ride.where(regular_ride_id: params[:regular_ride_id])
+      rides.destroy_all
+    else
+      ride = Ride.find_by(id: params[:id])
+      return render json: {message: "Could not destroy a ride"}, status: :not_found if ride.nil?
+      ride.destroy
+    end
 
     reason = params[:reason]
     # TODO send push notification with reason
     respond_to do |format|
-      format.xml { render xml: {:status => :ok} }
-      format.any { render json: {:status => :ok} }
+      format.xml { render xml: {message: "Ride was successfully deleted"}, :status => :ok }
+      format.any { render json: {message: "Ride was successfully deleted"}, :status => :ok }
     end
   end
 

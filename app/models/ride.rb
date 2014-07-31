@@ -68,8 +68,19 @@ class Ride < ActiveRecord::Base
     passengers
   end
 
-  def self.create_ride_by_owner ride_params, current_user
-    is_driving = ride_params[:is_driving].to_i
+  def self.create_regular_rides regular_ride_dates, ride_params, current_user
+    ride_params.delete("repeat_dates")
+    @rides = []
+    regular_ride_dates.each do |ride_date|
+      ride_params[:departure_time] = ride_date
+      @ride = Ride.create_ride_by_owner ride_params, current_user, true
+      @rides.append(@ride)
+      @ride.update_attributes!(regular_ride_id: @rides.first.id)
+    end
+    return @rides
+  end
+
+  def self.create_ride_by_owner ride_params, current_user, is_driving
     ride_params.delete("is_driving")
 
     ride_params[:departure_latitude] = ride_params[:departure_latitude].to_f
