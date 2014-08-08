@@ -1,51 +1,247 @@
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
 <%= javascript_include_tag "jquery.geocomplete.min.js" %>
-<% provide(:title, "New ride") %>
-<h1>Add a great ride</h1>
+<%= javascript_include_tag "jquery.datetimepicker.js" %>
+<%= stylesheet_link_tag "jquery.datetimepicker.css" %>
+<div class="container_main">
+    <% provide(:title, "New ride") %>
 
-<div class="row">
-  <div class="col-xs-6 col-xs-offset-3">
-    <%= form_for(@ride) do |f| %>
-        <%= render 'shared/error_messages', object: f.object %>
+    <div class="row" class="new_ride_background" id="main_img" style="margin-right: 0px; margin-top: 47px; background: url('<%= asset_path "MainCampusOrigin.png"%>')  no-repeat center center fixed">
+      <div class="ride_new_page_background">
+          <div class="col-xs-1 col-md-3">
+          </div>
+          <div class="col-xs-10 col-md-6 ride_new_form" >
+            <div class="panel panel-primary" style="width: 100%; border: none;">
+              <div class="panel-heading" class="ride_new_heading">
+                <img style="float: left; height: 17px; margin-right: 6px;" src='<%= asset_path "DetailsIcon.png" %>'>
+                <h3 class="panel-title" style="color: #beddf1;"><%= t("ride.details") %></h3>
+              </div>
+              <div>
+                <img id="destination_image" src='<%= asset_path "MainCampus@2x.png" %>' style="width: 100%;">
+              </div>
+              <div class="details" style="display: none">
+                <span id="dest_lat" data-geo="lat"></span>
+                <span id="dest-lng" data-geo="lng"></span>
+              </div>
+              <div class="panel-body" class="form-horizontal">
+                <%= form_for(@ride) do |f| %>
+                    <%= render 'shared/error_messages', object: f.object %>
+                    <div class="form-group">
+                        <%= f.label :is_driving,  t("ride.i_am") , class: "col-sm-4 control-label" %>
+                        <div class="col-sm-7" style="margin-bottom: 15px;">
+                            <div class="btn-group btn-toggle" data-toggle="buttons">
+                              <label class="btn btn-primary active">
+                                <img src='<%= asset_path "DriverIcon.png"%>' style="height: 16px">
+                                <%= radio_button_tag :is_driving, 1 %> <%= t("ride.driver")%>
+                              </label>
+                              <label class="btn btn-default">
+                                <img src='<%= asset_path "PassengerIcon.png"%>' style="height: 16px;">
+                                <%= radio_button_tag :is_driving, 0, :checked => true %> <%= t("ride.passenger")%>
+                              </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <img src='<%= asset_path "DepartureIconBlack.png"%>' class="ride_new_icons">
+                            <%= f.label :departure_place, t("ride.departure_place"), class: "control-label"%>
+                        </div>
+                          <div class="col-sm-7">
+                            <%= f.text_field :departure_place, class:"form-control" %>
+                          </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-4">
+                        <img src='<%= asset_path "DestinationIconBlack.png"%>' class="ride_new_icons" style="margin-left: 5px;">
+                        <%= f.label :destination, t("ride.destination_place"), class: "control-label" %>
+                      </div>
+                      <div class="col-sm-7">
+                        <%= f.text_field :destination, class:"form-control" %>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-4">
+                        <img src='<%= asset_path "CalendarIconBlack@2x.png"%>' class="ride_new_icons">
+                        <%= f.label :departure_time, t("ride.departure_time"), class: "control-label" %>
+                      </div>
+                      <div class="col-sm-7">
+                        <%= f.text_field :departure_time, class:"form-control" %>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-4">
+                        <img src='<%= asset_path "PassengerIconBlack.png"%>' class="ride_new_icons">
+                        <%= f.label :free_seats, t("ride.passengers"), class: "control-label" %>
+                      </div>
+                      <div class="col-sm-7">
+                        <%= f.text_field :free_seats, class:"form-control" %>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-4">
+                        <img src='<%= asset_path "CarIconBlack@2x.png"%>' class="ride_new_icons">
+                        <%= f.label :car, t("ride.car"), class: "control-label" %>
+                      </div>
+                      <div class="col-sm-7">
+                        <%= f.text_field :car, class:"form-control" %>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-4">
+                        <img src='<%= asset_path "InfoIconBlack.png"%>' class="ride_new_icons">
+                        <%= f.label :meeting_point, t("ride.meeting_point"), class: "control-label" %>
+                      </div>
+                      <div class="col-sm-7">
+                        <%= f.text_field :meeting_point, class:"form-control" %>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <%= f.label :ride_type, t("ride.choose_ride_type"), class: "col-sm-4 control-label" %><br />
+                      <div class="col-sm-7" style="margin-bottom: 15px;">
+                        <div class="btn-group btn-toggle" data-toggle="buttons">
+                          <label class="btn btn-primary active">
+                            <img src='<%= asset_path "CampusIcon.png"%>' style="height: 16px">
+                            <%= f.radio_button :ride_type, 0 %> <%= t("ride.Campus") %>
+                          </label>
+                          <label class="btn btn-default">
+                            <img src='<%= asset_path "ActivityIntroIcon.png"%>' style="height: 16px">
+                            <%= f.radio_button :ride_type, 1 %> <%= t("ride.activity") %>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
 
-        <%= f.label :departure_place %>
-        <%= f.text_field :departure_place %>
+                    <div class="form-group">
+                      <%= label_tag :ride_duplicate, t("ride.want_to_repeat_ride"), class: "col-sm-4 control-label" %><br />
+                      <div class="col-sm-7" style="margin-bottom: 10px;">
+                        <div class="onoffswitch">
+                          <input type="checkbox" name="repeat[switch]" class="onoffswitch-checkbox" id="myonoffswitch">
+                          <label class="onoffswitch-label" for="myonoffswitch">
+                            <div class="onoffswitch-inner"></div>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" id="repeat_ride_div" style="display: none">
+                      <div class="form-group">
+                        <%= label_tag :ride_duplicate_dates, t("ride.repeat_from"), class: "col-sm-4 control-label" %><br />
+                        <div class="col-sm-7" style="margin-bottom: 15px;">
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <%= text_field_tag :repeat_start_date, "", class:"form-control", name:"repeat[start_date]" %>
+                            </div>
+                            <div class="col-sm-6">
+                              <%= text_field_tag :repeat_end_date, "", class:"form-control", name:"repeat[end_date]" %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-4" ></div>
+                        <div class="col-sm-7" style="margin-bottom: 15px;">
+                          <div class="row">
+                            <div class="col-sm-1">
+                              <div id="ck-button">
+                                <label>
+                                  <%= check_box_tag "repeat[Mon]", 1, name:"repeat[mo]" %><span>Mo</span>
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-sm-1">
+                              <div id="ck-button">
+                                <label>
+                                  <%= check_box_tag "repeat[Tue]", 1, name:"repeat[tu]" %><span>Tu</span>
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-sm-1">
+                              <div id="ck-button">
+                                <label>
+                                  <%= check_box_tag "repeat[Wed]", 1, name:"repeat[we]" %> <span>We</span>
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-sm-1">
+                              <div id="ck-button">
+                                <label>
+                                  <%= check_box_tag "repeat[Thu]", 1, name:"repeat[th]" %> <span>Th</span>
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-sm-1">
+                              <div id="ck-button">
+                                <label>
+                                  <%= check_box_tag "repeat[Fri]", 1, name:"repeat[fr]" %><span>Fr</span>
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-sm-1">
+                              <div id="ck-button">
+                                <label>
+                                  <%= check_box_tag "repeat[Sat]", 1, name:"repeat[sa]" %> <span>Sa</span>
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-sm-1">
+                              <div id="ck-button">
+                                <label>
+                                  <%= check_box_tag "repeat[Sun]", 1, name:"repeat[su]" %><span>Su</span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-        <%= f.label :destination %>
-        <%= f.text_field :destination %>
 
-        <%= f.label :departure_time %>
-        <%= f.text_field :departure_time %>
+                    <div class="form-group">
+                      <div class="col-sm-offset-4 col-sm-4">
+                        <%= f.submit t("ride.add_new_ride"), class: "btn btn-primary" %>
+                      </div>
+                    </div>
 
-        <%= f.label :free_seats %>
-        <%= f.text_field :free_seats %>
-
-        <%= f.label :meeting_point %>
-        <%= f.text_field :meeting_point %>
-
-        <%= f.label :car %>
-        <%= f.text_field :car %>
-
-          <%= f.label :ride_type %><br />
-          <%= f.radio_button :ride_type, 0 %>
-          <%= f.label :ride_type, "Campus", :value => 0  %>
-          <%= f.radio_button :ride_type, 1, :checked => true %>
-          <%= f.label :ride_type, "Activity", :value => 1 %>   <br />
-          <span>
-          <%= label_tag :is_driving %><br /></span>
-          <%= radio_button_tag :is_driving, 1 %>
-          <%= label_tag :is_driving, "Driver", :value => 1  %>
-          <%= radio_button_tag :is_driving, 0, :checked => true %>
-          <%= label_tag :is_driving, "Passenger", :value => 0 %>
-
-
-        <%= f.submit "Add new ride", class: "btn btn-large btn-primary" %>
-
-    <% end %>
-  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-1 col-md-3">
+          </div>
+        </div>
+    </div>
 </div>
-
 <script>
     $("#ride_departure_place").geocomplete();
-    $("#ride_destination").geocomplete();
+    $("#repeat_start_date").datetimepicker({timepicker:false, format:'Y-m-d'});
+    $("#repeat_end_date").datetimepicker({timepicker:false, format:'Y-m-d'});
+    $("#ride_destination").geocomplete({
+        details: ".details",
+        detailsAttribute: "data-geo"
+    });
+    $('#ride_departure_time').datetimepicker({format:'Y-m-d H:i'});
+    $('.btn-toggle').click(function() {
+        if ($(this).find('.btn-primary').size()>0) {
+            $(this).find('.btn').toggleClass('btn-primary');
+        }
+        $(this).find('.btn').toggleClass('btn-default');
+    });
+    $('#ride_destination').change(function(){
+        alert("hello");
+        $.ajax({
+            type:"GET",
+            url: "/get_picture_from_panoramio/?lat="+ $("#dest_lat").text() +"&lng="+ $("#dest-lng").text()
+        })
+        .done(function( data ) {
+            $("#destination_image").attr("src", data.url);
+        });
+    });
+
+    $("#myonoffswitch").change(function(){
+        if ($(this).is(":checked"))
+        {
+            $("#repeat_ride_div").css("display", "block");
+        }
+        else{
+            $("#repeat_ride_div").css("display", "none");
+        }
+    });
 </script>

@@ -23,3 +23,25 @@ en:
   welcome:
       pic_heading: "Enjoy fun while driving"
       pic_paragraph: "Create, share and invite"
+  ride:
+      details: "Details"
+      i_am: "I am"
+      driver: "Driver"
+      passenger: "Passenger"
+      departure_place: "Departure place"
+      destination_place: "Destination place"
+      departure_time: "Departure time"
+      passengers: "Passengers"
+      car: "Car"
+      meeting_point: "Info"
+      choose_ride_type: "Choose ride type"
+      want_to_repeat_ride: "Want to repeat ride"
+      repeat_from: "Repeat from"
+      Campus: "Campus"
+      activity: "Activity"
+      add_new_ride: "Add new ride"
+      ride: "Ride"
+      requests: "Requests"
+      passengers: "Passengers"
+
+

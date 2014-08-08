@@ -27,6 +27,8 @@ gem 'newrelic_rpm'
 # for getting location
 gem "geocoder"
 
+gem 'bootstrap-switch-rails', '~> 3.0.0'
+
 group :development, :production do
   # postgres database
   #gem 'pg', '0.15.1'
@@ -84,6 +86,7 @@ gem 'active_model_serializers'
 gem 'paperclip'
 # S3 contains user images
 gem 'aws-sdk'
+gem 'rest-client'
 
 # Use unicorn as the app server
 # gem 'unicorn'
