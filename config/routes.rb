@@ -50,7 +50,9 @@ Tumitfahrer::Application.routes.draw do
 
   # Web app routes
   resources :users
-  resources :rides
+  resources :rides do
+    resources :requests
+  end
   resource :sessions, only: [:new, :create, :destroy]
 
   # Start page route
@@ -64,6 +66,8 @@ Tumitfahrer::Application.routes.draw do
   match "/about", to: "static_pages#about", via: 'get'
   match "/discover", to: "static_pages#discover", via: 'get'
   match "/search_rides", to: "searches#search_rides", via: 'get'
+  match "/remove_passenger", to: "rides#remove_passenger", via: 'delete'
+  match "/get_picture_from_panoramio", to: "rides#get_picture_from_panoramio", via: 'get'
 
 
   #map.check_email "users/check_email", :controller => "users", :action => "check_email"

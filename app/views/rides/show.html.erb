@@ -1,1 +1,242 @@
 <% provide(:title, "Ride to " + @ride.destination) %>
+
+<div class="container_main">
+  <% provide(:title, "Ride to " + @ride.destination) %>
+
+  <div class="row" class="new_ride_background" style="margin-right: 0px; margin-top: 47px; background: url('<%= asset_path "MainCampusOrigin.png"%>')  no-repeat center center fixed">
+    <div class="ride_new_page_background">
+      <div class="col-xs-1 col-md-3">
+      </div>
+      <div class="col-xs-10 col-md-6 ride_new_form" >
+        <div class="panel panel-primary" style="width: 100%; border: none;">
+          <div class="row" style="margin-left: 0px">
+              <div style="position: absolute; width: 100%">
+                <img class="img-responsive" id="destination_image" src='<%= @pic_url %>' style="width: 100%; height: 300px;">
+              </div>
+              <br><br><br><br><br><br><br><br><br><br><br><br>
+              <div class="col-xm-12 col-md-12" style=" width: 97%; background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5); position: relative; height: 60px;">
+                <div class="row">
+                  <div class="col-xs-8 col-md-9">
+                    <p style= "color: #beddf1; font-size: 138%" ><%= @ride.departure_place%> -> <%= @ride.destination %> </p>
+                  </div>
+                  <div class="col-xs-4 col-md-3">
+                    <div class="row" style="height: 25px">
+                      <div style="float: left">
+                        <img style="height: 16px; margin-right: 6px;" src='<%= asset_path "CalendarIcon.png" %>'>
+                      </div>
+                      <div style="float: left">
+                        <p style= "color: #beddf1; margin-top: 0px;" ><%= @ride.departure_time.to_date %> </p>
+                      </div>
+                      <div style="clear: both"></div>
+                    </div>
+                    <div class="row" style="height: 25px">
+                      <div style="float: left; margin-left: -102px">
+                        <img style="height: 16px; margin-right: 6px;" src='<%= asset_path "TimeIcon.png" %>'>
+                      </div>
+                      <div style="float: left; margin-left: -80px;">
+                        <p style= "color: #beddf1; margin-top: 0px;" ><%= @ride.departure_time.strftime("%I:%M%p")%> </p>
+                      </div>
+                      <div style="clear: both"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="panel-heading" class="ride_new_heading">
+            <% if @ride.relationships.first.is_driving %>
+                <img style="float: left; height: 17px; margin-right: 6px;" src='<%= asset_path "DriverIcon.png" %>'>
+            <% else %>
+                <img style="float: left; height: 17px; margin-right: 6px;" src='<%= asset_path "PassengerIcon.png" %>'>
+            <% end %>
+            <h3 class="panel-title" style="color: #beddf1;"><%= t("ride.ride") %></h3>
+          </div>
+          <div class="row" style="margin-top: 20px; margin-left: 0px;">
+            <div class="col-xs-6 col-md-6">
+              <div class="row">
+                <div class="col-sm-6">
+                  <img src='<%= asset_path "CarIconBlack@2x.png"%>' class="ride_new_icons">
+                  <%= label_tag :car, t("ride.car"), class: "control-label" %>
+                </div>
+                <div class="col-sm-6">
+                  <label  style= "color: #0076b3"><%= @ride.car %></label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <img src='<%= asset_path "InfoIconBlack.png"%>' class="ride_new_icons">
+                  <%= label_tag :car, t("ride.meeting_point"), class: "control-label" %>
+                </div>
+                <div class="col-sm-6">
+                  <label  style= "color: #0076b3"><%= @ride.meeting_point %></label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <img src='<%= asset_path "PassengerIconBlack.png"%>' class="ride_new_icons">
+                  <%= label_tag :car, t("ride.passengers"), class: "control-label" %>
+                </div>
+                <div class="col-sm-6">
+                  <label style= "color: #0076b3"><%= @ride.relationships.size - 1 %>/<%= @ride.free_seats%></label>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <div class="row">
+                  <div style="float: left">
+                    <%= gravatar_for @ride.ride_owner %>
+                  </div>
+                  <div style="float: left">
+                    <h4 style= "color: #0076b3">
+                      <%= @ride.ride_owner.first_name %> <%= @ride.ride_owner.last_name %>
+                    </h4>
+                    <img src='<%= asset_path "StarIcon.png"%>' class="ride_new_icons" style="height: 25px; float: left;">
+                    <label style="font-size: 20px;"><%= @ride.ride_owner.rating_avg%>%</label>
+                  </div>
+                  <div style="clear: both"></div>
+              </div>
+              <% if (!current_user || !@ride.ride_owner.id.equal?(current_user.id)) %>
+                <div class="row" style="margin-top: 10px;">
+                    <% ride_requester = @ride.requests.where(passenger_id: current_user.id).first %>
+                    <% if !current_user || ride_requester.nil?%>
+                        <div class="col-xs-12 col-md-12" style="padding: 0px;">
+                          <% if current_user && @ride.relationships.where(user_id: current_user.id).first.nil? %>
+                              <%= link_to "/rides/#{@ride.id}/requests?passenger_id=#{current_user.id}", {method: :post, class: "btn btn-success", style: "width: 90%;"} do %>
+                                  <span class="glyphicon glyphicon-star"></span> Join Ride
+                              <% end %>
+                          <% elsif current_user && !@ride.relationships.where(user_id: current_user.id).first.nil? %>
+                              <%= link_to "/remove_passenger?ride_id=#{@ride.id}&removed_passenger=#{current_user.id}", {method: :delete, class: "btn btn-danger", style: "width: 90%;"} do %>
+                                  <span class="glyphicon glyphicon-remove-circle"></span> Leave Ride
+                              <% end %>
+                          <% elsif !current_user %>
+                              <%= link_to "/rides/#{@ride.id}/requests", {method: :post, class: "btn btn-success", style: "width: 90%;"} do %>
+                                  <span class="glyphicon glyphicon-star"></span> Join Ride
+                              <% end %>
+                          <% end %>
+                        </div>
+                    <% elsif current_user && !ride_requester.nil? %>
+                        <div class="col-xs-12 col-md-12" style="padding: 0px;">
+                          <%= link_to "/rides/#{@ride.id}/requests?#{ride_requester.id}", {method: :delete, class: "btn btn-danger", style: "width: 90%;"} do %>
+                              <span class="glyphicon glyphicon-remove-circle"></span> Cancel
+                          <% end %>
+                        </div>
+                    <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <% if current_user && (current_user.id.equal?(@ride.ride_owner.id) || !@ride.relationships.where(user_id: current_user.id).first.nil?) %>
+            <% ride_passengers = @ride.relationships%>
+            <% if ride_passengers.size > 0 %>
+                <div class="panel-heading" class="ride_new_heading" style="margin-top: 20px;">
+                  <img style="float: left; height: 17px; margin-right: 6px;" src='<%= asset_path "PassengerIcon.png" %>'>
+                  <h3 class="panel-title" style="color: #beddf1;"><%= t("ride.passengers") %></h3>
+                </div>
+                <% ride_passengers.each do |passenger|  %>
+                    <% ride_passenger = User.find(passenger.user_id)%>
+                    <div class="row" style="margin: 0px; margin-top: 10px; border-bottom: thin solid; padding-bottom: 10px;">
+                      <div class="col-xs-6 col-md-6">
+                        <div style="float: left;  width: 75px; margin-right: 5px;">
+                          <%= gravatar_for ride_passenger %>
+                        </div>
+                        <div style="float: left;">
+                          <h4 style= "color: #0076b3">
+                            <%= ride_passenger.first_name %> <%= ride_passenger.last_name %>
+                          </h4>
+                          <img src='<%= asset_path "StarIcon.png"%>' class="ride_new_icons" style="height: 25px; float: left; margin-right: 2px;">
+                          <label style="font-size: 20px;"><%= ride_passenger.rating_avg %>%</label>
+                        </div>
+                        <div style="clear: both"></div>
+                      </div>
+                      <div class="col-xs-6 col-md-6">
+                        <div style="margin-top: 7%; margin-right: 5px; float: right;">
+                          <% if current_user.id.equal?(@ride.ride_owner.id) %>
+                              <%= link_to "/remove_passenger?ride_id=#{@ride.id}&removed_passenger=#{ride_passenger.id}", {method: :delete, class: "btn btn-danger", style: "margin-top: 2px;"} do %>
+                                  <span class="glyphicon glyphicon-remove-circle"></span>
+                              <% end %>
+                          <% end %>
+                          <%= link_to "users/#{ride_passenger.id}", {method: :get, class: "btn btn-primary", style: "margin-top: 2px;"} do %>
+                              <span class="glyphicon glyphicon-user"></span> Profile
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                <% end %>
+            <% end %>
+          <% end %>
+          <% if (current_user && (!@ride.requests.where(passenger_id: current_user.id).first.nil?) || current_user.id.equal?(@ride.ride_owner.id)) %>
+              <% if !@ride.requests.where(passenger_id: current_user.id).first.nil? && !current_user.id.equal?(@ride.ride_owner.id)%>
+                  <% ride_requests = [@ride.requests.where(passenger_id: current_user.id).first] %>
+              <% else %>
+                  <% ride_requests = @ride.requests %>
+              <% end %>
+            <% if ride_requests.size > 0 %>
+                <div class="panel-heading" class="ride_new_heading" style="margin-top: 20px;">
+                  <img style="float: left; height: 17px; margin-right: 6px;" src='<%= asset_path "PassengerIcon.png" %>'>
+                  <h3 class="panel-title" style="color: #beddf1;"><%= t("ride.requests") %></h3>
+                </div>
+                <% ride_requests.each do |request|  %>
+                    <% request_user = User.find(request.passenger_id)%>
+                    <div class="row" style="margin: 0px; margin-top: 10px; border-bottom: thin solid; padding-bottom: 10px;">
+                      <div class="col-xs-6 col-md-6">
+                        <div style="float: left;  width: 75px; margin-right: 5px;">
+                          <%= gravatar_for request_user %>
+                        </div>
+                        <div style="float: left;">
+                          <h4 style= "color: #0076b3">
+                            <%= request_user.first_name %> <%= request_user.last_name %>
+                          </h4>
+                          <img src='<%= asset_path "StarIcon.png"%>' class="ride_new_icons" style="height: 25px; float: left; margin-right: 2px;">
+                          <label style="font-size: 20px;"><%= request_user.rating_avg %>%</label>
+                        </div>
+                        <div style="clear: both"></div>
+                      </div>
+                      <% if !@ride.ride_owner.id.equal?(current_user.id)%>
+                          <div class="col-xs-6 col-md-6">
+                              <div style="margin-top: 10%;">
+                                <label style="float: right;">Pending approval</label>
+                              </div>
+                          </div>
+                      <% else %>
+                          <div class="col-xs-6 col-md-6">
+                            <div style="margin-top: 10%;">
+                              <%= link_to "/rides/#{@ride.id}/requests/#{request.id}?passenger_id=#{request_user.id}&confirmed=1", {method: :patch, class: "btn btn-success"} do %>
+                                  <span class="glyphicon glyphicon-ok-sign"></span>
+                              <% end %>
+                              <%= link_to "/rides/#{@ride.id}/requests/#{request.id}?passenger_id=#{request_user.id}&confirmed=0", {method: :patch, class: "btn btn-danger"} do %>
+                                  <span class="glyphicon glyphicon-remove-circle"></span>
+                              <% end %>
+                              <%= link_to "users/#{request.passenger_id}", {method: :get, class: "btn btn-primary"} do %>
+                                  <span class="glyphicon glyphicon-user"></span> Profile
+                              <% end %>
+                            </div>
+                          </div>
+                      <% end %>
+                    </div>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% if current_user && @ride.ride_owner.id.equal?(current_user.id) %>
+              <div class="row" style="margin-top: 20px; text-align: center;">
+                <div class="col-xs-12 col-md-12" style="padding: 0px;">
+                  <!--<button type="button" class="btn btn-danger" style="width: 90%">-->
+                    <!--<span class="glyphicon glyphicon-remove-circle"></span> Delete Ride-->
+                  <!--</button>-->
+                  <% if @ride.regular_ride_id.nil? %>
+                    <%= link_to "/rides/#{@ride.id}", {method: :delete, class: "btn btn-danger", style: "width: 90%;"} do %>
+                      <span class="glyphicon glyphicon-remove-circle"></span> Delete Ride
+                    <% end %>
+                  <% else %>
+                      <%= link_to "/rides/#{@ride.id}?regular_ride_id=#{@ride.id}", { method: :delete, class: "btn btn-danger", style: "width: 90%;"}  do %>
+                          <span class="glyphicon glyphicon-remove-circle"></span> Delete Ride
+                      <% end %>
+                  <% end %>
+                </div>
+              </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-xs-1 col-md-3">
+      </div>
+    </div>
+  </div>
+</div>
