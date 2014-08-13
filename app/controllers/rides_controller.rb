@@ -1,5 +1,17 @@
 require 'geocoder'
 require 'date'
+require 'net/http'
+
+URL = 'http://www.panoramio.com/map/get_panoramas.php'
+DEFAULT_OPTIONS = {
+    :set => :public, # Cant be :public, :full, or a USER ID number
+    :size => :medium, # Cant be :original, :medium (default value), :small, :thumbnail, :square, :mini_square
+    :from => 0,
+    :to => 1,
+    :mapfilter => true
+}
+
+
 class RidesController < ApplicationController
   before_action :signed_in_user, only: [:new, :destroy]
   respond_to :json
@@ -7,17 +19,6 @@ class RidesController < ApplicationController
   def index
     @rides = Ride.all
     @users = User.all
-
-    @campusrides = Ride.where(:ride_type => '0')
-    @activityrides = Ride.where(:ride_type => '1')
-
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @campusrides }
-
-
-    end
   end
 
   def new
@@ -53,53 +54,28 @@ class RidesController < ApplicationController
   def search
 
   end
-  def get_user_rides
-    user = User.find_by(id: params[:user_id])
-
-
-    if params.has_key?(:past)
-      return get_past_rides user
-    elsif params.has_key?(:driver)
-      @rides = user.rides_as_driver
-    elsif params.has_key?(:passenger)
-      @rides = user.rides_as_passenger
-    else
-      @rides = user.all_rides
-    end
-
-    if params.has_key?(:is_paid)
-      @rides = @rides.where(is_paid: params[:is_paid])
-    end
-    respond_with @rides, status: :ok
-  end
 
 
   def timeline
-    @users = User.find_by(id: params[:user_id])
-  @rides = Ride.where("user_id = ?",4)
-    #@rides = Ride.all
-    @rides1 = Ride.where
-    #@rides = Ride.paginate :page => params[:page], :order => 'created_at DESC'
-    @all = Ride.where("departure_time > ?", Time.now).order("departure_time asc")
 
+    @rides = Ride.where("user_id >?",3)
+    @rides.each do |ride1|
+      @yours_rides = Ride.where("Relationship.ride_id > ?",49)
+    end
 
+    @all = Ride.where("departure_time > ?", Time.now).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
 
-    #@all.each do |ride1|
       @t=Time.now.strftime("%Y-%m-%d")
-      @today_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2)
-    #end
+      @today_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
 
-    #@all.each do |ride1|
       @t=Time.now.tomorrow.strftime("%Y-%m-%d")
-      @tomorrow_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2)
-    #end
+      @tomorrow_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
 
-    #@all.each do |ride1|
       @t2=5.hours.from_now.strftime("%Y-%m-%d %H:%M:%S")
       @t1=Time.now.strftime("%Y-%m-%d %H:%M:%S")
       @lastminute_rides = Ride.where("departure_time  >  STR_TO_DATE('#{@t1}','%Y-%m-%d %H:%i:%s') and
-                          departure_time < STR_TO_DATE('#{@t2}','%Y-%m-%d %H:%i:%s')" )
-    #end
+                          departure_time < STR_TO_DATE('#{@t2}','%Y-%m-%d %H:%i:%s')" ).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
+
 
 #select * from rides where (departure_time > STR_TO_DATE('2014-07-11 00:00:00','%Y-%m-%d %H:%i:%s') and
 # departure_time < STR_TO_DATE('2014-07-11 22:30:00','%Y-%m-%d %H:%i:%s'));
@@ -113,8 +89,50 @@ class RidesController < ApplicationController
 
       @time_diff_components.push(TimeDifference.between(@start_time, @endtime).in_minutes)
     end
+  end
+
+  def campus
+
+    @campus_rides = Ride.where("departure_time > ? AND ride_type > ?", Time.now,0).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
+    @pic_url = Array.new
+    @campus_rides.each do |ride|
+    @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
+    end
+
+  end
 
 
+  def get_picture_from_panoramio
+    lat = params[:lat]
+    lng = params[:lng]
+    url = get_picture lat, lng
+    return render json: {status: :ok, url: url}
+  end
+
+  private
+
+  def get_picture lat, lng
+    lat = lat
+    lng = lng
+    options = {}
+    points = Geocoder::Calculations.bounding_box([lat, lng], 10, { :unit => :mi })
+    options.merge!({
+                       :miny => points[0],
+                       :minx => points[1],
+                       :maxy => points[2],
+                       :maxx => points[3]
+                   })
+    panoramio_options = DEFAULT_OPTIONS
+    panoramio_options.merge!(options)
+    response = RestClient.get URL, :params => panoramio_options
+    if response.code == 200
+      parse_data = JSON.parse(response.to_str)
+      url = parse_data['photos'][0]['photo_file_url']
+    else
+      raise "Panoramio API error: #{response.code}. Response #{response.to_str}"
+      url = ""
+    end
+    url
   end
 
   def show

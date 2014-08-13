@@ -1,0 +1,144 @@
+<%= javascript_include_tag "jquery.bootpag.min.js" %>
+<script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl=en"></script>
+
+<div class="container">
+  <div class="row" class="new_ride_background" id="main_img" style="margin-right: 0px; margin-top: 47px; background: url('<%= asset_path "1.jpg"%>')">
+
+
+  <div class="row">
+    <div id="All" class="col-md-6" style="background: #0F3750;color: #beddf1;text-color : #fffff;text-align : center">
+      <p><img src="<%= asset_path "NewsFeedIcon@2x.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
+        <a href="#" id="all">All</a>
+      </p>
+    </div>
+    <div id="Lastminute" class="col-md-6" style="background: #0F3750;color: #beddf1;text-color : #fffff;text-align : center">
+      <p><img src="<%= asset_path "NewsFeedIcon@2x.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
+        <a href="#" id="lastminute">Lastminute</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row" >
+    <div id="All_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;">
+      <% @campus_rides.each_with_index do |ride1, index| %>
+          <div class="col-sm-2">
+            <% if ride1.relationships.first.is_driving == true %>
+                <img src="<%= asset_path "DriverIcon@2x.png" %>" style="height: 40px; margin-top:15px;">
+            <% elsif ride1.relationships.first.is_driving == false %>
+                <img src="<%= asset_path "PassengerIcon.png" %>" style="height: 40px; margin-top:15px;">
+            <% end %>
+          </div>
+          <div class="col-md-2">
+
+            <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="width:50px; height: 50px;">
+
+          </div>
+          <div class="col-md-8">
+            <p> &nbsp; Ride offer to <%= ride1.departure_latitude %></p>
+
+            <p> &nbsp;
+              <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 10px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp;
+              <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 10px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %>
+            </p>
+          </div>
+
+          <br><br><br><br>
+          <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+      <% end %>
+    </div>
+    <%= will_paginate @campus_rides %>
+  </div>
+
+  <div class="row" >
+    <div id="Lastminute_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;">
+      <% @campus_rides.each_with_index do |ride1, index| %>
+          <div class="col-md-2">
+            <% if ride1.relationships.first.is_driving == true %>
+                <img src="<%= asset_path "DriverIcon@2x.png" %>" style="height: 40px; margin-top:15px;">
+            <% elsif ride1.relationships.first.is_driving == false %>
+                <img src="<%= asset_path "PassengerIcon.png" %>" style="height: 40px; margin-top:15px;">
+            <% end %>
+          </div>
+          <div class="col-md-8">
+            <p><font color="#0076b3"> <b> <%= ride1.departure_place %> </b> &nbsp; &nbsp;
+              <img src="<%= asset_path "LeftArrowIcon.png" %>" style="height: 15px;"> &nbsp; &nbsp;
+              <b> <%= ride1.destination %> </b> </font></p>
+
+            <p>
+              <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp; &nbsp; &nbsp;
+              <img src="<%= asset_path "SeatsIconBlack@2x.png" %>" style="height: 12px; "> &nbsp; <%= ride1.free_seats %>
+            </p>
+          </div>
+
+          <div class="col-md-2">
+            <input type="button" id="View ride" class="btn btn-success" value="View Ride" onClick="window.location='/rides/<%= ride1.id %>' "/>
+          </div>
+
+          <br><br><br>
+          <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+      <% end %>
+
+    </div>
+  </div>
+  <%= will_paginate @campus_rides %>
+  </div>
+</div>
+
+
+
+<script>
+    $("#All").click(function () {
+        $("#All_div").css("display", "block");
+        $("#Lastminute_div").css("display", "none");
+        $("#All").css('background-color', '#0F3750');
+        $("#Lastminute").css('background-color', 'black');
+    })
+    $("#Lastminute").click(function () {
+        $("#All_div").css("display", "none");
+        $("#Lastminute_div").css("display", "block");
+        $("#Lastminute").css('background-color', '#0F3750');
+        $("#All").css('background-color', 'black');
+    })
+    $("#Lastminute").click(function () {
+        $("#All_div").css("display", "none");
+        $("#Yours_div").css("display", "none")
+        $("#Lastminute_div").css("display", "block");
+        $("#Lastminute").css('background-color', '#0F3750');
+        $("#All").css('background-color', 'black');
+        $("#Yours").css('background-color', 'black');
+    });
+    $("#ride_destination").geocomplete({
+        details: ".details",
+        detailsAttribute: "data-geo"
+    });
+    $('#load_image').change(function () {
+        alert("hello");
+        $.ajax({
+            type: "GET",
+            url: "/get_picture_from_panoramio/?lat=" + $("#dest_lat").text() + "&lng=" + $("#dest-lng").text()
+        })
+                .done(function (data) {
+                    $("#destination_image").attr("src", data.url);
+                });
+    });
+    $(document).ready(function () {
+        $("#All_div").css("display", "block");
+        $("#Lastminute").css('background-color', 'black');
+        $("#Yours_div").css("display", "none");
+        $("#Lastminute_div").css("display", "none");
+
+
+    });
+
+
+</script>
+
+<style type="text/css">
+    #all:link {
+        color: #ffffff;
+    }
+
+
+</style>
+

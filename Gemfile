@@ -26,7 +26,7 @@ gem "httparty", "~> 0.13"
 gem 'newrelic_rpm'
 # for getting location
 gem "geocoder"
-
+# for getting news feed
 # gem 'ruby-debug-ide'
 #gem 'linecache','0.46'
 #gem 'ruby-debug-base19x'
@@ -35,15 +35,13 @@ gem "geocoder"
 # gem 'ruby-debug-ide', '0.4.17.beta14'
 gem "debase"
 gem 'nifty-generators'
-
+gem 'time_difference'
+gem 'simple-rss'
+gem 'rest-client'
 gem 'gmaps4rails'
 group :development, :production do
   # postgres database
-<<<<<<< HEAD
-  gem 'mysql2'
-=======
-  #gem 'pg', '0.15.1'
->>>>>>> b2b59b3f985142e3b9fb11ed48780811a44bffbc
+
   gem 'rails_12factor', '0.0.2'
   gem 'mysql2'
 

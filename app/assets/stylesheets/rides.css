@@ -1,3 +1,10 @@
+.new_ride_background {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 .xdsoft_datetimepicker{
     box-shadow: 0px 5px 15px -5px rgba(0, 0, 0, 0.506);
     background: #FFFFFF;
