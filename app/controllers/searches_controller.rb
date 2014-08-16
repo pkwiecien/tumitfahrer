@@ -1,4 +1,15 @@
+require 'will_paginate/array'
+
 class SearchesController < ApplicationController
+
+  URL = 'http://www.panoramio.com/map/get_panoramas.php'
+  DEFAULT_OPTIONS = {
+      :set => :public, # Cant be :public, :full, or a USER ID number
+      :size => :medium, # Cant be :original, :medium (default value), :small, :thumbnail, :square, :mini_square
+      :from => 0,
+      :to => 1,
+      :mapfilter => true
+  }
 
   def search_rides
     @departure_place = params[:departure_place]
@@ -17,17 +28,47 @@ class SearchesController < ApplicationController
     if @destination.nil?
       @destination = ""
     end
-    #if user.nil?
-    #  return render json: {:message => "user not found"}, status: :not_found
-    #else
-    #  # add this search to table ride_searches which is displayed as a timeline
-    #  user.ride_searches.create!(departure_place: departure_place, destination: destination,
-    #                             departure_time: departure_time, ride_type: ride_type)
-    #end
 
-    @rides = Ride.rides_nearby @departure_place, @departure_threshold, @destination,
-                              @destination_threshold, @departure_time, @ride_type
+    @rides = Ride.rides_nearby(@departure_place, @departure_threshold, @destination,
+                              @destination_threshold, @departure_time, @ride_type).paginate(:page => params[:page], :per_page => 5)
+    @rides_pic = Array.new
+
+    @rides.each do |ride|
+      if ride.ride_type != 0
+        @rides_pic.push(get_picture(ride.destination_latitude, ride.destination_longitude))
+      else
+        @rides_pic.push("")
+      end
+    end
 
   end
+
+  private
+
+  def get_picture lat, lng
+    lat = lat
+    lng = lng
+    options = {}
+
+    points = Geocoder::Calculations.bounding_box([lat, lng], 10, { :unit => :mi })
+    options.merge!({
+                       :miny => points[0],
+                       :minx => points[1],
+                       :maxy => points[2],
+                       :maxx => points[3]
+                   })
+    panoramio_options = DEFAULT_OPTIONS
+    panoramio_options.merge!(options)
+    response = RestClient.get URL, :params => panoramio_options
+    if response.code == 200
+      parse_data = JSON.parse(response.to_str)
+      url = parse_data['photos'][0]['photo_file_url']
+    else
+      raise "Panoramio API error: #{response.code}. Response #{response.to_str}"
+      url = ""
+    end
+    url
+  end
+
 
 end
