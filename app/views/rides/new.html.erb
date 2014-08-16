@@ -225,7 +225,6 @@
         $(this).find('.btn').toggleClass('btn-default');
     });
     $('#ride_destination').change(function(){
-        alert("hello");
         $.ajax({
             type:"GET",
             url: "/get_picture_from_panoramio/?lat="+ $("#dest_lat").text() +"&lng="+ $("#dest-lng").text()

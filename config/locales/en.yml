@@ -29,7 +29,9 @@ en:
       driver: "Driver"
       passenger: "Passenger"
       departure_place: "Departure place"
+      departure_place_threshold: "Departure place Threshold (in km)"
       destination_place: "Destination place"
+      destination_place_threshold: "Destination place threshold (in km)"
       departure_time: "Departure time"
       passengers: "Passengers"
       car: "Car"
@@ -43,5 +45,6 @@ en:
       ride: "Ride"
       requests: "Requests"
       passengers: "Passengers"
+      search: "Search"
 
 

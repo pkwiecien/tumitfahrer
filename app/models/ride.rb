@@ -180,7 +180,7 @@ class Ride < ActiveRecord::Base
       destination_distance = Geocoder::Calculations.distance_between(db_coordinates, request_destination_coordinates)
 
       if departure_place.empty? && destination.empty?
-        continue
+        #continue
       elsif (departure_place.empty? || (!departure_place.empty? && departure_distance <= departure_threshold)) &&
           (destination.empty? || (!destination.empty? && destination_distance <= destination_threshold))
         logger.debug "#{ride.departure_time.tomorrow} and #{ride.departure_time.yesterday}"
