@@ -1,3 +1,7 @@
+
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+<%= javascript_include_tag "jquery.geocomplete.min.js" %>
+
 <!--<div class="center main-section jumbo">-->
   <!--<h1>TUMitfahrer</h1>-->
 
@@ -54,17 +58,19 @@
     <div class="col-md-2" style="text-align: center">
         <p style="margin-top: 0px; color: #c8c8c8">Find a ride</p>
       </div>
-      <form role="form">
-        <div class="form-group col-md-4">
-          <input placeholder="Location" class="form-control main_page_input" type="text" >
-        </div>
-        <div class="form-group col-md-4">
-          <input placeholder="Destination" class="form-control main_page_input" type="text">
-        </div>
-        <div class="col-md-2" style="text-align: center;">
-            <button type="submit" class="btn btn-info" style="height: 32px; padding-top: 2px;">Search</button>
-        </div>
-      </form>
+        <%= form_tag("/search_rides", method: :get) do %>
+            <div class="form-group col-md-4">
+              <%= text_field_tag :departure_place, @departure_place, class:"form-control main_page_input" %>
+              <%= hidden_field_tag :departure_place_threshold, "5" %>
+            </div>
+            <div class="form-group col-md-4">
+              <%= text_field_tag :destination, @destination, class:"form-control main_page_input" %>
+              <%= hidden_field_tag :destination_threshold, "5" %>
+            </div>
+            <div class="col-md-2" style="text-align: center;">
+              <%= submit_tag "Search", class: "btn btn-info", style: "height: 32px; padding-top: 2px;" %>
+            </div>
+        <% end %>
   </div>
 </div>
 
@@ -150,3 +156,8 @@
     <div class="col-md-2"></div>
   </div>
 </div>
+
+<script>
+    $("#departure_place").geocomplete();
+    $("#destination").geocomplete();
+</script>
