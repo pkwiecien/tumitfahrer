@@ -88,6 +88,8 @@ gem 'paperclip'
 gem 'aws-sdk'
 gem 'rest-client'
 
+gem 'jquery-colorbox-rails'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 
