@@ -29,18 +29,24 @@ class User < ActiveRecord::Base
   has_many :ratings, foreign_key: :from_user_id, class_name: "Rating"
   has_many :feedbacks
 
+  has_attached_file :avatar, styles: {
+      square: '200x200#'
+  }
+
   # filters
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
   before_save :default_values
 
   # validators
-  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
-  validates :last_name, presence: true, length: {minimum: 2, maximum: 20}
+  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}, :on => :create
+  validates :last_name, presence: true, length: {minimum: 2, maximum: 20}, :on => :create
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
+  validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}, :on => :create
   has_secure_password
-  validates :password, length: {minimum: 6}
+  validates :password, length: {minimum: 6}, :on => :create
+
+  validates_attachment_content_type :avatar, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif"], :on => :update_photo
 
   # generate remember token used by web app to remember user session
   def User.new_remember_token

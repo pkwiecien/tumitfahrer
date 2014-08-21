@@ -11,6 +11,7 @@
  *= require_self
  *= require_tree .
  *= require bootstrap3-switch
+ *= require jquery.colorbox-example5
  */
 
 
