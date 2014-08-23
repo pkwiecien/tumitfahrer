@@ -1,0 +1,375 @@
+<div class="container_main">
+  <% provide(:title, "My rides") %>
+
+  <div class="row" class="new_ride_background" id="main_img" style="margin-right: 0px; margin-top: 47px; background: url('<%= asset_path "1.jpg"%>')  no-repeat center center fixed">
+    <div class="ride_new_page_background" style = "margin-top: 10px;">
+      <div class="col-xs-1 col-md-1">
+      </div>
+      <div class="col-xs-10 col-md-10" >
+
+        <div id="Created" class="col-md-4" style="background: #0F3750;color: #beddf1;text-color : #fffff;text-align : center">
+          <p><img src="<%= asset_path "icon_7189.svg" %>" style="height: 20px;color:white">
+            <a href="#" id="Created">Created</a>
+          </p>
+        </div>
+
+        <div id="Joined" class="col-md-4" style="background: #0F3750;color: #beddf1;text-align : center">
+          <p><img src="<%= asset_path "icon_7189.svg" %>" style="height: 20px;">
+            <a href="#" id="joined">Joined</a></p>
+        </div>
+
+        <div id="Past" class="col-md-4" style="background: #0F3750;color: #beddf1;text-align : center">
+          <p><img src="<%= asset_path "icon_7189.svg" %>" style="height: 20px;">
+            <a href="#" id="past">Past</a></p>
+        </div>
+
+        <div class="row" >
+        <div id="Created_div" class="col-sm-12" >
+
+        <div id="content" class="well col-sm-12">
+            <div class="col-md-12" style="background: #0076b3; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
+              <p><img src="<%= asset_path "DriverIcon.png" %>" style="height: 15px; "> Offers </p>
+            </div>
+
+            <% @myridescreated_offers.each_with_index do |ride1, index| %>
+                <div class="col-sm-1">
+
+                  <div style="position: absolute; width: 100%">
+                    <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="margin-top:15px;width:80px; height: 50px;">
+                  </div>
+
+
+                </div>
+
+              <div class="col-sm-5">
+                <p><font color="#0076b3"> <b> <%= ride1.departure_place %> </b> &nbsp; &nbsp;
+                  <img src="<%= asset_path "LeftArrowIcon.png" %>" style="height: 15px;color: #ff0000"> &nbsp; &nbsp;
+                  <b> <%= ride1.destination %> </b> </font></p>
+
+                <p>
+
+                  <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                  <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp; &nbsp; &nbsp;
+
+                </p>
+
+              </div>
+
+              <div class="col-sm-4">
+                <p>
+                  <% if ride1.requests.size > 0 %>
+                  <img src="<%= asset_path "PassengerGreenIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+
+                  <img src="<%= asset_path "CancelRedIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+                    <% end %>
+                 </p>
+                </div>
+              <div class="col-sm-2">
+                <input type="button" id="View ride" style="margin-top: 10px;height:12px;background-color:#0076b3" value="View Ride " onClick="window.location='/rides/<%= ride1.id %>' "/>
+              </div>
+
+              <br><br>
+              <br><br><br><br><br>
+              <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+
+                 <%end %>
+
+          <div class="col-md-12" style="background: #0076b3; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
+            <p><img src="<%= asset_path "PassengerIconBig.png" %>" style="height: 15px; "> Requests </p>
+          </div>
+
+          <% @myridescreatedrequest.each_with_index do |ride1, index| %>
+              <div class="col-sm-1 col-md-1">
+
+                <div style="position: absolute; width: 100%">
+                  <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="margin-top:15px;width:80px; height: 50px;">
+                </div>
+
+
+              </div>
+
+              <div class="col-sm-5 col-md-5">
+                <p><font color="#0076b3"> <b> <%= ride1.departure_place %> </b> &nbsp; &nbsp;
+                  <img src="<%= asset_path "LeftArrowIcon.png" %>" style="height: 15px;color: #ff0000"> &nbsp; &nbsp;
+                  <b> <%= ride1.destination %> </b> </font></p>
+
+                <p>
+
+                  <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                  <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp; &nbsp; &nbsp;
+
+                </p>
+
+              </div>
+
+              <div class="col-sm-4 col-md-4">
+                <p>
+                  <% if ride1.requests.size > 0 %>
+                      <img src="<%= asset_path "PassengerGreenIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+
+                      <img src="<%= asset_path "CancelRedIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+                  <% end %>
+                </p>
+
+              </div>
+              <div class="col-sm-2 col-md-2">
+                <input type="button" id="View ride" style="margin-top: 10px;height:12px;background-color:#0076b3" value="View Ride " onClick="window.location='/rides/<%= ride1.id %>' "/>
+              </div>
+
+              <br><br>
+              <br><br><br><br><br>
+              <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+
+          <%end %>
+
+          </div>
+            </div>
+
+</div>
+
+        <div class="row" >
+          <div id="Joined_div" class="col-sm-12" >
+
+            <div id="content" class="well col-sm-12">
+              <div class="col-md-12" style="background: #0076b3; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
+                <p><img src="<%= asset_path "DriverIcon.png" %>" style="height: 15px; "> Accepted </p>
+              </div>
+
+              <% @myridesjoined_accepted.each_with_index do |ride1, index| %>
+                  <div class="col-sm-1">
+
+                    <div style="position: absolute; width: 100%">
+                      <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="margin-top:15px;width:80px; height: 50px;">
+                    </div>
+
+
+                  </div>
+
+                  <div class="col-sm-5">
+                    <p><font color="#0076b3"> <b> <%= ride1.departure_place %> </b> &nbsp; &nbsp;
+                      <img src="<%= asset_path "LeftArrowIcon.png" %>" style="height: 15px;color: #ff0000"> &nbsp; &nbsp;
+                      <b> <%= ride1.destination %> </b> </font></p>
+
+                    <p>
+
+                      <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                      <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp; &nbsp; &nbsp;
+
+                    </p>
+
+                  </div>
+
+                  <div class="col-sm-4">
+                    <p>
+
+                      <img src="<%= asset_path "PassengerGreenIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+
+                      <img src="<%= asset_path "CancelRedIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+
+                    </p>
+                  </div>
+                  <div class="col-sm-2">
+                    <input type="button" id="View ride" style="margin-top: 10px;height:12px;background-color:#0076b3" value="View Ride " onClick="window.location='/rides/<%= ride1.id %>' "/>
+                  </div>
+
+                  <br><br>
+                  <br><br><br><br><br>
+                  <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+
+              <%end %>
+
+              <div class="col-md-12" style="background: #0076b3; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
+                <p><img src="<%= asset_path "PassengerIconBig.png" %>" style="height: 15px; "> Pending </p>
+              </div>
+
+              <% @myridesjoined_pending.each_with_index do |ride1, index| %>
+                  <div class="col-sm-1 col-md-1">
+
+                    <div style="position: absolute; width: 100%">
+                      <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="margin-top:15px;width:80px; height: 50px;">
+                    </div>
+
+
+                  </div>
+
+                  <div class="col-sm-5 col-md-5">
+                    <p><font color="#0076b3"> <b> <%= ride1.departure_place %> </b> &nbsp; &nbsp;
+                      <img src="<%= asset_path "LeftArrowIcon.png" %>" style="height: 15px;color: #ff0000"> &nbsp; &nbsp;
+                      <b> <%= ride1.destination %> </b> </font></p>
+
+                    <p>
+
+                      <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                      <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp; &nbsp; &nbsp;
+
+                    </p>
+
+                  </div>
+
+                  <div class="col-sm-4 col-md-4">
+                    <p>
+                      <img src="<%= asset_path "PassengerGreenIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+                      <img src="<%= asset_path "icon_14842.png" %>" style="height: 30px;"> &nbsp;
+                      <img src="<%= asset_path "CancelRedIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+
+                    </p>
+                  </div>
+                  <div class="col-sm-2 col-md-2">
+                    <input type="button" id="View ride" style="margin-top: 10px;height:12px;background-color:#0076b3" value="View Ride " onClick="window.location='/rides/<%= ride1.id %>' "/>
+                  </div>
+
+                  <br><br>
+                  <br><br><br><br><br>
+                  <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+
+              <%end %>
+
+            </div>
+          </div>
+
+        </div>
+        <div class="row" >
+          <div id="Past_div" class="col-sm-12" >
+
+            <div id="content" class="well col-sm-12">
+              <div class="col-md-12" style="background: #0076b3; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
+                <p><img src="<%= asset_path "DriverIcon.png" %>" style="height: 15px; "> Offers </p>
+              </div>
+
+              <% @myridespast_offers.each_with_index do |ride1, index| %>
+                  <div class="col-sm-1">
+
+                    <div style="position: absolute; width: 100%">
+                      <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="margin-top:15px;width:80px; height: 50px;">
+                    </div>
+
+
+                  </div>
+
+                  <div class="col-sm-5">
+                    <p><font color="#0076b3"> <b> <%= ride1.departure_place %> </b> &nbsp; &nbsp;
+                      <img src="<%= asset_path "LeftArrowIcon.png" %>" style="height: 15px;color: #ff0000"> &nbsp; &nbsp;
+                      <b> <%= ride1.destination %> </b> </font></p>
+
+                    <p>
+
+                      <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                      <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp; &nbsp; &nbsp;
+
+                    </p>
+
+                  </div>
+
+                  <div class="col-sm-4">
+                    <p>
+                      <img src="<%= asset_path "PassengerGreenIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+                      <img src="<%= asset_path "icon_14842.png" %>" style="height: 30px;"> &nbsp;
+                      <img src="<%= asset_path "CancelRedIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+
+                    </p>
+                  </div>
+                  <div class="col-sm-2">
+                    <input type="button" id="View ride" style="margin-top: 10px;height:12px;background-color:#0076b3" value="View Ride " onClick="window.location='/rides/<%= ride1.id %>' "/>
+                  </div>
+
+                  <br><br>
+                  <br><br><br><br><br>
+                  <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+
+              <%end %>
+
+              <div class="col-md-12" style="background: #0076b3; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
+                <p><img src="<%= asset_path "PassengerIconBig.png" %>" style="height: 15px; "> Pending </p>
+              </div>
+
+              <% @myridespast_requests.each_with_index do |ride1, index| %>
+                  <div class="col-sm-1 col-md-1">
+
+                    <div style="position: absolute; width: 100%">
+                      <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="margin-top:15px;width:80px; height: 50px;">
+                    </div>
+
+
+                  </div>
+
+                  <div class="col-sm-5 col-md-5">
+                    <p><font color="#0076b3"> <b> <%= ride1.departure_place %> </b> &nbsp; &nbsp;
+                      <img src="<%= asset_path "LeftArrowIcon.png" %>" style="height: 15px;color: #ff0000"> &nbsp; &nbsp;
+                      <b> <%= ride1.destination %> </b> </font></p>
+
+                    <p>
+
+                      <img src="<%= asset_path "CalendarIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                      <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 12px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp; &nbsp; &nbsp;
+
+                    </p>
+
+                  </div>
+
+                  <div class="col-sm-4 col-md-4">
+                    <p>
+                      <img src="<%= asset_path "PassengerGreenIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+                      <img src="<%= asset_path "icon_14842.png" %>" style="height: 30px;"> &nbsp;
+                      <img src="<%= asset_path "CancelRedIcon@2x.png" %>" style="height: 30px;"> &nbsp;
+
+                    </p>
+                  </div>
+                  <div class="col-sm-2 col-md-2">
+                    <input type="button" id="View ride" style="margin-top: 10px;height:12px;background-color:#0076b3" value="View Ride " onClick="window.location='/rides/<%= ride1.id %>' "/>
+                  </div>
+
+                  <br><br>
+                  <br><br><br><br><br>
+                  <hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+
+              <%end %>
+
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="col-xs-1 col-md-1"></div>
+  </div>
+</div>
+</div>
+
+<script>
+    $("#Created").click(function(){
+        $("#Created_div").css("display", "block");
+        $("#Joined_div").css("display", "none");
+        $("#Past_div").css("display","none");
+        $("#Created").css('background-color','#0F3750');
+        $("#Joined").css('background-color','black');
+        $("#Past").css('background-color','black');
+    })
+    $("#Joined").click(function(){
+        $("#Created_div").css("display", "none");
+        $("#Joined_div").css("display", "block");
+        $("#Past_div").css("display","none");
+        $("#Joined").css('background-color','#0F3750');
+        $("#Created").css('background-color','black');
+        $("#Past").css('background-color','black');
+    })
+    $("#Past").click(function(){
+        $("#Created_div").css("display","none");
+        $("#Joined_div").css("display","none")
+        $("#Past_div").css("display","block");
+        $("#Past").css('background-color','#0F3750');
+        $("#Created").css('background-color','black');
+        $("#Joined").css('background-color','black');
+    });
+    $(document).ready(function(){
+        $("#All_div").css("display", "block");
+        $("#Yours_div").css("display", "none");
+        $("#Lastminute_div").css("display","none");
+
+
+    });
+
+</script>

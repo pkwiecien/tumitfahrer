@@ -68,6 +68,11 @@ Tumitfahrer::Application.routes.draw do
   match "/search_rides", to: "searches#search_rides", via: 'get'
   match "/remove_passenger", to: "rides#remove_passenger", via: 'delete'
   match "/get_picture_from_panoramio", to: "rides#get_picture_from_panoramio", via: 'get'
+  match "/timeline", to: "rides#timeline", via: 'get'
+  match "/campus", to: "rides#campus" , via: 'get'
+  match "/activities", to: "rides#activities" , via:'get'
+  match "/my_rides/:id", to: "users#my_rides", via: 'get'
+
 
 
   #map.check_email "users/check_email", :controller => "users", :action => "check_email"

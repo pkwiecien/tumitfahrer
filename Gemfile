@@ -26,8 +26,9 @@ gem "httparty", "~> 0.13"
 gem 'newrelic_rpm'
 # for getting location
 gem "geocoder"
-
 gem 'bootstrap-switch-rails', '~> 3.0.0'
+gem 'time_difference'
+gem 'simple-rss'
 
 group :development, :production do
   # postgres database
@@ -67,7 +68,6 @@ gem 'therubyracer', :platforms => :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-
 #gem 'angularjs-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -87,6 +87,8 @@ gem 'paperclip'
 # S3 contains user images
 gem 'aws-sdk'
 gem 'rest-client'
+
+
 
 # Use unicorn as the app server
 # gem 'unicorn'
