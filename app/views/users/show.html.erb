@@ -47,19 +47,19 @@
         </div>
         <div class="col-xs-9 col-md-6 ride_new_form" >
           <div class="panel panel-primary" style="width: 100%; border: none;">
-            <div class="panel-body" class="form-horizontal">
-              <div class="row" style="margin: 0px; margin-top: 10px; padding-bottom: 10px;">
+            <div class="panel-body panel_body_background">
+              <div class="row" style="background-color: #428bca; margin: 2px 0 0; padding-bottom: 10px; padding-top: 16px;">
                 <div class="col-xs-8 col-md-8">
                   <div style="float: left; margin-right: 10px;">
                     <%=image_tag @user.avatar.url(:square), :style => "width: 100px;" %>
                   </div>
-                  <div style="float: left;">
-                    <h4 style= "margin-bottom: 0; margin-top: 35%">
+                  <div style="float: left; color: #beddf1;">
+                    <h5 style= "margin-bottom: 0; margin-top: 28%">
                       <%= @user.first_name %>
-                    </h4>
-                    <h3 style= "margin-top: 2%;">
+                    </h5>
+                    <h2 style= "margin-top: 2%;">
                       <b><%= @user.last_name %></b>
-                    </h3>
+                    </h2>
                   </div>
                   <div style="clear: both"></div>
                 </div>

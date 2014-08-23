@@ -16,3 +16,23 @@
 
 
 #exitpopup { text-align:center; } #exitpopup h1 { margin-top:0px; padding-top:0px; } #exitpopup p { text-align:left; }
+
+.panel_body_background {
+    background-color: #f2f2f2;
+}
+
+label {
+    color: #2b2b2b;
+}
+
+.panel {
+    margin-bottom: 0 !important;
+}
+
+.margin_bottom {
+    margin-bottom: 20px;
+}
+
+.panel-heading {
+    border-radius: 0 !important;
+}
