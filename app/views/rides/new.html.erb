@@ -22,18 +22,18 @@
                 <span id="dest_lat" data-geo="lat"></span>
                 <span id="dest-lng" data-geo="lng"></span>
               </div>
-              <div class="panel-body" class="form-horizontal">
+              <div class="panel-body panel_body_background" style="padding-bottom: 30px;">
                 <%= form_for(@ride) do |f| %>
                     <%= render 'shared/error_messages', object: f.object %>
                     <div class="form-group">
                         <%= f.label :is_driving,  t("ride.i_am") , class: "col-sm-4 control-label" %>
                         <div class="col-sm-7" style="margin-bottom: 15px;">
-                            <div class="btn-group btn-toggle" data-toggle="buttons">
-                              <label class="btn btn-primary active">
+                            <div class="btn-group btn-toggle" data-toggle="buttons" style="width: 100%">
+                              <label class="btn btn-primary active" style="width: 50%">
                                 <img src='<%= asset_path "DriverIcon.png"%>' style="height: 16px">
                                 <%= radio_button_tag :is_driving, 1 %> <%= t("ride.driver")%>
                               </label>
-                              <label class="btn btn-default">
+                              <label class="btn btn-default" style="width: 50%">
                                 <img src='<%= asset_path "PassengerIcon.png"%>' style="height: 16px;">
                                 <%= radio_button_tag :is_driving, 0, :checked => true %> <%= t("ride.passenger")%>
                               </label>
@@ -97,12 +97,12 @@
                     <div class="form-group">
                       <%= f.label :ride_type, t("ride.choose_ride_type"), class: "col-sm-4 control-label" %><br />
                       <div class="col-sm-7" style="margin-bottom: 15px;">
-                        <div class="btn-group btn-toggle" data-toggle="buttons">
-                          <label class="btn btn-primary active">
+                        <div class="btn-group btn-toggle" data-toggle="buttons" style="width: 100%;">
+                          <label class="btn btn-primary active" style="width: 50%">
                             <img src='<%= asset_path "CampusIcon.png"%>' style="height: 16px">
                             <%= f.radio_button :ride_type, 0 %> <%= t("ride.Campus") %>
                           </label>
-                          <label class="btn btn-default">
+                          <label class="btn btn-default" style="width: 50%">
                             <img src='<%= asset_path "ActivityIntroIcon.png"%>' style="height: 16px">
                             <%= f.radio_button :ride_type, 1 %> <%= t("ride.activity") %>
                           </label>
@@ -195,7 +195,7 @@
 
 
                     <div class="form-group">
-                      <div class="col-sm-offset-4 col-sm-4">
+                      <div class="col-sm-offset-4 col-sm-7">
                         <%= f.submit t("ride.add_new_ride"), class: "btn btn-primary" %>
                       </div>
                     </div>

@@ -7,40 +7,43 @@
       </div>
       <div class="col-xs-10 col-md-6 ride_new_form" >
         <div class="panel panel-primary" style="width: 100%; border: none;">
-          <div class="row" style="margin-left: 0px">
-              <div style="position: absolute; width: 100%">
-                <img class="img-responsive" id="destination_image" src='<%= @pic_url %>' style="width: 100%; height: 300px;">
+          <div class="row" style="margin-left: 0px; margin-right: 0;">
+              <div style="width: 100%">
+                <img class="img-responsive" id="destination_image" src='<%= @pic_url %>' style="width: 100%;">
               </div>
-              <br><br><br><br><br><br><br><br><br><br><br><br>
-              <div class="col-xm-12 col-md-12" style=" width: 97%; background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5); position: relative; height: 60px;">
+              <div class="col-xm-12 col-md-12" style="background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);">
                 <div class="row">
                   <div class="col-xs-8 col-md-9">
                     <p style= "color: #beddf1; font-size: 138%" ><%= @ride.departure_place%> -> <%= @ride.destination %> </p>
                   </div>
                   <div class="col-xs-4 col-md-3">
                     <div class="row" style="height: 25px">
-                      <div style="float: left">
-                        <img style="height: 16px; margin-right: 6px;" src='<%= asset_path "CalendarIcon.png" %>'>
+                      <div class="col-md-12 col-xs-12">
+                          <div style="float: left">
+                            <img style="height: 16px; margin-right: 6px;" src='<%= asset_path "CalendarIcon.png" %>'>
+                          </div>
+                          <div style="float: left">
+                            <p style= "color: #beddf1; margin-top: 0px; margin-bottom: 0;" ><%= @ride.departure_time.to_date %> </p>
+                          </div>
+                          <div style="clear: both"></div>
                       </div>
-                      <div style="float: left">
-                        <p style= "color: #beddf1; margin-top: 0px;" ><%= @ride.departure_time.to_date %> </p>
-                      </div>
-                      <div style="clear: both"></div>
                     </div>
                     <div class="row" style="height: 25px">
-                      <div style="float: left; margin-left: -102px">
-                        <img style="height: 16px; margin-right: 6px;" src='<%= asset_path "TimeIcon.png" %>'>
+                      <div class="col-md-12 col-xs-12">
+                          <div style="float: left;">
+                            <img style="height: 16px; margin-right: 6px;" src='<%= asset_path "TimeIcon.png" %>'>
+                          </div>
+                          <div style="float: left;">
+                            <p style= "color: #beddf1; margin-top: 0px; margin-bottom: 0px;" ><%= @ride.departure_time.strftime("%I:%M%p")%> </p>
+                          </div>
+                          <div style="clear: both"></div>
                       </div>
-                      <div style="float: left; margin-left: -80px;">
-                        <p style= "color: #beddf1; margin-top: 0px;" ><%= @ride.departure_time.strftime("%I:%M%p")%> </p>
-                      </div>
-                      <div style="clear: both"></div>
                     </div>
                   </div>
                 </div>
               </div>
           </div>
-          <div class="panel-heading" class="ride_new_heading">
+          <div class="panel-heading ride_new_heading">
             <% if @ride.relationships.first.is_driving %>
                 <img style="float: left; height: 17px; margin-right: 6px;" src='<%= asset_path "DriverIcon.png" %>'>
             <% else %>
@@ -48,7 +51,7 @@
             <% end %>
             <h3 class="panel-title" style="color: #beddf1;"><%= t("ride.ride") %></h3>
           </div>
-          <div class="row" style="margin-top: 20px; margin-left: 0px;">
+          <div class="row panel_body_background" style="padding-top: 20px; padding-bottom: 20px; margin-left: 0px; margin-right: 0px;">
             <div class="col-xs-6 col-md-6">
               <div class="row">
                 <div class="col-sm-6">
@@ -127,13 +130,13 @@
           <% if current_user && (current_user.id.equal?(@ride.ride_owner.id) || !@ride.relationships.where(user_id: current_user.id).first.nil?) %>
             <% ride_passengers = @ride.relationships%>
             <% if ride_passengers.size > 0 %>
-                <div class="panel-heading" class="ride_new_heading" style="margin-top: 20px;">
+                <div class="panel-heading" class="ride_new_heading">
                   <img style="float: left; height: 17px; margin-right: 6px;" src='<%= asset_path "PassengerIcon.png" %>'>
                   <h3 class="panel-title" style="color: #beddf1;"><%= t("ride.passengers") %></h3>
                 </div>
                 <% ride_passengers.each do |passenger|  %>
                     <% ride_passenger = User.find(passenger.user_id)%>
-                    <div class="row" style="margin: 0px; margin-top: 10px; border-bottom: thin solid; padding-bottom: 10px;">
+                    <div class="row panel_body_background" style="margin: 0px; padding-top: 10px; border-bottom: thin solid; padding-bottom: 10px;">
                       <div class="col-xs-6 col-md-6">
                         <div style="float: left;  width: 75px; margin-right: 5px;">
                           <%= gravatar_for ride_passenger %>
@@ -176,7 +179,7 @@
                 </div>
                 <% ride_requests.each do |request|  %>
                     <% request_user = User.find(request.passenger_id)%>
-                    <div class="row" style="margin: 0px; margin-top: 10px; border-bottom: thin solid; padding-bottom: 10px;">
+                    <div class="row panel_body_background" style="margin: 0px; padding-top: 10px; border-bottom: thin solid; padding-bottom: 10px;">
                       <div class="col-xs-6 col-md-6">
                         <div style="float: left;  width: 75px; margin-right: 5px;">
                           <%= gravatar_for request_user %>
@@ -216,7 +219,7 @@
               <% end %>
             <% end %>
           <% if current_user && @ride.ride_owner.id.equal?(current_user.id) %>
-              <div class="row" style="margin-top: 20px; text-align: center;">
+              <div class="row panel_body_background" style="padding-top: 20px; padding-bottom: 20px; text-align: center; margin: 0;">
                 <div class="col-xs-12 col-md-12" style="padding: 0px;">
                   <!--<button type="button" class="btn btn-danger" style="width: 90%">-->
                     <!--<span class="glyphicon glyphicon-remove-circle"></span> Delete Ride-->
