@@ -48,7 +48,7 @@ class RidesController < ApplicationController
     end
     if !@ride.nil? || !@rides.empty?
       flash[:success] = "Ride was added!"
-      redirect_to current_user
+      redirect_to @ride
     else
       render :new
     end
