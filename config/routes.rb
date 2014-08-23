@@ -73,6 +73,7 @@ Tumitfahrer::Application.routes.draw do
   match "/activities", to: "rides#activities" , via:'get'
   match "/my_rides/:id", to: "users#my_rides", via: 'get'
 
+  match "/update_photo/:id", to: "users#update_photo", via: 'patch'
 
 
   #map.check_email "users/check_email", :controller => "users", :action => "check_email"

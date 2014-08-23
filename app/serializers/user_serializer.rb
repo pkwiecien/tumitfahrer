@@ -1,6 +1,6 @@
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :first_name, :last_name, :email, :phone_number,
-             :department, :car, :is_student, :api_key, :rating_average, :created_at, :updated_at
+             :department, :car, :is_student, :api_key, :rating_average, :created_at, :updated_at, :avatar
 
   def rating_average
     object.compute_avg_rating

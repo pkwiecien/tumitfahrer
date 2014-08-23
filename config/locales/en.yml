@@ -29,9 +29,9 @@ en:
       driver: "Driver"
       passenger: "Passenger"
       departure_place: "Departure place"
-      departure_place_threshold: "Departure place Threshold (in km)"
+      departure_place_threshold: "Around departure (in km)"
       destination_place: "Destination place"
-      destination_place_threshold: "Destination place threshold (in km)"
+      destination_place_threshold: "Around destination (in km)"
       departure_time: "Departure time"
       passengers: "Passengers"
       car: "Car"
@@ -46,6 +46,13 @@ en:
       requests: "Requests"
       passengers: "Passengers"
       search: "Search"
+  user:
+      name: "Name"
+      surname: "Surname"
+      email: "Email"
+      phone: "Phone"
+      password: "Password"
+      faculty: "Faculty"
 
   user:
      first_name: "Name"

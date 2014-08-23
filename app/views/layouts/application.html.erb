@@ -22,7 +22,11 @@
 
 <!--<div class="container">-->
   <% flash.each do |key, value| %>
+    <% if signed_in? %>
+      <div class="alert alert-<%= key %>" style="margin-bottom: 0px; margin-top: 40px;"><%= value %></div>
+    <% else %>
       <div class="alert alert-<%= key %>" style="margin-bottom: 0px;"><%= value %></div>
+    <% end %>
   <% end %>
 
   <%= yield %>
