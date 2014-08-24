@@ -30,6 +30,10 @@ class User < ActiveRecord::Base
   has_many :ratings, foreign_key: :from_user_id, class_name: "Rating"
   has_many :feedbacks
 
+  has_attached_file :avatar, styles: {
+      square: '200x200#'
+  }
+
   # filters
   before_create :create_remember_token, :generate_api_key
   before_save { self.email = email.downcase }
