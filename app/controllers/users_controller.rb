@@ -4,6 +4,17 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:edit, :update, :show]
   before_action :right_user, only: [:edit, :update]
 
+  def check_email
+    @user = User.find_by_email(params[:user][:email])
+
+    respond_to do |format|
+      format.json { render :json => !@user }
+    end
+  end
+
+
+
+
   URL = 'http://www.panoramio.com/map/get_panoramas.php'
   DEFAULT_OPTIONS = {
       :set => :public, # Cant be :public, :full, or a USER ID number
@@ -31,6 +42,14 @@ class UsersController < ApplicationController
 
   def create
 
+    params[:user][:password] = Digest::SHA512.hexdigest(params[:user][:password]+Tumitfahrer::Application::SALT)
+    params[:user][:password_confirmation] = params[:user][:password]
+
+    logger.debug "Env variable is: "
+    logger.debug "here: #{ENV['S3_BUCKET_NAME']}"
+
+    @user = User.new(user_params)
+
 
     new_password = User.generate_new_password
     hashed_password = User.generate_hashed_password(new_password)
@@ -45,6 +64,7 @@ class UsersController < ApplicationController
     else
       render 'new'
     end
+
   end
 
  def my_rides

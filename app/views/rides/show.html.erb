@@ -1,4 +1,4 @@
-
+<% provide(:title, "Ride to " + @ride.destination) %>
 
 <div class="container_main">
   <div class="row" class="new_ride_background" style="margin-right: 0px; margin-top: 47px; background: url('<%= asset_path "MainCampusOrigin.png"%>')  no-repeat center center fixed">
@@ -7,6 +7,10 @@
       </div>
       <div class="col-xs-10 col-md-6 ride_new_form" >
         <div class="panel panel-primary" style="width: 100%; border: none;">
+
+
+
+
           <div class="row" style="margin-left: 0px; margin-right: 0;">
               <div style="width: 100%">
                 <img class="img-responsive" id="destination_image" src='<%= @pic_url %>' style="width: 100%;">

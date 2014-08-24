@@ -39,14 +39,9 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "locations", force: true do |t|
-    t.string   "address"
-    t.float    "latitude",   limit: 24
-    t.float    "longitude",  limit: 24
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "host"
+    t.string   "format"
+    t.string   "key"
   end
 
   create_table "messages", force: true do |t|

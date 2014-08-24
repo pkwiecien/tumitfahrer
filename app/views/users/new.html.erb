@@ -1,5 +1,5 @@
-<div class="container_main">
-<% provide(:title, "Signup page") %>
+<% provide(:title, "Sign up") %>
+<h1>Sign up for great adventures</h1>
 
   <div class="row" class="new_ride_background" id="main_img" style="margin-right: 0px; ">
 
@@ -70,7 +70,20 @@
  background-color: #909090;
     border-color : #909090;
 
-}
-</style>
+        <%= f.label :email %>
+        <%= f.text_field :email %>
 
+        <%= f.label :department %>
+        <%= f.text_field :department %>
 
+        <%= f.label :password %>
+        <%= f.password_field :password %>
+
+        <%= f.label :password_confirmation, "Confirmation" %>
+        <%= f.password_field :password_confirmation %>
+
+        <%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
+
+  <% end %>
+  </div>
+</div>

@@ -9,6 +9,10 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+      <%= link_to image_tag("logo.png", :border => 0, :style => "width: 140px"), root_path, class: "navbar-brand" %>
+    </div>
+    <div class="navbar-collapse collapse">
+      <div class="navbar-right">
 
     </div>
     <div class="navbar-collapse collapse">
@@ -29,6 +33,51 @@
             <%= link_to "Sign up", "/signup", class: "btn btn-primary", style:"height: 32px; padding-top: 2px;" %>
           </form>
         <% end %>
+      </div>
+    </div><!--/.navbar-collapse -->
+    <% if signed_in? %>
+        <div class="navbar-collapse collapse">
+          <div class="row row-centered">
+            <div class="col-md-1 col-centered" style="background: #0F3750; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
+              <p><%= link_to "Timeline", '/timeline', style: "color: #beddf1" %></p>
+            </div>
+            <div class="col-md-1 col-centered" style="background: #005c91; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
+              <p><%= link_to "Campus",'/campus',style: "color: #beddf1" %></p>
+            </div>
+            <div class="col-md-1 col-centered" style="background: #005c91; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
+              <p><%= link_to "Activities",'/activities',style: "color: #beddf1" %></p>
+            </div>
+            <div class="col-md-1 col-centered" style="background: #0076b3; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
+              <p><%= image_tag("create_ride.png", class: "head-button" )%><%= link_to "Create", new_ride_path, style: "color: #beddf1" %></p>
+            </div>
+            <div class="col-md-1 col-centered" style="background: #0076b3; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
+              <p><%= image_tag("SearchIcon.png", class: "head-button" )%><%= link_to "Search", "/search_rides", style: "color: #beddf1" %></p>
+            </div>
+            <div class="col-md-1 col-centered" style="background: #53A2d0; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
+              <p>My Rides</p>
+            </div>
+            <div class="col-md-1 col-centered" style="background: #53A2d0; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
+              <p><%= image_tag("ProfileIcon.png", class: "head-button" )%><%= link_to "Profile", "/users/#{current_user.id}", style: "color: #beddf1" %></p>
+            </div>
+          </div>
+        </div>
+        <style>
+            .row-centered {
+                text-align:center;
+            }
+            .col-centered {
+                display:inline-block;
+                float:none;
+                /* reset the text-align */
+                text-align:left;
+                /* inline-block space fix */
+                margin-right:-4px;
+            }
+            .head-button {
+                width:16px; margin-right: 4px;
+            }
+        </style>
+    <% end %>
       </div>
     </div><!--/.navbar-collapse -->
     <% if signed_in? %>
