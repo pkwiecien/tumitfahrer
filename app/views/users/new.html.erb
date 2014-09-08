@@ -1,5 +1,5 @@
-<% provide(:title, "Sign up") %>
-<h1>Sign up for great adventures</h1>
+<div class="container_main">
+  <% provide(:title, "Signup page") %>
 
   <div class="row" class="new_ride_background" id="main_img" style="margin-right: 0px; ">
 
@@ -9,8 +9,8 @@
         </div>
         <div class="col-xs-9 col-md-6" >
           <div class="panel panel-primary" style="width: 70%; border: none;margin-top: 100px;margin-left:100px;background-color: #2B2B2B;">
-            <div class="panel-heading" style="background: #2B2B2B;">
-              <p> <img src='<%= asset_path "logo.png"%>' style="height: 20px;align : middle;float:left;background-color: #2B2B2B;"> &nbsp; &nbsp;</p>
+            <div class="panel-heading" style="background: #2B2B2B;border-color: #2B2B2B">
+              <p> <img src='<%= asset_path "logo.png"%>' style="height: 20px;float:left;background-color: #2B2B2B;"> &nbsp; &nbsp;</p>
 
             </div>
             <div class="panel-body" class="form-horizontal"style="background-color:#2B2B2B ;">
@@ -48,42 +48,32 @@
                       <%= f.text_field :email, class:"form-control" %>
                     </div>
                   </div>
-                  <br><br><br><br><br><br><br><br><br>
-                  <p> &nbsp;&nbsp; Email with the password will be sent to your TUM mailbox</p>
+                  <br><br><br><br><br><br><br><br>
+                  <p style="color: white"> &nbsp;Email with the password will be sent to your TUM mailbox</p>
                   <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-4"style="float:right">
                       <%= f.submit "Signup", class: "btn btn-large btn-primary" %>
                     </div>
                   </div>
-                  <% end %>
-            </div>
+              <% end %>
             </div>
           </div>
+        </div>
         <div class="col-xs-1 col-md-3"></div>
       </div>
-       </div>
-      </div>
     </div>
-<style>
-.form-control
-{
- background-color: #909090;
-    border-color : #909090;
-
-        <%= f.label :email %>
-        <%= f.text_field :email %>
-
-        <%= f.label :department %>
-        <%= f.text_field :department %>
-
-        <%= f.label :password %>
-        <%= f.password_field :password %>
-
-        <%= f.label :password_confirmation, "Confirmation" %>
-        <%= f.password_field :password_confirmation %>
-
-        <%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
-
-  <% end %>
   </div>
 </div>
+<style>
+    .form-control
+    {
+        background-color: #909090;
+        border-color : #909090;
+
+    }
+    .control-label
+    {
+        color: white;
+    }
+</style>
+

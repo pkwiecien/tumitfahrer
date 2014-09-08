@@ -10,6 +10,13 @@ body {
     width: 100% !important;
 }
 
+.container_ride {
+    pading-left : 15px;
+    padding-right : 15px;
+    margin-left : auto;
+    margin-right : auto;
+
+}
 .container_main_child {
     width: 100%;
     position: absolute;

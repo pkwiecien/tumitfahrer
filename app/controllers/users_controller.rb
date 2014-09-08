@@ -42,8 +42,6 @@ class UsersController < ApplicationController
 
   def create
 
-    params[:user][:password] = Digest::SHA512.hexdigest(params[:user][:password]+Tumitfahrer::Application::SALT)
-    params[:user][:password_confirmation] = params[:user][:password]
 
     logger.debug "Env variable is: "
     logger.debug "here: #{ENV['S3_BUCKET_NAME']}"
