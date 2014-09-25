@@ -36,7 +36,8 @@
               </div>
 
               <div class="col-md-8">
-                <h4 style="margin-top: 12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+                <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                  <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
                 <p> &nbsp;
                   <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;
                   <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
@@ -80,7 +81,8 @@
               </div>
 
               <div class="col-md-8">
-                <h4 style="color: #0076b3;margin-top:12px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+                <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                  <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
                 <p> &nbsp;
                   <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;
                   <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
@@ -128,6 +130,7 @@
     $(document).ready(function(){
         $("#All_div").css("display", "block");
         $("#Lastminute_div").css("display","none");
+        $("#Lastminute").css('background-color','#2B2B2B').css('color','#F2F2F2');
 
     });
 
@@ -138,7 +141,6 @@
 
 
 </script>
-
 
 
 

@@ -23,54 +23,55 @@
 
 <div id="Created_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
 
-<div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
-  <img src="<%= asset_path "driver_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
-  <h4 style="margin-top:15px;">Offers</h4>
-</div>
+  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
+    <img src="<%= asset_path "driver_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
+    <h4 style="margin-top:15px;">Offers</h4>
+  </div>
 
-         <% @myridescreated_offers.each_with_index do |ride1, index| %>
+  <% @myridescreated_offers.each_with_index do |ride1, index| %>
       <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
-                <div class="col-md-1">
-                  <% if ride1.ride_type == 0%>
-                      <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
-                  <% else %>
-                      <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
-                  <% end %>
+        <div class="col-md-1">
+          <% if ride1.ride_type == 0%>
+              <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+          <% else %>
+              <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+          <% end %>
 
-                </div>
+        </div>
 
-              <div class="col-md-6">
-                <h4 style="color: #0076b3;margin-top:15px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
-                <p style="margin-top: -2px;"> &nbsp;
-                  <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+        <div class="col-md-6">
+          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
+          <p style="margin-top: -2px;"> &nbsp;
+            <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <img src="<%= asset_path "TimeIconBlack.pnhrg" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
 
-                </p>
-              </div>
+          </p>
+        </div>
 
-              <div class="col-md-5">
+        <div class="col-md-5">
 
-                <div class="col-md-1"style="width:10%;margin-right:35px;margin-left:130px;">
-                  <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
-                </div>
-
-
-                <div class="col-md-1"style="width: 10%;padding-left:5px;padding-right:35px;">
-                  <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
-                </div>
+          <div class="col-md-1"style="width:10%;margin-right:35px;margin-left:130px;">
+            <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
+          </div>
 
 
-                <div class="col-md-3" style="margin-left:70px;padding-left:120px;padding-bottom:30px;margin-right:-80px;">
-                  <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0; "} do %>
-                      View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-                  <% end %>
-                </div>
+          <div class="col-md-1"style="width: 10%;padding-left:5px;padding-right:35px;">
+            <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
+          </div>
 
-  </div>
-  </div>
+
+          <div class="col-md-3" style="margin-left:70px;padding-left:120px;padding-bottom:30px;margin-right:-80px;">
+            <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0; "} do %>
+                View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+            <% end %>
+          </div>
+
+        </div>
+      </div>
       <% if index < 2 %>
-      <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
-        <% end %>
+          <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
+      <% end %>
 
 
   <%end %>
@@ -93,7 +94,8 @@
         </div>
 
         <div class="col-md-6">
-          <h4 style="color: #0076b3;margin-top:15px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
           <p style="margin-top: -2px;"> &nbsp;
             <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
@@ -149,7 +151,8 @@
         </div>
 
         <div class="col-md-9">
-          <h4 style="color: #0076b3;margin-top:15px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
           <p style="margin-top: -2px;"> &nbsp;
             <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
@@ -158,11 +161,11 @@
         </div>
 
 
-          <div class="col-md-3" style="float:right;">
-            <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0; "} do %>
-                View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-            <% end %>
-          </div>
+        <div class="col-md-3" style="float:right;">
+          <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0; "} do %>
+              View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+          <% end %>
+        </div>
 
       </div>
       <% if index < 2 %>
@@ -190,7 +193,8 @@
         </div>
 
         <div class="col-md-6">
-          <h4 style="color: #0076b3;margin-top:15px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
           <p style="margin-top: -2px;"> &nbsp;
             <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
@@ -246,7 +250,8 @@
         </div>
 
         <div class="col-md-8">
-          <h4 style="color: #0076b3;margin-top:15px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
           <p style="margin-top: -2px;"> &nbsp;
             <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
@@ -298,7 +303,8 @@
         </div>
 
         <div class="col-md-8">
-          <h4 style="color: #0076b3;margin-top:15px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
           <p style="margin-top: -2px;"> &nbsp;
             <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
@@ -369,6 +375,8 @@
         $("#Created_div").css("display", "block");
         $("#Joined_div").css("display","none");
         $("#Past_div").css("display","none");
+        $("#Joined").css('background-color','#2B2B2B').css('color','#F2F2F2');
+        $("#Past").css('background-color','#2B2B2B').css('color','#F2F2F2');
 
     });
 
