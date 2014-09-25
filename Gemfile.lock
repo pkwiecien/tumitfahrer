@@ -97,7 +97,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
-    mini_portile (0.6.0)
+    mini_portile (0.5.0)
     minitest (5.4.0)
     multi_json (1.10.1)
     multi_xml (0.5.5)
@@ -227,8 +227,9 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-colorbox-rails
   jquery-rails
-  pg (= 0.15.1)
-  push-core
+  mysql2
+  newrelic_rpm
+  paperclip
   push-gcm
   railroady
   rails (~> 4.1)
