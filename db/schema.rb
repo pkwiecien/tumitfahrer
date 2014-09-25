@@ -39,6 +39,9 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "host"
+    t.string   "format"
+    t.string   "key"
   end
 
   create_table "messages", force: true do |t|

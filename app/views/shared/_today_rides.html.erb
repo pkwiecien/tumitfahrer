@@ -1,0 +1,26 @@
+<div class="panel panel-primary" style="border: none;border-radius: 0px;">
+  <div class="panel-heading" style="border: none;border-radius: 0px;background: #0F3750;color: #beddf1;text-align : center">
+    <h3 class="panel-title " >Today</h3>
+  </div>
+  <div class="panel-body">
+    <% @today_rides.each_with_index do |ride1, index| %>
+
+        <div class="col-sm-2">
+         <% if ride1.relationships.first.is_driving == true %>
+                             <img src="<%= asset_path "driver_icon.png" %>" style="height: 46px; margin-top:10px; float:left; background-color: #0F3750; padding: 8px">
+         <% elsif ride1.relationships.first.is_driving == false %>
+                             <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:10px; float: left;  background-color: #0F3750; padding: 8px">
+         <% end %>
+        </div>
+        <div class="col-sm-10">
+          <h4 style="margin-top: 10px;color: #0076b3"> &nbsp;<%= ride1.destination %></h4>
+                          <p style="margin-top: -4px;"> &nbsp;
+
+                            <img src="<%= asset_path "TimeIconBlack.png" %> " style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+
+                          </p>
+        </div>
+        <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+    <%end %>
+  </div>
+</div>

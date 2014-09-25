@@ -1,0 +1,149 @@
+<%= javascript_include_tag "jquery.bootpag.min.js" %>
+
+<div class="container_ride">
+  <% provide(:title, "Activity ride") %>
+  <div class="row"  id="main_img" style="padding-left:70px;margin-top: 47px; background: url('<%= asset_path "1.jpg"%>')">
+
+    <div class="col-xs-9 col-md-9 " style="width:96%;margin-left:2px;margin-top:25px;">
+      <div id="All" class="col-md-6" style=" background: #005c91;text-color : #fffff;text-align : center">
+        <p><img src="<%= asset_path "activity_icon.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
+          <a href="#" id="all"style="color: white;">All</a>
+        </p>
+      </div>
+      <div id="Lastminute" class="col-md-6" style="background: #005c91;text-color : #fffff;text-align : center">
+        <p><img src="<%= asset_path "activity_icon.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
+          <a href="#" id="lastminute"style="color: white;">Lastminute</a>
+        </p>
+      </div>
+
+
+      <div id="All_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
+        <% @activity_rides.each_with_index do |ride1, index| %>
+
+            <div class="row" style="border-bottom : solid 1px;">
+              <div class="col-md-2">
+                <% if ride1.relationships.first.is_driving == true %>
+                    <img src="<%= asset_path "driver_icon.png" %>" style="height: 46px; margin-top:15px; float:left; background-color: #0076b3; padding: 8px">
+                <% elsif ride1.relationships.first.is_driving == false %>
+                    <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px; float: left;  background-color: #0076b3; padding: 8px">
+                <% end %>
+                <% if ride1.ride_type == 0%>
+                    <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+                <% else %>
+                    <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+                <% end %>
+                <div style="clear: both"></div>
+              </div>
+
+              <div class="col-md-8">
+                <h4 style="margin-top: 12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+                <p> &nbsp;
+                  <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;
+                  <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+                  <% if ride1.relationships.first.is_driving == true%>
+                      <img src="<%= asset_path "SeatsIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.free_seats %>
+                  <% end %>
+                </p>
+              </div>
+              <div class="col-md-2">
+                <% if ride1.relationships.first.is_driving == true %>
+                    <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn btn-success", style: "float: right; margin-top: 8%; height: 48px; padding: 12px;"} do %>
+                        View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+                    <% end %>
+                <% elsif ride1.relationships.first.is_driving == false %>
+                    <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn btn-success", style: "float: right; margin-top: 8%; height: 48px; padding: 12px;"} do %>
+                        View Offer <span class="glyphicon glyphicon-chevron-right"></span>
+                    <% end %>
+                <% end %>
+              </div>
+            </div>
+        <% end %>
+        <%= will_paginate @activity_rides %>
+      </div>
+
+      <div id="Lastminute_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
+        <% @lastminute_activityrides.each_with_index do |ride1, index| %>
+
+            <div class="row" style="border-bottom : solid 1px;">
+              <div class="col-md-2">
+                <% if ride1.relationships.first.is_driving == true %>
+                    <img src="<%= asset_path "driver_icon.png" %>" style="height: 46px; margin-top:15px; float:left; background-color: #0076b3; padding: 8px">
+                <% elsif ride1.relationships.first.is_driving == false %>
+                    <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px; float: left;  background-color: #0076b3; padding: 8px">
+                <% end %>
+                <% if ride1.ride_type == 0%>
+                    <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+                <% else %>
+                    <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+                <% end %>
+                <div style="clear: both"></div>
+              </div>
+
+              <div class="col-md-8">
+                <h4 style="color: #0076b3;margin-top:12px;"> &nbsp;<%= ride1.departure_place %> -> <%= ride1.destination %></h4>
+                <p> &nbsp;
+                  <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;
+                  <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+                  <% if ride1.relationships.first.is_driving == true%>
+                      <img src="<%= asset_path "SeatsIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.free_seats %>
+                  <% end %>
+                </p>
+              </div>
+              <div class="col-md-2">
+                <% if ride1.relationships.first.is_driving == true %>
+                    <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn btn-success", style: "float: right; margin-top: 8%; height: 48px; padding: 12px;"} do %>
+                        View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+                    <% end %>
+                <% elsif ride1.relationships.first.is_driving == false %>
+                    <%= link_to "rides/#{ride1.id}", {method: :get, class: "btn btn-success", style: "float: right; margin-top: 8%; height: 48px; padding: 12px;"} do %>
+                        View Offer <span class="glyphicon glyphicon-chevron-right"></span>
+                    <% end %>
+                <% end %>
+              </div>
+            </div>
+        <% end %>
+        <%= will_paginate @lastminute_activityrides %>
+      </div>
+
+
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+    $("#All").click(function(){
+        $("#All_div").css("display", "block");
+        $("#Lastminute_div").css("display","none");
+        $("#All").css('background-color','#005c91');
+        $("#Lastminute").css('background-color','#2B2B2B').css('color','#F2F2F2');
+    })
+    $("#Lastminute").click(function(){
+        $("#All_div").css("display", "none");
+        $("#Lastminute_div").css("display", "block");
+        $("#Lastminute").css('background-color','#005c91');
+        $("#All").css('background-color','#2B2B2B').css('color','#F2F2F2');
+    });
+    $(document).ready(function(){
+        $("#All_div").css("display", "block");
+        $("#Lastminute_div").css("display","none");
+
+    });
+
+    $("#ride_destination").geocomplete({
+        details: ".details",
+        detailsAttribute: "data-geo"
+    });
+
+
+</script>
+
+
+
+
+
+
+
+
+

@@ -27,6 +27,8 @@ gem "httparty", "~> 0.13"
 gem 'newrelic_rpm'
 # for getting location
 gem "geocoder"
+gem 'time_difference'
+gem 'simple-rss'
 
 gem 'bootstrap-switch-rails', '~> 3.0.0'
 

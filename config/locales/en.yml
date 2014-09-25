@@ -116,4 +116,12 @@ en:
       terms_change: "10 Change of Terms"
       terms_change_1: "Amendments to General Conditions are to the user effectively only by his consent. This consent shall be deemed granted if the TUMitfahrer GbR the amended Terms will send to the user via e-mail and he does not object within a month and he is a visible indication of this legal consequence in the e-mail."
 
+  user:
+     first_name: "Name"
+     last_name: "Surname"
+     department: "Faculty"
+     email: "TUM Email"
+
+
+
 
