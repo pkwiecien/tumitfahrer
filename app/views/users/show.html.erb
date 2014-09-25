@@ -38,8 +38,6 @@
 <!--</div>-->
 
 <div class="container_main">
-  <% provide(:title, "Search ride") %>
-
   <div class="row" class="new_ride_background" id="main_img" style="margin-right: 0px; margin-top: 47px; background: url('<%= asset_path "MainCampusOrigin.png"%>')  no-repeat center center fixed">
     <div class="ride_new_page_background">
       <div class="row">
@@ -51,7 +49,7 @@
               <div class="row" style="background-color: #428bca; margin: 2px 0 0; padding-bottom: 10px; padding-top: 16px;">
                 <div class="col-xs-8 col-md-8">
                   <div style="float: left; margin-right: 10px;">
-                    <%=image_tag @user.avatar.url(:square), :style => "width: 100px;" %>
+                    <%= image_tag @user.avatar.url(:square), :style => "width: 100px;" %>
                   </div>
                   <div style="float: left; color: #beddf1;">
                     <h5 style= "margin-bottom: 0; margin-top: 28%">
@@ -87,56 +85,119 @@
                   </div>
                 </div>
               </div>
-              <div class="row" style="margin-top: 20px;">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4">
-                  <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
-                  <%= label_tag :name, t("user.name"), class: "control-label", style: "font-weight: normal" %>
-                </div>
-                <div class="col-sm-7">
-                  <%= label_tag :name, @user.first_name, class:"control-label" %>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 10px;">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4">
-                  <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
-                  <%= label_tag :name, t("user.surname"), class: "control-label", style: "font-weight: normal" %>
-                </div>
-                <div class="col-sm-7">
-                  <%= label_tag :name, @user.last_name, class:"control-label" %>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 10px;">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4">
-                  <img src='<%= asset_path "EmailIconBlack.png"%>' class="ride_new_icons">
-                  <%= label_tag :name, t("user.email"), class: "control-label", style: "font-weight: normal" %>
-                </div>
-                <div class="col-sm-7">
-                  <%= label_tag :name, @user.email, class:"control-label" %>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 10px;">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4">
-                  <img src='<%= asset_path "PhoneIconBlack.png"%>' class="ride_new_icons">
-                  <%= label_tag :name, t("user.phone"), class: "control-label", style: "font-weight: normal" %>
-                </div>
-                <div class="col-sm-7">
-                  <%= label_tag :name, @user.phone_number, class:"control-label" %>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 10px;">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4">
-                  <img src='<%= asset_path "CampusIconBlack.png"%>' class="ride_new_icons">
-                  <%= label_tag :name, t("user.faculty"), class: "control-label", style: "font-weight: normal" %>
-                </div>
-                <div class="col-sm-7">
-                  <%= label_tag :name, @user.department, class:"control-label" %>
-                </div>
-              </div>
+              <% if @user.id != current_user.id %>
+                  <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.name"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.first_name, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.surname"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.last_name, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "EmailIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.email"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.email, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "PhoneIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.phone"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.phone_number, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "CampusIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.faculty"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.department, class:"control-label" %>
+                    </div>
+                  </div>
+              <% else %>
+                <%= form_for(@user) do |f| %>
+                  <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.name"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :first_name, value: @user.first_name, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.surname"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :last_name, value: @user.last_name, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "EmailIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :email, t("user.email"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :email, value: @user.email, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "PhoneIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.phone"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+
+                      <%= f.text_field :phone_number, value: @user.phone_number, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "CampusIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.faculty"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :department, value: @user.department, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group">
+                      <div class="col-sm-12">
+                        <%= f.submit t("form.edit"), class: "btn btn-primary" %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
             </div>
           </div>
         </div>

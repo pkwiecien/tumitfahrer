@@ -7,10 +7,6 @@
       </div>
       <div class="col-xs-10 col-md-6 ride_new_form" >
         <div class="panel panel-primary" style="width: 100%; border: none;">
-
-
-
-
           <div class="row" style="margin-left: 0px; margin-right: 0;">
               <div style="width: 100%">
                 <img class="img-responsive" id="destination_image" src='<%= @pic_url %>' style="width: 100%;">
@@ -101,7 +97,7 @@
                   </div>
                   <div style="clear: both"></div>
               </div>
-              <% if (!current_user || !@ride.ride_owner.id.equal?(current_user.id)) %>
+              <% if (!current_user.nil? && !@ride.ride_owner.id.equal?(current_user.id)) %>
                 <div class="row" style="margin-top: 10px;">
                     <% ride_requester = @ride.requests.where(passenger_id: current_user.id).first %>
                     <% if !current_user || ride_requester.nil?%>
@@ -161,7 +157,7 @@
                                   <span class="glyphicon glyphicon-remove-circle"></span>
                               <% end %>
                           <% end %>
-                          <%= link_to "users/#{ride_passenger.id}", {method: :get, class: "btn btn-primary", style: "margin-top: 2px;"} do %>
+                          <%= link_to "/users/#{ride_passenger.id}", {method: :get, class: "btn btn-primary", style: "margin-top: 2px;"} do %>
                               <span class="glyphicon glyphicon-user"></span> Profile
                           <% end %>
                         </div>
@@ -170,7 +166,7 @@
                 <% end %>
             <% end %>
           <% end %>
-          <% if (current_user && (!@ride.requests.where(passenger_id: current_user.id).first.nil?) || current_user.id.equal?(@ride.ride_owner.id)) %>
+          <% if (!current_user.nil? && ((!@ride.requests.where(passenger_id: current_user.id).first.nil?) || current_user.id.equal?(@ride.ride_owner.id))) %>
               <% if !@ride.requests.where(passenger_id: current_user.id).first.nil? && !current_user.id.equal?(@ride.ride_owner.id)%>
                   <% ride_requests = [@ride.requests.where(passenger_id: current_user.id).first] %>
               <% else %>
@@ -212,7 +208,7 @@
                               <%= link_to "/rides/#{@ride.id}/requests/#{request.id}?passenger_id=#{request_user.id}&confirmed=0", {method: :patch, class: "btn btn-danger"} do %>
                                   <span class="glyphicon glyphicon-remove-circle"></span>
                               <% end %>
-                              <%= link_to "users/#{request.passenger_id}", {method: :get, class: "btn btn-primary"} do %>
+                              <%= link_to "/users/#{request.passenger_id}", {method: :get, class: "btn btn-primary"} do %>
                                   <span class="glyphicon glyphicon-user"></span> Profile
                               <% end %>
                             </div>

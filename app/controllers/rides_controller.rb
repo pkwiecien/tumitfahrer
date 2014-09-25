@@ -39,16 +39,24 @@ class RidesController < ApplicationController
       start_date.upto(end_date){ |date|
         puts date.inspect
         if (!params[:repeat][Date::ABBR_DAYNAMES[date.wday]].nil?)
-          ride_dates.append date
+          date_f = date.to_s + " " + params[:ride][:departure_time].split(" ")[1]
+          ride_dates.append date_f
         end
       }
 
       @rides = Ride.create_regular_rides ride_dates, ride_params, current_user
 
     end
+
     if !@ride.nil? || !@rides.empty?
       flash[:success] = "Ride was added!"
-      redirect_to @ride
+      if !@ride.nil?
+        final_ride = @ride
+      else
+        final_ride = @ride.first
+      end
+
+      redirect_to final_ride
     else
       render :new
     end
