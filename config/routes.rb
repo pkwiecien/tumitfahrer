@@ -50,7 +50,9 @@ Tumitfahrer::Application.routes.draw do
 
   # Web app routes
   resources :users
-  resources :rides
+  resources :rides do
+    resources :requests
+  end
   resource :sessions, only: [:new, :create, :destroy]
 
   # Start page route
@@ -62,7 +64,23 @@ Tumitfahrer::Application.routes.draw do
   match "/help", to: "static_pages#help", via: 'get'
   match "/contact", to: "static_pages#contact", via: 'get'
   match "/about", to: "static_pages#about", via: 'get'
+  match "/team", to: "static_pages#team", via: 'get'
+  match "/privacy", to: "static_pages#privacy", via: 'get'
+  match "/terms_and_conditions", to: "static_pages#terms", via: 'get'
   match "/discover", to: "static_pages#discover", via: 'get'
+  match "/search_rides", to: "searches#search_rides", via: 'get'
+  match "/remove_passenger", to: "rides#remove_passenger", via: 'delete'
+  match "/get_picture_from_panoramio", to: "rides#get_picture_from_panoramio", via: 'get'
+  match "/update_photo/:id", to: "users#update_photo", via: 'patch'
+
+
+  #map.check_email "users/check_email", :controller => "users", :action => "check_email"
+  #map.resources :users
+
+  #map.resources :users, :collection => { :check_email => :get }
+
+
+  # HOW TO:
 
 
   #map.check_email "users/check_email", :controller => "users", :action => "check_email"

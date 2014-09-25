@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
+//= require bootstrap-switch
+//= require jquery.colorbox
 //= require turbolinks
 //= require_tree .
-
-

@@ -1,38 +1,238 @@
 <% provide(:title, @user.first_name) %>
-<div class="row">
-  <aside class="col-xs-4">
-    <section>
-      <h1>
-        <%= gravatar_for @user %>
-        <%= @user.first_name %> <%= @user.last_name %>
-      </h1>
-    </section>
-  </aside>
+<!--<div class="row">-->
+  <!--<aside class="col-xs-4">-->
+    <!--<section>-->
+      <!--<h1>-->
+        <%#= gravatar_for @user %>
+        <%#= @user.first_name %> <%#= @user.last_name %>
+      <!--</h1>-->
+    <!--</section>-->
+  <!--</aside>-->
 
-  <% if @user.rides.any? %>
-      <h3>Rides (<%= @user.rides.count %>)</h3>
+  <%# if @user.rides.any? %>
+      <!--<h3>Rides (<#%= @user.rides.count %>)</h3>-->
 
-      <div class="col-xs-8">
-        <table class="table table-condensed table-striped table-hover">
-          <thead>
-          <tr>
-            <th class="col-sm-2">From</th>
-            <th class="col-sm-2">Destination</th>
-            <th class="col-sm-2">Date</th>
-            <th class="col-sm-2">Seats</th>
-          </tr>
-          </thead>
-          <tbody>
-          <% @user.rides.each do |ride| %>
-              <tr>
-                <td><span><%= ride.departure_place %></span></td>
-                <td><span><%= ride.destination %></span></td>
-                <td><span><%= ride.departure_time %></span></td>
-                <td><span><%= pluralize(ride.free_seats, "seat") %></td>
-              </tr>
-          <% end %>
-          </tbody>
-        </table>
+      <!--<div class="col-xs-8">-->
+        <!--<table class="table table-condensed table-striped table-hover">-->
+          <!--<thead>-->
+          <!--<tr>-->
+            <!--<th class="col-sm-2">From</th>-->
+            <!--<th class="col-sm-2">Destination</th>-->
+            <!--<th class="col-sm-2">Date</th>-->
+            <!--<th class="col-sm-2">Seats</th>-->
+          <!--</tr>-->
+          <!--</thead>-->
+          <!--<tbody>-->
+          <!--<#% @user.rides.each do |ride| %>-->
+              <!--<tr>-->
+                <!--<td><span><#%= ride.departure_place %></span></td>-->
+                <!--<td><span><#%= ride.destination %></span></td>-->
+                <!--<td><span><#%= ride.departure_time %></span></td>-->
+                <!--<td><span><#%= pluralize(ride.free_seats, "seat") %></td>-->
+              <!--</tr>-->
+          <!--<#% end %>-->
+          <!--</tbody>-->
+        <!--</table>-->
+      <!--</div>-->
+  <!--<#% end %>-->
+<!--</div>-->
+
+<div class="container_main">
+  <div class="row" class="new_ride_background" id="main_img" style="margin-right: 0px; margin-top: 47px; background: url('<%= asset_path "MainCampusOrigin.png"%>')  no-repeat center center fixed">
+    <div class="ride_new_page_background">
+      <div class="row">
+        <div class="col-xs-1 col-md-3">
+        </div>
+        <div class="col-xs-9 col-md-6 ride_new_form" >
+          <div class="panel panel-primary" style="width: 100%; border: none;">
+            <div class="panel-body panel_body_background">
+              <div class="row" style="background-color: #428bca; margin: 2px 0 0; padding-bottom: 10px; padding-top: 16px;">
+                <div class="col-xs-8 col-md-8">
+                  <div style="float: left; margin-right: 10px;">
+                    <%= image_tag @user.avatar.url(:square), :style => "width: 100px;" %>
+                  </div>
+                  <div style="float: left; color: #beddf1;">
+                    <h5 style= "margin-bottom: 0; margin-top: 28%">
+                      <%= @user.first_name %>
+                    </h5>
+                    <h2 style= "margin-top: 2%;">
+                      <b><%= @user.last_name %></b>
+                    </h2>
+                  </div>
+                  <div style="clear: both"></div>
+                </div>
+                <div class="col-xs-4 col-md-4">
+                  <% if current_user && @user.id.eql?(current_user.id)%>
+                      <div style="float: right">
+                        <%= link_to (image_tag "camera.png", style: "width: 40px; cursor: pointer;"), "#inline_content", :class => "inline"%>
+                      </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="panel-heading" class="ride_new_heading" style="background-color: #428bca; border-color: #428bca;">
+                <div class="row">
+                  <div class="col-xs-4" style="color: #beddf1;">
+                    <p style="margin: 0"><img style="height: 17px; margin-right: 6px;" src='<%= asset_path "DriverIcon.png" %>'>
+                    <%= @user.rides.size %></p>
+                  </div>
+                  <div class="col-xs-4" style="color: #beddf1; text-align: center">
+                    <p style="margin: 0"><img style="height: 17px; margin-right: 6px;" src='<%= asset_path "PassengerIcon.png" %>'>
+                    <%= @user.relationships.where(user_id: @user.id, is_driving: false).size %></p>
+                  </div>
+                  <div class="col-xs-4" style="color: #beddf1;">
+                    <div style="float: right"><p style="margin: 0"><img style="height: 17px; margin-right: 6px;" src='<%= asset_path "StarIcon.png" %>'>
+                    <%= @user.rating_avg %></p></div>
+                  </div>
+                </div>
+              </div>
+              <% if @user.id != current_user.id %>
+                  <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.name"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.first_name, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.surname"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.last_name, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "EmailIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.email"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.email, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "PhoneIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.phone"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.phone_number, class:"control-label" %>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "CampusIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.faculty"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= label_tag :name, @user.department, class:"control-label" %>
+                    </div>
+                  </div>
+              <% else %>
+                <%= form_for(@user) do |f| %>
+                  <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.name"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :first_name, value: @user.first_name, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "ProfileIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.surname"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :last_name, value: @user.last_name, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "EmailIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :email, t("user.email"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :email, value: @user.email, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "PhoneIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.phone"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+
+                      <%= f.text_field :phone_number, value: @user.phone_number, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4">
+                      <img src='<%= asset_path "CampusIconBlack.png"%>' class="ride_new_icons">
+                      <%= label_tag :name, t("user.faculty"), class: "control-label", style: "font-weight: normal" %>
+                    </div>
+                    <div class="col-sm-7">
+                      <%= f.text_field :department, value: @user.department, class:"form-control" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group">
+                      <div class="col-sm-12">
+                        <%= f.submit t("form.edit"), class: "btn btn-primary" %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-1 col-md-3"></div>
       </div>
-  <% end %>
+      <div style='display:none'>
+        <div id='inline_content' style='padding:10px; background:#fff; text-align: center;'>
+          <label for="cover" style="float: none;">Profile Photo</label><br>
+          <%= image_tag @user.avatar.url(:square), id: "uploadPreview", style: "width: 100px; height: 100px;"%>
+          <%= form_for @user, :url => {:action => "update_photo"} do |f| %>
+              <div class="form-group" style="display: inline-table; margin-top: 10px;">
+                <%= f.file_field :avatar, id: "uploadImage", style: "border: none;" %>
+              </div>
+              <div class="form-group">
+                <%= f.submit "Submit", class: "btn btn-primary" %>
+              </div>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $(".inline").colorbox({inline:true, width:"40%"});
+
+        $("#uploadImage").change(function(){
+            var oFReader = new FileReader();
+            oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
+
+            oFReader.onload = function (oFREvent) {
+                document.getElementById("uploadPreview").src = oFREvent.target.result;
+            };
+        });
+    });
+</script>

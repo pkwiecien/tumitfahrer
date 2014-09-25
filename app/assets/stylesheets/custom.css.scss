@@ -1,5 +1,5 @@
 @import "bootstrap";
-
+@import "bootstrap3-switch";
 /* mixins, variables, etc. */
 
 $grayMediumLight: #eaeaea;
@@ -98,7 +98,7 @@ footer {
 /* Sections */
 
 .main-section {
-  # background: url('/assets/road.png');
+  background: url('/assets/road.png');
   background-color: $grayMediumLight;
   border-radius: 6px;
   margin: 20px;

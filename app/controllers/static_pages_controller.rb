@@ -12,4 +12,15 @@ class StaticPagesController < ApplicationController
   def contact
 
   end
+
+  def team
+
+  end
+  def privacy
+
+  end
+
+  def terms
+
+  end
 end

@@ -1,0 +1,164 @@
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+<%= javascript_include_tag "jquery.geocomplete.min.js" %>
+<%= javascript_include_tag "jquery.datetimepicker.js" %>
+<%= stylesheet_link_tag "jquery.datetimepicker.css" %>
+
+<div class="container_main">
+  <% provide(:title, "Search ride") %>
+
+  <div class="row new_ride_background main_div" id="main_img" style="background: url('<%= asset_path "MainCampusOrigin.png"%>')  no-repeat center center fixed">
+    <div class="ride_new_page_background">
+      <div class="row">
+          <div class="col-xs-1 col-md-3">
+          </div>
+          <div class="col-xs-10 col-md-6 ride_new_form" >
+            <div class="panel panel-primary" style="width: 100%; border: none;">
+              <div class="panel-heading" class="ride_new_heading">
+                <img class="panel_heading_image" src='<%= asset_path "DetailsIcon.png" %>'>
+                <h3 class="panel-title" style="color: #beddf1;"><%= t("ride.search") %></h3>
+              </div>
+              <div class="panel-body panel_body_background">
+
+                  <%= form_tag("/search_rides", method: :get) do %>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-md-6">
+                        <div>
+                            <img src='<%= asset_path "DepartureIconBlack.png"%>' class="ride_new_icons">
+                            <%= label_tag :departure_place, t("ride.departure_place"), class: "control-label"%>
+                        </div>
+                        <div>
+                            <%= text_field_tag :departure_place, @departure_place, class:"form-control" %>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 col-md-6">
+                        <div>
+                          <img src='<%= asset_path "DepartureIconBlack.png"%>' class="ride_new_icons">
+                          <%= label_tag :departure_threshold, t("ride.departure_place_threshold"), class: "control-label"%>
+                        </div>
+                        <div>
+                          <%= text_field_tag :departure_place_threshold, @departure_threshold, class:"form-control" %>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="col-xs-12 col-md-6">
+                        <div>
+                          <img src='<%= asset_path "DestinationIconBlack.png"%>' class="ride_new_icons">
+                          <%= label_tag :destination, t("ride.destination_place"), class: "control-label"%>
+                        </div>
+                        <div>
+                          <%= text_field_tag :destination, @destination, class:"form-control" %>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 col-md-6">
+                        <div>
+                          <img src='<%= asset_path "DestinationIconBlack.png"%>' class="ride_new_icons">
+                          <%= label_tag :destination_threshold, t("ride.destination_place_threshold"), class: "control-label"%>
+                        </div>
+                        <div>
+                          <%= text_field_tag :destination_threshold, @destination_threshold, class:"form-control" %>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="col-xs-12 col-md-6">
+                        <div>
+                            <img src='<%= asset_path "CalendarIconBlack@2x.png"%>' class="ride_new_icons">
+                            <%= label_tag :departure_time, t("ride.departure_time"), class: "control-label" %>
+                        </div>
+                        <div>
+                            <%= text_field_tag :departure_time, @departure_time, class:"form-control" %>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 col-md-6">
+                        <div>
+                          <%= label_tag :ride_type, t("ride.choose_ride_type"), class: "control-label"%>
+                        </div>
+                          <div class="btn-group btn-toggle" data-toggle="buttons" style="width: 100%;">
+                            <label class="btn btn-primary active" style="width: 50%;">
+                              <img src='<%= asset_path "CampusIcon.png"%>' style="height: 16px">
+                              <%= radio_button_tag :ride_type, 0, @ride_type.equal?(0) ? "class: active" : "" %> <%= t("ride.Campus") %>
+                            </label>
+                            <label class="btn btn-default" style="width: 50%;">
+                              <img src='<%= asset_path "ActivityIntroIcon.png"%>' style="height: 16px">
+                              <%= radio_button_tag :ride_type, 1, @ride_type.equal?(1) ? "class: active" : "" %> <%= t("ride.activity") %>
+                            </label>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="form-group" style="margin: 15px;">
+                        <%= submit_tag "Search", class: "btn btn-large btn-primary" %>
+                    </div>
+
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <div class="col-xs-1 col-md-3"></div>
+      </div>
+      <% if @rides.any? %>
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-1 col-md-3"></div>
+            <div class="col-xs-10 col-md-6" style="padding: 0">
+              <div class="panel panel-primary" style="width: 100%; border: none;">
+                <div class="panel-body panel_body_background">
+
+                  <% @rides.each_with_index do |ride, i| %>
+                      <div class="row" style="border-bottom: solid 1px;">
+                          <div class="col-md-3">
+                            <% if ride.relationships.first.is_driving == true %>
+                                <img src="<%= asset_path "DriverIcon.png" %>" style="height: 46px; margin-top:15px; float:left; background-color: #0076b3; padding: 8px">
+                            <% elsif ride.relationships.first.is_driving == false %>
+                                <img src="<%= asset_path "PassengerIcon.png" %>" style="height: 46px; margin-top:15px; float: left;  background-color: #0076b3; padding: 8px">
+                            <% end %>
+                            <% if ride.ride_type == 0%>
+                                <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+                            <% else %>
+                                <img class="img-responsive" id="destination_image" src='<%= @rides_pic[i] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+                            <% end %>
+                            <div style="clear: both"></div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <h4 style="color: #0076b3"> &nbsp;<%= ride.departure_place %> -> <%= ride.destination %></h4>
+                            <p> &nbsp;
+                              <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride.departure_time.strftime("%d-%m-%Y") %> &nbsp;
+                              <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride.departure_time.strftime("%I:%M %P") %> &nbsp;
+                              <% if ride.relationships.first.is_driving == true%>
+                                  <img src="<%= asset_path "SeatsIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride.free_seats %>
+                              <% end %>
+                            </p>
+                          </div>
+                        <div class="col-md-3">
+                          <%= link_to "rides/#{ride.id}", {method: :get, class: "btn btn-success", style: "float: right; margin-top: 10%; height: 48px; padding: 12px;"} do %>
+                              View Offer <span class="glyphicon glyphicon-chevron-right"></span>
+                          <% end %>
+                        </div>
+                      </div>
+                  <% end %>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-1 col-md-3"></div>
+            <%= will_paginate @rides, :renderer => WillPaginate::ActionView::LinkRenderer %>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+    $("#departure_place").geocomplete();
+    $("#destination").geocomplete();
+    $('#departure_time').datetimepicker({timepicker:false, format:'Y-m-d'});
+
+    $('.btn-toggle').click(function() {
+        if ($(this).find('.btn-primary').size()>0) {
+            $(this).find('.btn').toggleClass('btn-primary');
+        }
+        $(this).find('.btn').toggleClass('btn-default');
+    });
+</script>

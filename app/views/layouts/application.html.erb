@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="TUMitfahrer">
   <title><%= full_title(yield(:title)) %></title>
   <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "jumbotron", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <!--just steal some css code from ng-newsletter.com, Lukas will re-design the css-->
-  <link rel="stylesheet" href="http://www.ng-newsletter.com/css/site.css?cb=12">
+  <!--<link rel="stylesheet" href="http://www.ng-newsletter.com/css/site.css?cb=12">-->
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
 </head>
@@ -13,15 +20,19 @@
 
 <%= render 'layouts/header' %>
 
-<div class="container">
+<!--<div class="container">-->
   <% flash.each do |key, value| %>
-      <div class="alert alert-<%= key %>"><%= value %></div>
+    <% if signed_in? %>
+      <div class="alert alert-<%= key %>" style="margin-bottom: 0px; margin-top: 40px;"><%= value %></div>
+    <% else %>
+      <div class="alert alert-<%= key %>" style="margin-bottom: 0px;"><%= value %></div>
+    <% end %>
   <% end %>
 
   <%= yield %>
   <%= render 'layouts/footer' %>
   <%= debug(params) if Rails.env.development? %>
-</div>
+<!--</div>-->
 
 
 </body>
