@@ -101,7 +101,6 @@ GEM
     minitest (5.4.0)
     multi_json (1.10.1)
     multi_xml (0.5.5)
-    mysql2 (0.3.16)
     netrc (0.7.7)
     newrelic_rpm (3.8.0.218)
     nokogiri (1.6.1)
@@ -111,6 +110,7 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
+    pg (0.15.1)
     polyglot (0.3.5)
     push-core (1.0.4)
       multi_json (>= 1.3.2)
@@ -230,9 +230,9 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-colorbox-rails
   jquery-rails
-  mysql2
   newrelic_rpm
   paperclip
+  pg (= 0.15.1)
   push-gcm
   railroady
   rails (~> 4.1)

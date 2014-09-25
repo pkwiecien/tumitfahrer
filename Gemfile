@@ -34,9 +34,9 @@ gem 'bootstrap-switch-rails', '~> 3.0.0'
 
 group :development, :production do
   # postgres database
-  #gem 'pg', '0.15.1'
+  gem 'pg', '0.15.1'
   gem 'rails_12factor', '0.0.2'
-  gem 'mysql2'
+  #gem 'mysql2'
 
 end
 
