@@ -13,6 +13,24 @@
 
 ActiveRecord::Schema.define(version: 20140725082712) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "adminpack"
+
+  create_table "api_keys", force: true do |t|
+    t.string   "access_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contributions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.float    "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "conversations", force: true do |t|
     t.integer  "ride_id"
     t.datetime "created_at"
@@ -39,6 +57,29 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "friendship_requests", force: true do |t|
+    t.integer  "from_user_id"
+    t.integer  "to_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "friendships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "friend_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
+  add_index "friendships", ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true, using: :btree
+  add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
+
+  create_table "gcms", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "host"
     t.string   "format"
     t.string   "key"
@@ -52,6 +93,46 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.integer  "conversation_id"
     t.integer  "sender_id"
     t.integer  "receiver_id"
+  end
+
+  create_table "notifications", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.string   "message_type"
+    t.datetime "date_time"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "message"
+    t.integer  "extra"
+  end
+  
+  create_table "organized_rides", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "payments", force: true do |t|
+    t.integer  "from_user_id"
+    t.integer  "to_user_id"
+    t.integer  "ride_id"
+    t.float    "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "projects", force: true do |t|
+    t.integer  "phase"
+    t.float    "fundings_target"
+    t.integer  "owner_id"
+    t.string   "description"
+    t.string   "title"
+    t.datetime "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "ride_id"
   end
 
   create_table "push_configurations", force: true do |t|
@@ -115,7 +196,7 @@ ActiveRecord::Schema.define(version: 20140725082712) do
   end
 
   add_index "relationships", ["ride_id"], name: "index_relationships_on_ride_id", using: :btree
-  add_index "relationships", ["user_id", "ride_id"], name: "index_relationships_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "relationships", ["user_id", "ride_id", "is_driving"], name: "index_relationships_on_user_id_and_ride_id_and_is_driving", unique: true, using: :btree
   add_index "relationships", ["user_id"], name: "index_relationships_on_user_id", using: :btree
 
   create_table "requests", force: true do |t|
@@ -144,17 +225,15 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.string   "meeting_point"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "realtime_km",             limit: 24
-    t.float    "price",                   limit: 24
-    t.datetime "realtime_departure_time"
-    t.float    "duration",                limit: 24
-    t.datetime "realtime_arrival_time"
-    t.boolean  "is_finished"
+    t.float    "price"
+    t.boolean  "is_paid"
+    t.integer  "rideType"
+    t.float    "distance"
     t.integer  "ride_type"
-    t.float    "departure_latitude",      limit: 24
-    t.float    "departure_longitude",     limit: 24
-    t.float    "destination_latitude",    limit: 24
-    t.float    "destination_longitude",   limit: 24
+    t.float    "departure_latitude"
+    t.float    "departure_longitude"
+    t.float    "destination_latitude"
+    t.float    "destination_longitude"
     t.string   "car"
     t.integer  "rating_id"
     t.datetime "last_cancel_time"
@@ -162,6 +241,28 @@ ActiveRecord::Schema.define(version: 20140725082712) do
   end
 
   add_index "rides", ["user_id"], name: "index_rides_on_user_id", using: :btree
+
+  create_table "rides_as_drivers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rides_as_drivers", ["ride_id"], name: "index_rides_as_drivers_on_ride_id", using: :btree
+  add_index "rides_as_drivers", ["user_id", "ride_id"], name: "index_rides_as_drivers_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "rides_as_drivers", ["user_id"], name: "index_rides_as_drivers_on_user_id", using: :btree
+
+  create_table "rides_as_passengers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rides_as_passengers", ["ride_id"], name: "index_rides_as_passengers_on_ride_id", using: :btree
+  add_index "rides_as_passengers", ["user_id", "ride_id"], name: "index_rides_as_passengers_on_user_id_and_ride_id", unique: true, using: :btree
+  add_index "rides_as_passengers", ["user_id"], name: "index_rides_as_passengers_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first_name"
@@ -177,11 +278,11 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.boolean  "admin"
     t.string   "api_key"
     t.boolean  "is_student"
-    t.float    "rating_avg",          limit: 24
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.float    "rating_avg"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

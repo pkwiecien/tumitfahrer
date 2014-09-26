@@ -34,7 +34,11 @@ class Api::V2::RequestsController < ApiController
     @new_request = ride.create_ride_request params[:passenger_id]
 
     unless @new_request.nil?
-      render json: {request: @new_request}, status: :created
+      #Added by Behroz - Send notification to driver that user wants to join the ride - 16-06-2014 - Start
+      Notification.user_join(params[:ride_id])
+      #Added by Behroz - 16-06-2014 - End
+
+	    render json: {request: @new_request}, status: :created
     else
       render json: {request: []}, status: :bad_request
     end
@@ -48,10 +52,13 @@ class Api::V2::RequestsController < ApiController
     ride = Ride.find_by(id: params[:ride_id])
     passenger = User.find_by(id: params[:passenger_id])
     return render json: {status: :not_found} if ride.nil? || passenger.nil?
-
+    
     ride.accept_ride_request ride.ride_owner.id, passenger.id, params[:confirmed].to_i
-    # TODO: send push notification if request was confirmed or rejected
 
+    #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - Start
+    Notification.accept_request(passenger.id, ride.id, ride[:departure_time])
+    #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - End
+    
     respond_to do |format|
       format.xml { render xml: {:message => "Request handled successfully"}, :status => :ok }
       format.any { render json: {:message => "Request handled successfully"}, :status => :ok }
@@ -66,15 +73,18 @@ class Api::V2::RequestsController < ApiController
     ride = Ride.find_by(id: params[:ride_id])
     return render json: {message: "Ride not found"}, status: :not_found if ride.nil?
 
+    #Changed by Behroz - When request is declined by driver. We need to insert the notification. Start 18-06-2014
+    request = Request.find_by(id: params[:id])
+    Notification.decline_request(request.ride_id, request.passenger_id)
+    #Changed by Behroz - When request is declined by driver. We need to insert the notifacation. End 18-06-2014
+
     ride.remove_ride_request params[:id]
 
     respond_to do |format|
       format.xml { render xml: {message: "Request successfully deleted"}, :status => :ok }
       format.any { render json: {message: "Request successfully deleted"}, :status => :ok }
     end
-
   end
-
 
   private
 

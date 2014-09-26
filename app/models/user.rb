@@ -44,6 +44,10 @@ require 'securerandom'
 class User < ActiveRecord::Base
 
   # Active Record relationships
+
+  #Added by Behroz
+  has_many :notifications
+
   has_many :relationships, foreign_key: :user_id
   has_many :rides
   has_many :devices

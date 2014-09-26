@@ -19,6 +19,10 @@ require 'geocoder'
 class Ride < ActiveRecord::Base
 
   # Active Record relationships
+
+  #Added by Behroz
+  has_many :notifications
+
   has_many :relationships, dependent: :delete_all
   has_many :users
   has_many :requests
@@ -94,6 +98,11 @@ class Ride < ActiveRecord::Base
       @ride.update_attributes!(user_id: current_user.id)
       @ride.relationships.create!(user: current_user, is_driving: is_driving)
       if @ride.save
+
+        #Added by Behroz - Insert data in notification table - Start - 10-June-2014
+        Notification.driver_pickup(current_user.id, @ride.id, @ride.departure_time)
+        #Added by Behroz - Insert data in notification table - End - 10-June-2014
+
         return @ride
       end
     end
@@ -149,6 +158,12 @@ class Ride < ActiveRecord::Base
 
     passenger = relationships.where("user_id = ? AND is_driving = false", passenger_id).first
     if passenger != nil
+
+      #Changed by Behroz - 27 June-2014 - Start
+      #Since, we are deleting the passenger from the passenger list. We need to inform the driver that passenger has left the ride
+      notifications.reservation_cancelled(driver_id,passenger_id, self.id )
+      #Changed by Behroz - 27 June-2014 - End
+
       passenger.destroy
       self.remove_conversation_between_users driver_id, passenger_id
       self.update_attributes(updated_at: Time.zone.now, last_cancel_time: Time.zone.now)
