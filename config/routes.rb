@@ -2,23 +2,24 @@ Tumitfahrer::Application.routes.draw do
 
   namespace :api do
     # API v1 Routes
-    namespace :v1, :defaults => { :format => 'json' } do
-      resource :search
-      resources :users do
-        match '/rides', to: 'rides#get_user_rides', via: :get
-        resources :rides do
-          resources :requests
-        end
-        resources :devices
-        resources :ratings
-        resources :messages
-      end
-      resources :rides do
-        resources :passengers
-      end
-      resource :sessions
-      resources :projects
-    end
+    # uncomment to switch on api v1 (it is depreciated, though)
+    # namespace :v1, :defaults => { :format => 'json' } do
+    #   resource :search
+    #   resources :users do
+    #     match '/rides', to: 'rides#get_user_rides', via: :get
+    #     resources :rides do
+    #       resources :requests
+    #     end
+    #     resources :devices
+    #     resources :ratings
+    #     resources :messages
+    #   end
+    #   resources :rides do
+    #     resources :passengers
+    #   end
+    #   resource :sessions
+    #   resources :projects
+    # end
     # API v2 Routes
     namespace :v2, :defaults => { :format => 'json' } do
       match '/activities/badges', to: 'activities#get_badge_counter', via: :get

@@ -10,7 +10,7 @@ class Api::V2::ForgotsController < ApiController
       new_password = User.generate_new_password
       hashed_password = User.generate_hashed_password(new_password)
       @user.update_attributes!(password: hashed_password, password_confirmation: hashed_password)
-      UserMailer.welcome_email(@user, new_password).deliver
+      UserMailer.forgot_email(@user, new_password).deliver
 
       respond_to do |format|
         format.json { render json: {:message => "Reminder sent"}, status: :created }

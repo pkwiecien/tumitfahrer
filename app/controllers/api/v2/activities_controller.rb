@@ -12,7 +12,16 @@ class Api::V2::ActivitiesController < ApplicationController
     campus_rides = Ride.order(created_at: :desc).where("ride_type = ? AND departure_time > ?", 0, Time.now).limit(@@num_page_results)
     activity_rides = Ride.order(created_at: :desc).where("ride_type = ? AND departure_time > ?", 1, Time.now).limit(@@num_page_results)
 
-    @activities[:rides] = campus_rides + activity_rides
+    all_rides = campus_rides + activity_rides
+
+    result_rides = []
+    all_rides.each do |ride|
+      ride_attributes = ride.attributes
+      ride_attributes[:is_ride_request] = ride.is_ride_request
+      result_rides.append(ride_attributes)
+    end
+    @activities[:rides] = result_rides
+
     @activities[:ride_searches] = RideSearch.order(created_at: :desc).limit(@@num_page_results)
     @activities[:requests] = Request.order(created_at: :desc).limit(@@num_page_results)
 
