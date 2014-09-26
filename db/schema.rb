@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140725082712) do
+ActiveRecord::Schema.define(version: 20140727140308) do
+#TODO: Need to remove unused schemas
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "conversations", force: true do |t|
     t.integer  "ride_id"
@@ -39,9 +42,6 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "host"
-    t.string   "format"
-    t.string   "key"
   end
 
   create_table "messages", force: true do |t|
@@ -52,6 +52,18 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.integer  "conversation_id"
     t.integer  "sender_id"
     t.integer  "receiver_id"
+  end
+
+  create_table "notifications", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "ride_id"
+    t.string   "message_type"
+    t.datetime "date_time"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "message"
+    t.integer  "extra"
   end
 
   create_table "push_configurations", force: true do |t|
@@ -144,17 +156,17 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.string   "meeting_point"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "realtime_km",             limit: 24
-    t.float    "price",                   limit: 24
+    t.float    "realtime_km"
+    t.float    "price"
     t.datetime "realtime_departure_time"
-    t.float    "duration",                limit: 24
+    t.float    "duration"
     t.datetime "realtime_arrival_time"
     t.boolean  "is_finished"
     t.integer  "ride_type"
-    t.float    "departure_latitude",      limit: 24
-    t.float    "departure_longitude",     limit: 24
-    t.float    "destination_latitude",    limit: 24
-    t.float    "destination_longitude",   limit: 24
+    t.float    "departure_latitude"
+    t.float    "departure_longitude"
+    t.float    "destination_latitude"
+    t.float    "destination_longitude"
     t.string   "car"
     t.integer  "rating_id"
     t.datetime "last_cancel_time"
@@ -177,7 +189,7 @@ ActiveRecord::Schema.define(version: 20140725082712) do
     t.boolean  "admin"
     t.string   "api_key"
     t.boolean  "is_student"
-    t.float    "rating_avg",          limit: 24
+    t.float    "rating_avg"
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"

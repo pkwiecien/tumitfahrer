@@ -152,6 +152,9 @@ class Api::V2::RidesController < ApiController
 
     if params.has_key?(:regular_ride_id)
       rides = Ride.where(regular_ride_id: params[:regular_ride_id])
+      #Added by Behroz - insert the notification - 16-06-2014 - Start
+      Notification.cancel_ride(params[:id], params[:user_id])
+      #Added by Behroz - insert the notification - 16-06-2014 - End
       rides.destroy_all
     else
       ride = Ride.find_by(id: params[:id])
