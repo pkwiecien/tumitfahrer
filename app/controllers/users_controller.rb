@@ -109,33 +109,6 @@ class UsersController < ApplicationController
     return render json: {status: :ok, url: url}
   end
 
-  private
-
-  def get_picture lat, lng
-    lat = lat
-    lng = lng
-    options = {}
-    points = Geocoder::Calculations.bounding_box([lat, lng], 10, { :unit => :mi })
-    options.merge!({
-                       :miny => points[0],
-                       :minx => points[1],
-                       :maxy => points[2],
-                       :maxx => points[3]
-                   })
-    panoramio_options = DEFAULT_OPTIONS
-    panoramio_options.merge!(options)
-    response = RestClient.get URL, :params => panoramio_options
-    if response.code == 200
-      parse_data = JSON.parse(response.to_str)
-      url = parse_data['photos'][0]['photo_file_url']
-    else
-      raise "Panoramio API error: #{response.code}. Response #{response.to_str}"
-      url = ""
-    end
-    url
-  end
-
-
   def show
     #TODO: REMOVE THE FOLLOWING CODE JUST FOR TESTING BY BEHROZ
     #@result = Notification.get_notification_list
@@ -191,5 +164,30 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     redirect_to root_url unless current_user?(@user)
   end
+
+  def get_picture lat, lng
+    lat = lat
+    lng = lng
+    options = {}
+    points = Geocoder::Calculations.bounding_box([lat, lng], 10, { :unit => :mi })
+    options.merge!({
+                       :miny => points[0],
+                       :minx => points[1],
+                       :maxy => points[2],
+                       :maxx => points[3]
+                   })
+    panoramio_options = DEFAULT_OPTIONS
+    panoramio_options.merge!(options)
+    response = RestClient.get URL, :params => panoramio_options
+    if response.code == 200
+      parse_data = JSON.parse(response.to_str)
+      url = parse_data['photos'][0]['photo_file_url']
+    else
+      raise "Panoramio API error: #{response.code}. Response #{response.to_str}"
+      url = ""
+    end
+    url
+  end
+
 end
 
