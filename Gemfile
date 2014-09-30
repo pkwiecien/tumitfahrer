@@ -95,6 +95,9 @@ gem 'rest-client'
 
 gem 'jquery-colorbox-rails'
 
+# Whenever Gem for Cron Job
+gem 'whenever', :require => false
+
 # Use unicorn as the app server
 # gem 'unicorn'
 
