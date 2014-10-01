@@ -159,6 +159,11 @@ class Api::V2::RidesController < ApiController
     else
       ride = Ride.find_by(id: params[:id])
       return render json: {message: "Could not destroy a ride"}, status: :not_found if ride.nil?
+
+      #Added by Behroz - insert the notification - 16-06-2014 - Start
+      Notification.cancel_ride(params[:id], params[:user_id])
+      #Added by Behroz - insert the notification - 16-06-2014 - End
+
       ride.destroy
     end
 
