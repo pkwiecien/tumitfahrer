@@ -30,6 +30,11 @@ class RequestsController < ApplicationController
       flash[:error] = "You have already request pending for this ride."
     else
       @new_request = ride.create_ride_request params[:passenger_id]
+      unless @new_request
+        #Added by Behroz - Send notification to driver that user wants to join the ride - 16-06-2014 - Start
+        Notification.user_join(params[:ride_id])
+        #Added by Behroz - 16-06-2014 - End
+      end
     end
 
     redirect_to request.referer
@@ -42,7 +47,10 @@ class RequestsController < ApplicationController
     passenger = User.find_by(id: params[:passenger_id])
 
     ride.accept_ride_request ride.ride_owner.id, passenger.id, params[:confirmed].to_i
-    # TODO: send push notification if request was confirmed or rejected
+
+    #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - Start
+    Notification.accept_request(passenger.id, ride.id, ride[:departure_time])
+    #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - End
 
     redirect_to request.referer
   end
@@ -50,6 +58,12 @@ class RequestsController < ApplicationController
   # DELETE /api/v2/rides/:ride_id/requests/:id
   def destroy
     ride = Ride.find_by(id: params[:ride_id])
+
+    #Changed by Behroz - When request is declined by driver. We need to insert the notification. Start 18-06-2014
+    request = Request.find_by(id: params[:id])
+    Notification.decline_request(request.ride_id, request.passenger_id)
+    #Changed by Behroz - When request is declined by driver. We need to insert the notifacation. End 18-06-2014
+
     ride.remove_ride_request params[:id]
 
     redirect_to request.referer

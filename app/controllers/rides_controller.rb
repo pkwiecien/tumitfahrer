@@ -145,6 +145,11 @@ class RidesController < ApplicationController
   def destroy
     if params.has_key?(:regular_ride_id)
       rides = Ride.where(regular_ride_id: params[:regular_ride_id])
+
+      #Added by Behroz - insert the notification - 16-06-2014 - Start
+      Notification.cancel_ride(params[:id], current_user.id)
+      #Added by Behroz - insert the notification - 16-06-2014 - End
+
       rides.destroy_all
     else
       ride = Ride.find_by(id: params[:id])
@@ -152,6 +157,11 @@ class RidesController < ApplicationController
         flash[:error] = "Ride not found."
         redirect_to root_url
       end
+
+      #Added by Behroz - insert the notification - 16-06-2014 - Start
+      Notification.cancel_ride(params[:id], current_user.id)
+      #Added by Behroz - insert the notification - 16-06-2014 - End
+
       ride.destroy
     end
 
