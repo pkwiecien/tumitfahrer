@@ -79,11 +79,11 @@
                           <div class="btn-group btn-toggle" data-toggle="buttons" style="width: 100%;">
                             <label class="btn btn-primary active" style="width: 50%;">
                               <img src='<%= asset_path "CampusIcon.png"%>' style="height: 16px">
-                              <%= radio_button_tag :ride_type, 0, @ride_type.equal?(0) ? "class: active" : "" %> <%= t("ride.Campus") %>
+                              <%= radio_button_tag :ride_type, 0 %> <%= t("ride.Campus") %>
                             </label>
                             <label class="btn btn-default" style="width: 50%;">
                               <img src='<%= asset_path "ActivityIntroIcon.png"%>' style="height: 16px">
-                              <%= radio_button_tag :ride_type, 1, @ride_type.equal?(1) ? "class: active" : "" %> <%= t("ride.activity") %>
+                              <%= radio_button_tag :ride_type, 1 %> <%= t("ride.activity") %>
                             </label>
                           </div>
                       </div>
