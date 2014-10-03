@@ -6,7 +6,7 @@
 #  destination             :string
 #  departure_time          :datetime
 #  meeting_point           :string
-#  free_seats              :string
+#  free_seats              :integer
 #  is_paid                 :boolean
 #  price                   :float
 #  is_finished             :boolean
