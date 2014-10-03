@@ -37,7 +37,7 @@
                       <%= f.label :department, t("user.department"), class: "control-label"%>
                     </div>
                     <div class="col-sm-7">
-                      <%= f.text_field :department, class:"form-control" %>
+                      <%= f.select :department, options_for_select(["Architecture", "Chemistry", "Civil,Geo,Env.Eng", "Electrical,Engineering","Informatics", "Life and Food science","Mathematics","Mechanical Engineering", "Medicine","Physics", "Sport and Health Science", "TUM school of Education", "TUM School of Management"]) %>
                     </div>
                   </div>
                   <div class="form-group">
