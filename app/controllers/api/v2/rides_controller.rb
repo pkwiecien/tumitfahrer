@@ -7,8 +7,27 @@ class Api::V2::RidesController < ApiController
   # GET /api/v2/rides
   def index
 
-    if params.has_key?(:from_date)
+	if params.has_key?(:from_date)
       get_rides_from_date  Time.zone.parse(params[:from_date]), params[:ride_type].to_i
+    elsif params.has_key?(:ride_type)
+      page = 0
+
+      if params.has_key?(:page)
+        page = params[:page].to_i
+      end
+
+      if params[:ride_type].eql?(1)
+        rides = Ride.where("ride_type = ? AND departure_time > ?", 1, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
+      else
+        rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
+      end
+
+      unless rides.nil?
+        respond_with rides, status: :ok
+      else
+        respond_with :rides => [], status: :no_content
+      end
+
     else
       page = 0
 
