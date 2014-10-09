@@ -16,7 +16,7 @@ class Api::V2::RidesController < ApiController
         page = params[:page].to_i
       end
 
-      if params[:ride_type].eql?(1)
+      if params[:ride_type].eql?("1")
         rides = Ride.where("ride_type = ? AND departure_time > ?", 1, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
       else
         rides = Ride.where("ride_type = ? AND departure_time > ?", 0, Time.now).order(departure_time: :desc).offset(page*@@num_page_results).limit(@@num_page_results)
