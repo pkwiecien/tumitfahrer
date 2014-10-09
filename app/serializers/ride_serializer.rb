@@ -1,6 +1,6 @@
 class RideSerializer < ActiveModel::Serializer
   attributes :id, :departure_place, :destination, :meeting_point, :free_seats, :departure_time,
-   :price, :ride_owner, :is_ride_request, :requests, :passengers, :conversations, :ratings, :is_paid,
+   :price, :ride_owner, :is_ride_request, :requests, :passengers, :conversations, :ratings, 
    :ride_type, :car, :last_cancel_time, :regular_ride_id, :created_at, :updated_at
 
   has_many :conversations, serializer: SimpleConversationSerializer
