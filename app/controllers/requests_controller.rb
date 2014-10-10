@@ -30,9 +30,9 @@ class RequestsController < ApplicationController
       flash[:error] = "You have already request pending for this ride."
     else
       @new_request = ride.create_ride_request params[:passenger_id]
-      unless @new_request
+      unless @new_request.nil?
         #Added by Behroz - Send notification to driver that user wants to join the ride - 16-06-2014 - Start
-        Notification.user_join(params[:ride_id])
+        Notification.user_join(params[:ride_id], @new_request.id)
         #Added by Behroz - 16-06-2014 - End
       end
     end
