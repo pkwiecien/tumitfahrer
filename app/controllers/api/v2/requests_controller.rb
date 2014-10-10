@@ -35,7 +35,7 @@ class Api::V2::RequestsController < ApiController
 
     unless @new_request.nil?
       #Added by Behroz - Send notification to driver that user wants to join the ride - 16-06-2014 - Start
-      Notification.user_join(params[:ride_id])
+      Notification.user_join(params[:ride_id], @new_request.id)
       #Added by Behroz - 16-06-2014 - End
 
 	    render json: {request: @new_request}, status: :created
