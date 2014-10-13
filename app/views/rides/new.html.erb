@@ -28,14 +28,14 @@
                     <div class="form-group">
                         <%= f.label :is_driving,  t("ride.i_am") , class: "col-sm-4 control-label" %>
                         <div class="col-sm-7" style="margin-bottom: 15px;">
-                            <div class="btn-group btn-toggle" data-toggle="buttons" style="width: 100%">
-                              <label class="btn btn-primary active" style="width: 50%">
+                            <div class="btn-group btn-toggle active" data-toggle="buttons" style="width: 100%">
+                              <label class="btn btn-default" style="width: 50%">
                                 <img src='<%= asset_path "DriverIcon.png"%>' style="height: 16px">
                                 <%= radio_button_tag :is_driving, 1 %> <%= t("ride.driver")%>
                               </label>
-                              <label class="btn btn-default" style="width: 50%">
+                              <label class="btn btn-primary " style="width: 50%">
                                 <img src='<%= asset_path "PassengerIcon.png"%>' style="height: 16px;">
-                                <%= radio_button_tag :is_driving, 0, :checked => true %> <%= t("ride.passenger")%>
+                                <%= radio_button_tag :is_driving, 0%> <%= t("ride.passenger")%>
                               </label>
                             </div>
                         </div>
@@ -98,11 +98,11 @@
                       <%= f.label :ride_type, t("ride.choose_ride_type"), class: "col-sm-4 control-label" %><br />
                       <div class="col-sm-7" style="margin-bottom: 15px;">
                         <div class="btn-group btn-toggle" data-toggle="buttons" style="width: 100%;">
-                          <label class="btn btn-primary active" style="width: 50%">
+                          <label class="btn btn-default active" style="width: 50%">
                             <img src='<%= asset_path "CampusIcon.png"%>' style="height: 16px">
                             <%= f.radio_button :ride_type, 0 %> <%= t("ride.Campus") %>
                           </label>
-                          <label class="btn btn-default" style="width: 50%">
+                          <label class="btn btn-primary" style="width: 50%">
                             <img src='<%= asset_path "ActivityIntroIcon.png"%>' style="height: 16px">
                             <%= f.radio_button :ride_type, 1 %> <%= t("ride.activity") %>
                           </label>
@@ -224,6 +224,8 @@
         }
         $(this).find('.btn').toggleClass('btn-default');
     });
+
+    $('.btn-toggle').click();
     $('#ride_destination').change(function(){
         $.ajax({
             type:"GET",
