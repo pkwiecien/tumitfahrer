@@ -66,6 +66,6 @@ class RequestsController < ApplicationController
 
     ride.remove_ride_request params[:id]
 
-    redirect_to request.referer
+    redirect_to "/rides/" + params[:ride_id]
   end
 end
