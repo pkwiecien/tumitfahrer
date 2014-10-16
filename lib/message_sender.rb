@@ -35,11 +35,18 @@ class MessageSender
         elsif(notification.device_type == 'VisioM')
                #Send a post request to the VisioM server. Url is of the format 'http://thewebsite.net'
                #device_id should be the URL of the car
-            MessageSender.send_visiom_notification(notification.device_id, notification.message)
+
+          #Only send notifications to VisioM if the message type is either Driver pick up alert or User join request
+          notifObj = Notification.find_by(:id, notification.notification_id)
+          if(notifObj.message_type == 1 || notifObj.message_type == 7)
+            MessageSender.send_visiom_notification(notification.device_id, notification.message, notification.notification_id, notifObj)
             Notification.update_status(notification.notification_id, notification.message)
+          else
+            puts("UPDATE: VisoM => Ignoring message type -->" + notifObj.message_type.to_s)
+          end
         end
       rescue
-        puts("ERROR: While sending push notification: "+notification.notification_id)
+        puts("ERROR: While sending push notification: "+notification.notification_id.to_s)
       end
     end
   end
@@ -89,8 +96,60 @@ class MessageSender
   end
 
   #Thsi function sends a POST request to the URL of the car. Car fetches the message from the POST request and puts it on the bus
-  def self.send_visiom_notification(url,message)
-    response = Net::HTTP.post_form(URI.parse(url), {'notification'=>message})
+  def self.send_visiom_notification(url,message, notification_id, notifObj)
+
+    #{
+     #   "type": "Driver Pickup Alert",
+      #  "id": 6,
+       # "name": "TUMitfahrer",
+        #"address": "address",
+        #"image": "image"
+
+    #Extra:
+    # destination longtitude
+    # destination lattitude
+    # call back URL
+    #
+    #}
+
+    #TODO: Find image URL, type of notification
+    #TODO: The function should work only for 2 types of notification ... driver pickup and accept/decline
+
+    message_type = notifObj.message_type
+
+    if(message_type == 1)
+      message_type_string = 'Driver Pickup Alert'
+    else if (message_type == 7)
+      message_type_string = 'User Join Request'
+       end
+    end
+
+    #Create call back url for accept/decline user join request
+    request_id = notifObj.extra
+    request = Request.find_by(:id,request_id)
+
+    #http://localhost:3000/api/v2/rides/8/requests/5?passenger_id=2
+    callbackURL = '/api/v2/rides/' + request.ride_id + '/requests/' + request_id + '?passenger_id=' + request.passenger_id
+
+    ride = Ride.find_by(:id,request.ride_id)
+    latitude = ride.destination_latitude
+    longitude = ride.destination_longitude
+
+    user_image_url = ''
+
+    json_string ='{
+                    \"type\":    ' + message_type_string +  ',
+                    \"id\":      ' + notification_id.to_s + ',
+                    \"name\":        "TUMitfahrer",
+                    \"address\": ' + message +              ',
+                    \"image\":   ' +  user_image_url +      ',
+                    \"url\":     ' + callbackURL +          ',
+                    \"latt\":    ' + latitude.to_s +        ',
+                    \"long\":    ' + longitude.to_s +       '
+                 }'
+
+    response = Net::HTTP.post_form(URI.parse(url), {'notification'=>json_string})
+    #response = Net::HTTP.post_form(URI.parse(url), {'notification'=>message})
     #response.code #TODO: Add check if required based on the code
     #puts response.body
   end

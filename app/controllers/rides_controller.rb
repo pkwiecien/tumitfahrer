@@ -53,7 +53,7 @@ class RidesController < ApplicationController
       if !@ride.nil?
         final_ride = @ride
       else
-        final_ride = @ride.first
+        final_ride = @rides.first
       end
 
       redirect_to final_ride

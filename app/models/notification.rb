@@ -92,7 +92,8 @@ class Notification < ActiveRecord::Base
   #This function inserts the notification in the database table for cancel_ride_alert notification message.
   def self.cancel_ride(ride_id,user_id)
     # 1- We need to destroy the notification that was created to remind the driver about the upcoming ride
-    Notification.where(:ride_id => ride_id, :message_type => 1).destroy_all #TODO: check the notification exist or not
+    #Notification.where(:ride_id => ride_id, :message_type => '1',:status =>'not sent').destroy_all #TODO: check the notification exist or not
+    Notification.where(:ride_id=> ride_id, :status=>'not sent').destroy_all #If you insert notifications and then suddently delete the ride then other notifications will give exception because ride will no longer exit
 
     # 2- We need to add notifications for passengers that user has canceled the ride
     ride = Ride.new
@@ -107,18 +108,20 @@ class Notification < ActiveRecord::Base
       devices_list.each do |device|
         language = device.language
 
-        notification = insert_notification(passenger.id, ride_id, 3, Time.zone.now + 5*60,user_id) #Send users notification within 5 minutes of cancellation of ride
-        message = cancel_ride_alert(notification, language)   #generate a mesage right now because the ride will be deleted
-        Notification.update_message(notification.id,message) #update the generated message in the database
+        if (device.platform != 'VisioM')
+            notification = insert_notification(passenger.id, ride_id, 3, Time.zone.now + 5*60,user_id) #Send users notification within 5 minutes of cancellation of ride
+            message = cancel_ride_alert(notification, language)   #generate a mesage right now because the ride will be deleted
+            Notification.update_message(notification.id,message) #update the generated message in the database
+        end
       end
     end
   end
 
-  def self.user_join(ride_id)
+  def self.user_join(ride_id, passenger_id)
     #Since the message should be sent to the driver. Get his user id and insert in the notification table
     ride = Ride.find(ride_id)
     user = ride.driver
-    insert_notification(user.id , ride_id, 7, Time.zone.now + 5*60,-1) #Send notification to user 5 minutes
+    insert_notification(user.id , ride_id, 7, Time.zone.now + 5*60,passenger_id) #Send notification to user 5 minutes
   end
 
   def self.reservation_cancelled(driver_id,passenger_id,ride_id) #Update method in rides_controller.... update the code and put the function over there
