@@ -112,8 +112,8 @@ class RidesController < ApplicationController
 
     @t2=5.hours.from_now.strftime("%Y-%m-%d %H:%M:%S")
     @t1=Time.now.strftime("%Y-%m-%d %H:%M:%S")
-    @lastminute_activityrides = Ride.where("departure_time  >  TO_DATE('#{@t1}','%Y-%m-%d %H:%i:%s') and
-                          departure_time < TO_DATE('#{@t2}','%Y-%m-%d %H:%i:%s') AND ride_type = 1"  ).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
+    @lastminute_activityrides = Ride.where("departure_time  >  to_timestamp('#{@t1}','YYYY-MM-DD HH24:MI:SS') and
+                          departure_time < to_timestamp('#{@t2}','YYYY-MM-DD HH24:MI:SS') AND ride_type = 1"  ).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
 
     @pic_url = Array.new
     @activity_rides.each do |ride|
