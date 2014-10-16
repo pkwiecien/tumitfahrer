@@ -22,6 +22,9 @@ class MessageSender
       begin
         if(notification.device_type == 'Android')
           result = MessageSender.send_android_notification(notification.device_id, notification.message)
+
+	  #puts "Sending Android Push Notification " + result
+
           if (result == 1)
             #Update the database
             Notification.update_status(notification.notification_id, notification.message)
@@ -55,6 +58,12 @@ class MessageSender
     #http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     #http.get("www.google.com/");
     response = gcm.send_notification(registration_id, options)
+
+	puts("Response of android sender")
+    #puts(response[:body])
+	puts(response)
+	
+	
     if(  JSON.parse(response[:body])["success"] == 1 )
       return 1
     else
