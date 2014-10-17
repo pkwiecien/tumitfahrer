@@ -18,6 +18,8 @@ class MessageSender
 
   #Method to send messages to different platforms based on the platform information in the object.``
   def self.send_message(notificationDataList)
+
+    puts("Total notifications => " + notificationDataList.count.to_s)
     notificationDataList.each do |notification|
       begin
         if(notification.device_type == 'Android')
@@ -35,18 +37,20 @@ class MessageSender
         elsif(notification.device_type == 'VisioM')
                #Send a post request to the VisioM server. Url is of the format 'http://thewebsite.net'
                #device_id should be the URL of the car
-
+          puts("In VisioM => " + notification.notification_id.to_s)
           #Only send notifications to VisioM if the message type is either Driver pick up alert or User join request
-          notifObj = Notification.find_by(:id, notification.notification_id)
-          if(notifObj.message_type == 1 || notifObj.message_type == 7)
+          notifObj = Notification.find(notification.notification_id)
+          if(notifObj.message_type == '1' || notifObj.message_type == '7')
+            puts("IN FOR LOOP")
             MessageSender.send_visiom_notification(notification.device_id, notification.message, notification.notification_id, notifObj)
+            puts("BEFORE UPDATE")
             Notification.update_status(notification.notification_id, notification.message)
           else
             puts("UPDATE: VisoM => Ignoring message type -->" + notifObj.message_type.to_s)
           end
         end
-      rescue
-        puts("ERROR: While sending push notification: "+notification.notification_id.to_s)
+      rescue Exception => e
+        puts("ERROR: While sending push notification: "+ notification.notification_id.to_s + " == Exception => " + e.to_s)
       end
     end
   end
@@ -117,38 +121,60 @@ class MessageSender
 
     message_type = notifObj.message_type
 
-    if(message_type == 1)
+    callbackURL = ''
+    latitude = 0
+    longitude = 0
+
+    puts("1")
+
+    if(message_type == '1')
       message_type_string = 'Driver Pickup Alert'
-    else if (message_type == 7)
-      message_type_string = 'User Join Request'
+
+      ride = Ride.find(notifObj.ride_id)
+      latitude = ride.destination_latitude
+      longitude = ride.destination_longitude
+    else if (message_type == '7')
+        message_type_string = 'User Join Request'
+
+        #Create call back url for accept/decline user join request
+        request_id = notifObj.extra
+        request = Request.find(request_id)
+        #http://localhost:3000/api/v2/rides/8/requests/5?passenger_id=2
+        callbackURL = '/api/v2/rides/' + request.ride_id.to_s + '/requests/' + request_id.to_s + '?passenger_id=' + request.passenger_id.to_s
        end
     end
 
-    #Create call back url for accept/decline user join request
-    request_id = notifObj.extra
-    request = Request.find_by(:id,request_id)
-
-    #http://localhost:3000/api/v2/rides/8/requests/5?passenger_id=2
-    callbackURL = '/api/v2/rides/' + request.ride_id + '/requests/' + request_id + '?passenger_id=' + request.passenger_id
-
-    ride = Ride.find_by(:id,request.ride_id)
-    latitude = ride.destination_latitude
-    longitude = ride.destination_longitude
-
+    puts("2")
     user_image_url = ''
 
-    json_string ='{
-                    \"type\":    ' + message_type_string +  ',
-                    \"id\":      ' + notification_id.to_s + ',
-                    \"name\":        "TUMitfahrer",
-                    \"address\": ' + message +              ',
-                    \"image\":   ' +  user_image_url +      ',
-                    \"url\":     ' + callbackURL +          ',
-                    \"latt\":    ' + latitude.to_s +        ',
-                    \"long\":    ' + longitude.to_s +       '
-                 }'
+    #json_string ='{
+     #               \"type\":    ' + message_type_string +  ',
+      #              \"id\":      ' + notification_id.to_s + ',
+       #             \"name\":        "TUMitfahrer",
+        #            \"address\": ' + message +              ',
+         #           \"image\":   ' +  user_image_url +      ',
+          #          \"url\":     ' + callbackURL +          ',
+           #         \"latt\":    ' + latitude.to_s +        ',
+            #        \"long\":    ' + longitude.to_s +       '
+             #    }'
 
-    response = Net::HTTP.post_form(URI.parse(url), {'notification'=>json_string})
+
+    params = {'type' => message_type_string , 'id' => notification_id , 'name' => message, 'address'=>  '','image'=> user_image_url,
+              'url'=> callbackURL, 'latt' =>latitude.to_s , 'long' => longitude.to_s}
+    json_headers = {"Content-Type" => "application/json",
+                    "Accept" => "application/json"}
+
+    uri = URI.parse(url)
+    http = Net::HTTP.new(uri.host, uri.port)
+
+    puts("PARAM JSON =>" + params.to_json.to_s)
+
+    response = http.put(uri.path, params.to_json, json_headers)
+    puts(response.body)
+
+
+    #response = Net::HTTP.post_form(URI.parse(url), {'notification'=>json_string}
+    #response = Net::HTTP.post_form(URI.parse(url), json_string, headers)
     #response = Net::HTTP.post_form(URI.parse(url), {'notification'=>message})
     #response.code #TODO: Add check if required based on the code
     #puts response.body

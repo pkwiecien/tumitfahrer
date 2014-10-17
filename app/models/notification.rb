@@ -159,8 +159,8 @@ class Notification < ActiveRecord::Base
   def self.get_notification_list
     startTime = Time.zone.now
     endTime = Time.zone.now + 5*60  #next 5 mins
-    #@notifications = Notification.where(:status => false).where(:date_time => startTime...endTime)
-    notifications = Notification.where(:status=>'not sent') #TODO: revert it back to 5 min thing
+    @notifications = Notification.where(:status => false).where(:date_time => startTime...endTime)
+    #notifications = Notification.where(:status=>'not sent') #TODO: revert it back to 5 min thing
 
     #TODO: Error handling
 
@@ -368,7 +368,7 @@ class Notification < ActiveRecord::Base
     #ride.id = ride_id
     #driver = get_driver_name(ride)
 
-    ride = Ride.find(ride_id)
+    ride = Ride.find(notification.ride_id)
     driver_name = Notification.get_driver_name(ride)
 
     #message = "TUMitFahrer: Alert (Request Declined) Driver #{driver}, has declined your request to join the ride."
