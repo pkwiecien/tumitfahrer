@@ -12,7 +12,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20140727140308) do
-#TODO: Need to remove unused schemas
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
