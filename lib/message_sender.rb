@@ -22,7 +22,7 @@ class MessageSender
     puts("Total notifications => " + notificationDataList.count.to_s)
     notificationDataList.each do |notification|
       begin
-        if(notification.device_type == 'Android')
+        if(notification.device_type.downcase == 'android')
           result = MessageSender.send_android_notification(notification.device_id, notification.message)
 
 	  #puts "Sending Android Push Notification " + result
@@ -31,10 +31,10 @@ class MessageSender
             #Update the database
             Notification.update_status(notification.notification_id, notification.message)
           end
-        elsif(notification.device_type == 'iPhone')
+        elsif(notification.device_type.downcase == 'ios')
                 MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
                 Notification.update_status(notification.notification_id, notification.message)
-        elsif(notification.device_type == 'VisioM')
+        elsif(notification.device_type.downcase == 'visiom')
                #Send a post request to the VisioM server. Url is of the format 'http://thewebsite.net'
                #device_id should be the URL of the car
           puts("In VisioM => " + notification.notification_id.to_s)
