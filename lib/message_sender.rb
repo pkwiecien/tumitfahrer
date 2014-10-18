@@ -140,7 +140,7 @@ class MessageSender
         request_id = notifObj.extra
         request = Request.find(request_id)
         #http://localhost:3000/api/v2/rides/8/requests/5?passenger_id=2
-        callbackURL = '/api/v2/rides/' + request.ride_id.to_s + '/requests/' + request_id.to_s + '?passenger_id=' + request.passenger_id.to_s
+        callbackURL = '/api/v2/rides_visiom/' + request.ride_id.to_s + '/requests/' + request_id.to_s + '?passenger_id=' + request.passenger_id.to_s
        end
     end
 

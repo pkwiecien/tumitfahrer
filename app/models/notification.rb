@@ -159,7 +159,7 @@ class Notification < ActiveRecord::Base
   def self.get_notification_list
     startTime = Time.zone.now
     endTime = Time.zone.now + 5*60  #next 5 mins
-    @notifications = Notification.where(:status => false).where(:date_time => startTime...endTime)
+    notifications = Notification.where(:status => 'not sent').where(:date_time => startTime...endTime)
     #notifications = Notification.where(:status=>'not sent') #TODO: revert it back to 5 min thing
 
     #TODO: Error handling

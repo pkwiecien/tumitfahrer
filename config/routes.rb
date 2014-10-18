@@ -23,6 +23,8 @@ Tumitfahrer::Application.routes.draw do
     # API v2 Routes
     namespace :v2, :defaults => { :format => 'json' } do
       match '/activities/badges', to: 'activities#get_badge_counter', via: :get
+      match "rides_visiom/:ride_id/requests/:id", to: "requests#update_for_visiom", via: 'put'
+      match "rides_visiom/:ride_id/requests/:id", to: "requests#destroy_for_visiom", via: 'delete'
       resources :activities
       resource :forgot
       resource :search
@@ -76,8 +78,6 @@ Tumitfahrer::Application.routes.draw do
   match "/campus", to: "rides#campus" , via: 'get'
   match "/activities", to: "rides#activities" , via:'get'
   match "/my_rides/:id", to: "users#my_rides", via: 'get'
-
-
 
   #map.check_email "users/check_email", :controller => "users", :action => "check_email"
   #map.resources :users
