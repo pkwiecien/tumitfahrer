@@ -175,7 +175,7 @@ class Notification < ActiveRecord::Base
 
         if(language == nil)
           language = "en"
-        end 
+        end
 
         #Each device can have different language. So, we have to construct the message again in the loop
         message = Notification.get_message(notification, language)  #get the constructed message based on message type
