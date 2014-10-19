@@ -21,13 +21,13 @@
 
 de:
   hello: "Hallo welt"
-  driver_pickup_alert : "TUMitfahrer: Erinnerung für die Fahrt > Zeit: %{time} Ort: %{departure}."
+  driver_pickup_alert : "TUMitfahrer: Abhol-Erinnerung > Zeit: %{time} Ort: %{departure}."
   passenger_ride_alert: "TUMitfahrer: Mitfahrt Alarm > Zeit: %{time} Ort: %{departure} Fahrer: %{result}."
   cancel_ride_alert: "TUMitfahrer: Fahrt abgesagt > Fahrer %{driver} hat die Fahrt abgesagt. Zeit: %{time} Ort: %{departure} Grund: Wegen eines unerwarteten Ereignisses."
   reservation_cancelled_passenger_alert: "TUMitfahrer: Reservierung abgesagt > Mitfahrer %{passenger_name} hat die Fahrt abgesagt. Zeit: %{time} Ort: %{departure} Grund: Wegen eines unerwarteten Ereignisses."
   accept_request_alert: "TUMitfahrer: Anfrage akzeptiert > Fahrer %{driver} hat deine Anfrage für die Fahrt akzeptiert."
   decline_request_alert: "TUMitfahrer: Antrag abgelehnt > Fahrer %{driver} hat deine Anfrage für die Fahrt  abgelehnt."
-  user_join_alert: "TUMitfahrer: Fahrt Anfrage > Ein Passagier will, um Ihre Fahrt kommen."
+  user_join_alert: "TUMitfahrer: Mitfahr-Anfrage > Jemand möchte an Ihrer Fahrt teilnehmen."
   welcome:
       pic_heading: "Enjoy fun while driving"
       pic_paragraph: "Create, share and invite"
