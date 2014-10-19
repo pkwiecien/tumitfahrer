@@ -13,6 +13,12 @@ class StaticPagesController < ApplicationController
 
   end
 
+  def contact_us
+    UserMailer.contact_email(params[:Email], params[:Name], params[:Title], params[:message]).deliver
+    flash[:success] = "Your message has been sent successfully"
+    redirect_to root_path
+  end
+
   def team
 
   end

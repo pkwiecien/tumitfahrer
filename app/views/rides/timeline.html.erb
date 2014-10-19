@@ -4,25 +4,32 @@
 <% provide(:title, "Timeline") %>
 <div class="row"  id="main_img" style="padding-left:70px;margin-top: 47px; background: url('<%= asset_path "1.jpg"%>')">
 <div class="col-xs-6 col-md-6 " style="width: 55%;margin-left:2px;margin-top:25px;">
-  <div id="All" class="col-xs-6 col-md-4" style=" background: #0F3750;text-color : #fffff;text-align : center">
+  <div id="All"  class="col-xs-6 col-md-4" style=" background: #0F3750;text-color : #fffff;text-align : center">
     <p><img src="<%= asset_path "NewsFeedIcon@2x.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
-      <a href="#" id="all"style="color: white;">All</a>
+      <a href="#" id="all"style="color: white;"><%= t("static.all") %></a>
     </p>
   </div>
   <div id="Yours" class="col-xs-6 col-md-4" style=" background: #0F3750;text-color : #fffff;text-align : center">
     <p><img src="<%= asset_path "NewsFeedIcon@2x.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
-      <a href="#" id="all"style="color: white;">Yours</a>
+      <a href="#" id="all"style="color: white;"><%= t("static.yours") %></a>
     </p>
   </div>
   <div id="Lastminute" class="col-xs-6 col-md-4" style="background: #0F3750;text-color : #fffff;text-align : center">
     <p><img src="<%= asset_path "NewsFeedIcon@2x.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
-      <a href="#" id="lastminute"style="color: white;">Lastminute</a>
+      <a href="#" id="lastminute"style="color: white;"><%= t("static.lastminute") %></a>
     </p>
   </div>
 
   <div id="All_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
-    <% @all.each_with_index do |ride1, index| %>
 
+    <% if @all.count ==  0 %>
+        <div class="col-md-12">
+          <p> Currently no rides Available </p>
+        </div>
+
+    <% elsif @all.count > 0 %>
+
+    <% @all.each_with_index do |ride1, index| %>
         <div class="row" style="border-bottom : solid 1px;padding-top:15px;">
           <div class="col-md-1">
             <% if ride1.relationships.first.is_driving == true %>
@@ -79,8 +86,15 @@
         </div>
     <% end %>
     <%= will_paginate @all %>
+    <% end %>
   </div>
   <div id="Yours_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
+    <% if @yours.count ==  0 %>
+        <div class="col-md-12">
+          <p> Currently no rides Available </p>
+        </div>
+
+    <% elsif @yours.count > 0 %>
     <% @yours.each_with_index do |ride1, index| %>
 
         <div class="row" style="border-bottom : solid 1px;padding-top:15px;">
@@ -118,8 +132,15 @@
         </div>
     <% end %>
     <%= will_paginate @yours %>
+    <% end %>
   </div>
   <div id="Lastminute_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
+    <% if @lastminute_rides.count ==  0 %>
+        <div class="col-md-12">
+          <p> Currently no rides Available </p>
+        </div>
+
+    <% elsif @lastminute_rides.count > 0 %>
     <% @lastminute_rides.each_with_index do |ride1, index| %>
 
         <div class="row" style="border-bottom : solid 1px;padding-top:15px;">
@@ -178,15 +199,82 @@
         </div>
     <% end %>
     <%= will_paginate @lastminute_rides %>
+        <% end %>
   </div>
 </div>
 <div class="col-xs-2 col-md-offset-2">
   <div class="sidebar-module " style="margin-top:25px;width: 415px;margin-left:-150px;">
-    <%= render "shared/today_rides", today_rides: @today_rides  %>
-    <%= render "shared/tomorrow_rides",tomorrow_rides: @tomorrow_rides %>
+    <div class="panel panel-primary" style="border: none;border-radius: 0px;">
+      <div class="panel-heading" style="border: none;border-radius: 0px;background: #0F3750;color: #beddf1;">
+        <h3 class="panel-title " ><img src="<%= asset_path "date_icon.png" %>" style="height: 14px;margin-top: -3px;margin-left: 14px">&nbsp;&nbsp; <%= t("static.today") %></h3>
+      </div>
+      <div class="panel-body">
+        <% if @today_rides.count ==  0 %>
+            <div class="col-md-12">
+              <p> Currently no rides Available </p>
+            </div>
+
+        <% elsif @today_rides.count > 0 %>
+        <% @today_rides.each_with_index do |ride1, index| %>
+
+
+                <div class="col-sm-2">
+                  <% if ride1.relationships.first.is_driving == true %>
+                      <img src="<%= asset_path "driver_icon.png" %>" style="height: 46px; margin-top:10px; float:left; background-color: #0F3750; padding: 8px">
+                  <% elsif ride1.relationships.first.is_driving == false %>
+                      <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:10px; float: left;  background-color: #0F3750; padding: 8px">
+                  <% end %>
+                </div>
+                <div class="col-sm-10">
+                  <h4 style="margin-top: 10px;color: #0076b3"> &nbsp;<%= ride1.destination %></h4>
+                  <p style="margin-top: -4px;"> &nbsp;
+
+                    <img src="<%= asset_path "TimeIconBlack.png" %> " style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+
+                  </p>
+                </div>
+                <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+            <%end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel panel-primary" style="border: none;border-radius: 0px;margin-top:40px;">
+      <div class="panel-heading" style="border: none;border-radius: 0px;background: #0F3750;color: #beddf1;">
+        <h3 class="panel-title " ><img src="<%= asset_path "date_icon.png" %>" style="height: 14px;margin-top: -3px;margin-left: 14px">&nbsp;&nbsp; <%= t("static.tomorrow") %></h3>
+      </div>
+      <div class="panel-body">
+        <% if @tomorrow_rides.count ==  0 %>
+            <div class="col-md-12">
+              <p> Currently no rides Available </p>
+            </div>
+
+        <% elsif @tomorrow_rides.count > 0 %>
+        <% @tomorrow_rides.each_with_index do |ride1, index| %>
+
+                <div class="col-sm-2">
+                  <% if ride1.relationships.first.is_driving == true %>
+                      <img src="<%= asset_path "driver_icon.png" %>" style="height: 46px; margin-top:10px; float:left; background-color: #0F3750; padding: 8px">
+                  <% elsif ride1.relationships.first.is_driving == false %>
+                      <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:10px; float: left;  background-color: #0F3750; padding: 8px">
+                  <% end %>
+                </div>
+                <div class="col-sm-10">
+                  <h4 style="margin-top: 10px;color: #0076b3"> &nbsp;<%= ride1.destination %></h4>
+                  <p style="margin-top: -4px;"> &nbsp;
+
+                    <img src="<%= asset_path "TimeIconBlack.png" %> " style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+
+                  </p>
+                </div>
+                <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
+            <%end %>
+        <% end %>
+      </div>
+    </div>
+
     <div class="panel panel-primary"style="border: none;border-radius: 0px;margin-top:40px;margin-bottom:50px;">
       <div class="panel-heading" style="border: none;border-radius: 0px;background: #0F3750;color: #beddf1;">
-        <h3 class="panel-title " ><img src="<%= asset_path "NewsFeedIcon@2x.png" %>" style="height: 24px;margin-top: -3px;margin-left: 14px">&nbsp;&nbsp; TUM News</h3>
+        <h3 class="panel-title " ><img src="<%= asset_path "NewsFeedIcon@2x.png" %>" style="height: 24px;margin-top: -3px;margin-left: 14px">&nbsp;&nbsp; <%= t("static.tumnews") %></h3>
 
       </div>
       <div class="panel-body">

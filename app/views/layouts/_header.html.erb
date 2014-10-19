@@ -27,6 +27,7 @@
             </div>
             <button type="button" id="sign_in" class="btn btn-info" style="height: 32px; padding-top: 2px;">Sign in</button>
             <%= link_to "Sign up", "/signup", class: "btn btn-primary", style:"height: 32px; padding-top: 2px;" %>
+            <%= link_to "Forgot password" ,"/password_resets/new", style:"height: 32px; padding-top: 4px; color: white;" %>
           </form>
         <% end %>
       </div>
@@ -35,26 +36,26 @@
         <div class="navbar-collapse collapse">
           <div class="row row-centered">
             <div class="col-md-1 col-centered" style="background: #0F3750; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("NewsFeedIcon@2x.png", class: "head-button" )%><%= link_to "Timeline", "/timeline", style: "color: #beddf1" %></p>
+              <p><%= image_tag("NewsFeedIcon@2x.png", class: "head-button" )%><%= link_to t("static.timeline"), "/timeline", style: "color: #beddf1" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #005c91; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("campus_rides.png", class: "head-button" )%><%= link_to "Campus", "/campus", style: "color: #beddf1" %></p>
+              <p><%= image_tag("campus_rides.png", class: "head-button" )%><%= link_to t("static.campus"), "/campus", style: "color: #beddf1" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #005c91; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("activity_icon.png", class: "head-button" )%><%= link_to "Activities", "/activities", style: "color: #beddf1" %></p>
+              <p><%= image_tag("activity_icon.png", class: "head-button" )%><%= link_to t("static.activity"), "/activities", style: "color: #beddf1" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #0076b3; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("create_ride_image.png", class: "head-button" )%><%= link_to "Create", new_ride_path, style: "color: #beddf1" %></p>
+              <p><%= image_tag("create_ride_image.png", class: "head-button" )%><%= link_to t("static.Create"), new_ride_path, style: "color: #beddf1" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #0076b3; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("SearchIcon.png", class: "head-button" )%><%= link_to "Search", "/search_rides", style: "color: #beddf1" %></p>
+              <p><%= image_tag("SearchIcon.png", class: "head-button" )%><%= link_to t("static.Search"), "/search_rides", style: "color: #beddf1" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #53A2d0; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("my_rides.png", class: "head-button" )%><%= link_to "MyRides", "/my_rides/#{current_user.id}", style: "color: #beddf1" %></p>
+              <p><%= image_tag("my_rides.png", class: "head-button" )%><%= link_to t("static.My_rides"), "/my_rides/#{current_user.id}", style: "color: #beddf1" %></p>
 
             </div>
             <div class="col-md-1 col-centered" style="background: #53A2d0; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("ProfileIcon.png", class: "head-button" )%><%= link_to "Profile", "/users/#{current_user.id}", style: "color: #beddf1" %></p>
+              <p><%= image_tag("ProfileIcon.png", class: "head-button" )%><%= link_to t("static.Profile"), "/users/#{current_user.id}", style: "color: #beddf1" %></p>
             </div>
           </div>
         </div>

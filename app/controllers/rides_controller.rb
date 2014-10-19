@@ -53,7 +53,7 @@ class RidesController < ApplicationController
       if !@ride.nil?
         final_ride = @ride
       else
-        final_ride = @rides.first
+        final_ride = @ride.first
       end
 
       redirect_to final_ride
@@ -70,10 +70,10 @@ class RidesController < ApplicationController
     @yours = Ride.where("user_id = ?",current_user).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
 
     @t=Time.now.strftime("%Y-%m-%d")
-    @today_rides = Ride.where("departure_time::text  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
+    @today_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
 
     @t=Time.now.tomorrow.strftime("%Y-%m-%d")
-    @tomorrow_rides = Ride.where("departure_time::text  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
+    @tomorrow_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
 
     @t2=5.hours.from_now.strftime("%Y-%m-%d %H:%M:%S")
     @t1=Time.now.strftime("%Y-%m-%d %H:%M:%S")

@@ -4,6 +4,11 @@
   </div>
   <div class="panel-body">
     <% @today_rides.each_with_index do |ride1, index| %>
+     <% if @today_rides.count ==  0 %>
+
+              <p> Currently no rides Available </p>
+
+        <% elsif @today_rides.count > 0 %>
 
         <div class="col-sm-2">
          <% if ride1.relationships.first.is_driving == true %>
@@ -22,5 +27,6 @@
         </div>
         <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
     <%end %>
+    <% end %>
   </div>
 </div>

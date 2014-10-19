@@ -4,7 +4,12 @@
   </div>
   <div class="panel-body">
     <% @tomorrow_rides.each_with_index do |ride1, index| %>
+        <% if @tomorrow_rides.count ==  0 %>
+            <div class="col-md-12">
+              <p> Currently no rides Available </p>
+            </div>
 
+        <% elsif @tomorrow_rides.count > 0 %>
         <div class="col-sm-2">
           <% if ride1.relationships.first.is_driving == true %>
               <img src="<%= asset_path "driver_icon.png" %>" style="height: 46px; margin-top:10px; float:left; background-color: #0F3750; padding: 8px">
@@ -22,5 +27,6 @@
         </div>
         <br><br><br><hr size="2" style="height:1px;border:none;color:#333;background-color:#333;">
     <%end %>
+        <% end %>
   </div>
 </div>
