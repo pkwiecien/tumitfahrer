@@ -120,7 +120,7 @@
                         </div>
                     <% elsif current_user && !ride_requester.nil? %>
                         <div class="col-xs-12 col-md-12" style="padding: 0px;">
-                          <%= link_to "/rides/#{@ride.id}/requests?#{ride_requester.id}", {method: :delete, class: "btn btn-danger", style: "width: 90%;"} do %>
+                          <%= link_to "/rides/#{@ride.id}/requests/#{ride_requester.id}", {method: :delete, class: "btn btn-danger", style: "width: 90%;"} do %>
                               <span class="glyphicon glyphicon-remove-circle"></span> Cancel
                           <% end %>
                         </div>
@@ -154,7 +154,7 @@
                       </div>
                       <div class="col-xs-6 col-md-6">
                         <div style="margin-top: 7%; margin-right: 5px; float: right;">
-                          <% if current_user.id.equal?(@ride.ride_owner.id) %>
+                          <% if current_user.id.equal?(@ride.ride_owner.id) && !ride_passenger.id.equal?(current_user.id) %>
                               <%= link_to "/remove_passenger?ride_id=#{@ride.id}&removed_passenger=#{ride_passenger.id}", {method: :delete, class: "btn btn-danger", style: "margin-top: 2px;"} do %>
                                   <span class="glyphicon glyphicon-remove-circle"></span>
                               <% end %>

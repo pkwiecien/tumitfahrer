@@ -99,10 +99,13 @@ class Ride < ActiveRecord::Base
       @ride.relationships.create!(user: current_user, is_driving: is_driving)
       if @ride.save
 
-        #Added by Behroz - Insert data in notification table - Start - 10-June-2014
-        Notification.driver_pickup(current_user.id, @ride.id, @ride.departure_time)
-        #Added by Behroz - Insert data in notification table - End - 10-June-2014
-
+        #TODO: Test this check. If the user is driver only then the notification should be inserted.
+        # In the case when a user joins the ride as a driver. Insert notification at that point.
+        #if(is_driving.eql?(1))
+          #Added by Behroz - Insert data in notification table - Start - 10-June-2014
+          Notification.driver_pickup(current_user.id, @ride.id, @ride.departure_time)
+          #Added by Behroz - Insert data in notification table - End - 10-June-2014
+        #end
         return @ride
       end
     end

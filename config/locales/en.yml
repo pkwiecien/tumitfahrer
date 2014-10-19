@@ -25,8 +25,8 @@ en:
   passenger_ride_alert: "TUMitFahrer: Passenger Ride Alert > Time: %{time} Location: %{departure} Driver: %{result}."
   cancel_ride_alert: "TUMitFahrer: Ride Cancelled Driver > %{driver}, had cancelled the ride. Time: %{time} Location: %{departure} Reason: Due to an unexpected event."
   reservation_cancelled_passenger_alert: "TUMitFahrer: Reservation Cancelled > Passenger %{passenger_name}, had cancelled the ride. Time: %{time} Location: %{departure} Reason: Due to an unexpected event."
-  accept_request: "TUMitFahrer: Request Accepted > Driver %{driver}, has accepted your request to join the ride."
-  decline_request: "TUMitFahrer: Request Declined > Driver %{driver}, has declined your request to join the ride."
+  accept_request_alert: "TUMitFahrer: Request Accepted > Driver %{driver}, has accepted your request to join the ride."
+  decline_request_alert: "TUMitFahrer: Request Declined > Driver %{driver}, has declined your request to join the ride."
   user_join_alert: "TUMitFahrer: User Join Request > A Passenger wants to join your ride."
   welcome:
       pic_heading: "Enjoy fun while driving"
