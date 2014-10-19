@@ -12,4 +12,12 @@ class UserMailer < ActionMailer::Base
     @new_password = new_password
     mail(to: @user.email, subject: 'TUMitfahrer: Password reminder')
   end
+
+  def contact_email(email_id, name, title, message)
+    @email = email_id
+    @name = name
+    @title = title
+    @message = message
+    mail(from: @email, to: "tumitfahrer.beta@gmail.com", subject: 'TUMitfahrer: Feedback')
+  end
 end

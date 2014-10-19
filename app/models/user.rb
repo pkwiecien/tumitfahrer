@@ -157,6 +157,29 @@ class User < ActiveRecord::Base
     self.rides.joins(:relationships).where(relationships: {is_driving: false})
   end
 
+  def get_past_rides_as_driver
+    if self.rides.count > 0
+      self.rides.where("departure_time < ?",Time.now).joins(:relationships).where(relationships:{is_driving: true})
+    else
+      []
+    end
+  end
+
+  def get_past_requests_for_driver
+    self.rides.where("departure_time < ?",Time.now).joins(:relationships).where(relationships: {is_driving: false})
+  end
+
+  def get_present_rides_as_driver
+    if self.rides.count > 0
+      self.rides.where("departure_time > ?",Time.now).joins(:relationships).where(relationships: {is_driving: true})
+    else
+      []
+    end
+  end
+  def get_present_requests_for_driver
+    self.rides.where("departure_time > ?",Time.now).joins(:relationships).where(relationships: {is_driving: false})
+  end
+
   def all_rides
     rides_as_driver + requests_for_driver + rides_as_passenger + requested_rides
   end

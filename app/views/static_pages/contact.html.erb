@@ -1,3 +1,38 @@
-<% provide(:title, "Contact") %>
-<h1>Contact Us</h1>
-<p>Please fill in the form below.</p>
+
+<%= javascript_include_tag "jquery.bootpag.min.js" %>
+
+<div class="container_ride">
+  <% provide(:title, "Contact") %>
+  <div class="row"  id="main_img" style="padding-left:74px;margin-top: 10px; background: url('<%= asset_path "1.jpg"%>')">
+
+    <div class="col-xs-9 col-md-9 " style="width:96%;margin-top:25px;">
+      <div class="panel panel-primary"style="border: none;border-radius: 0px;margin-top:40px;margin-bottom:50px;">
+        <div class="panel-heading" style="border: none;border-radius: 0px;background: #2F2F2F;color: #beddf1;">
+          <h3 class="panel-title " style="height: 22px;margin-top: 2px;margin-left: 14px">&nbsp;&nbsp; Contact</h3>
+
+        </div>
+      </div>
+      <div class="panel-body" class="form-horizontal"style="background-color:lightgrey;">
+        <div class="form-group">
+    <%= form_tag('/contact_us', method: :post) do %>
+      Name    <%= text_field_tag 'Name' %>
+      Email   <%= text_field_tag 'Email' %>
+      Title   <%= text_field_tag 'Title' %>
+      Message <%= text_field_tag 'Message' %>
+              <input name="commit" type="submit" value="Send" />
+        <% end %>
+    </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+

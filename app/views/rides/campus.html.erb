@@ -7,17 +7,23 @@
     <div class="col-xs-9 col-md-9 " style="width:96%;margin-left:2px;margin-top:25px;">
       <div id="All" class="col-md-6" style=" background: #005c91;text-color : #fffff;text-align : center">
         <p><img src="<%= asset_path "campus_rides.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
-          <a href="#" id="all"style="color: white;">All</a>
+          <a href="#" id="all"style="color: white;"><%= t("static.all") %></a>
         </p>
       </div>
       <div id="Lastminute" class="col-md-6" style="background: #005c91;text-color : #fffff;text-align : center">
         <p><img src="<%= asset_path "campus_rides.png" %>" style="height: 20px;margin-right: 0px; margin-top: 0px;">
-          <a href="#" id="lastminute"style="color: white;">Lastminute</a>
+          <a href="#" id="lastminute"style="color: white;"><%= t("static.lastminute") %></a>
         </p>
       </div>
 
 
       <div id="All_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
+        <% if @campus_rides.count ==  0 %>
+            <div class="col-md-12">
+              <p> Currently no rides Available </p>
+            </div>
+
+        <% elsif @campus_rides.count > 0 %>
         <% @campus_rides.each_with_index do |ride1, index| %>
 
             <div class="row" style="border-bottom : solid 1px;">
@@ -60,10 +66,18 @@
             </div>
         <% end %>
         <%= will_paginate @campus_rides %>
+            <% end %>
       </div>
 
       <div id="Lastminute_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
-        <% @lastminute_campusrides.each_with_index do |ride1, index| %>
+        <% if @lastminute_rides.count ==  0 %>
+            <div class="col-md-12">
+              <p> Currently no rides Available </p>
+            </div>
+
+        <% elsif @lastminute_rides.count > 0 %>
+        <% @lastminute_rides.each_with_index do |ride1, index| %>
+
 
             <div class="row"style="border-bottom : solid 1px;">
               <div class="col-md-2">
@@ -105,7 +119,8 @@
               <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
             </div>
         <% end %>
-        <%= will_paginate @lastminute_campusrides %>
+        <%= will_paginate @lastminute_rides %>
+            <% end %>
       </div>
 
 

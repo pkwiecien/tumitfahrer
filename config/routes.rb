@@ -1,5 +1,7 @@
 Tumitfahrer::Application.routes.draw do
 
+  get 'password_resets/new'
+
   namespace :api do
     # API v1 Routes
     # uncomment to switch on api v1 (it is depreciated, though)
@@ -50,6 +52,7 @@ Tumitfahrer::Application.routes.draw do
 
   # Web app routes
   resources :users
+  resources :password_resets
   resources :rides do
     resources :requests
   end
@@ -63,6 +66,7 @@ Tumitfahrer::Application.routes.draw do
   match "/signout", to: "sessions#destroy", via: 'delete'
   match "/help", to: "static_pages#help", via: 'get'
   match "/contact", to: "static_pages#contact", via: 'get'
+  match "/contact_us", to: "static_pages#contact_us", via: 'post'
   match "/about", to: "static_pages#about", via: 'get'
   match "/team", to: "static_pages#team", via: 'get'
   match "/privacy", to: "static_pages#privacy", via: 'get'
@@ -76,6 +80,7 @@ Tumitfahrer::Application.routes.draw do
   match "/campus", to: "rides#campus" , via: 'get'
   match "/activities", to: "rides#activities" , via:'get'
   match "/my_rides/:id", to: "users#my_rides", via: 'get'
+  match "/forgotten_password",to: "password_resets#new", via: 'get'
 
 
 

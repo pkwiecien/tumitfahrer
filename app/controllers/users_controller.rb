@@ -68,12 +68,12 @@ class UsersController < ApplicationController
 
  def my_rides
    @user = User.find_by(id: params[:id])
-   @myridescreated_offers = @user.rides_as_driver.limit(3).order("departure_time asc").where("departure_time > ?",Time.now)
-   @myridescreatedrequest = @user.requests_for_driver.limit(3).order("departure_time asc").where("departure_time > ?",Time.now)
+   @myridescreated_offers = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
+   @myridescreatedrequest = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
    @myridesjoined_accepted = @user.rides_as_passenger
-   @myridesjoined_pending = @user.requested_rides.limit(3).order("departure_time asc").where("departure_time > ?",Time.now)
-   @myridespast_offers = @user.rides_as_driver.limit(3).order("departure_time asc").where("departure_time < ?",Time.now)
-   @myridespast_requests = @user.requests_for_driver.limit(3).order("departure_time asc").where("departure_time < ?",Time.now)
+   @myridesjoined_pending = @user.requested_rides
+   @myridespast_offers = @user.get_past_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
+   @myridespast_requests = @user.get_past_requests_for_driver.paginate(:page => params[:page], :per_page => 10)
    @pic_url = Array.new
    @myridescreated_offers.each do |ride|
      @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
