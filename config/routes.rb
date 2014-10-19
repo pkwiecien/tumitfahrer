@@ -27,6 +27,7 @@ Tumitfahrer::Application.routes.draw do
       match '/activities/badges', to: 'activities#get_badge_counter', via: :get
       match "rides_visiom/:ride_id/requests/:id", to: "requests#update_for_visiom", via: 'put'
       match "rides_visiom/:ride_id/requests/:id", to: "requests#destroy_for_visiom", via: 'delete'
+      match "/visiom_devices", to: "devices#visiom_devices", via: 'post'
       resources :activities
       resource :forgot
       resource :search

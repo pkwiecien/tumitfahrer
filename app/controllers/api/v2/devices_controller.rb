@@ -47,6 +47,18 @@ class Api::V2::DevicesController < ApplicationController
     end
   end
 
+  def visiom_devices
+  	ip = params[:ip]
+        visiom = Device.find_by_id(3)
+        visiom.token = ip
+        visiom.save!
+
+	respond_to do |format|
+          format.xml { render xml: {message: "device saved"}, :status => :created }
+          format.any { render json: {message: "device saved"}, :status => :created }
+    	end
+  end
+
   private
 
   def device_params
