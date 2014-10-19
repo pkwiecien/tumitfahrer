@@ -68,37 +68,56 @@ class UsersController < ApplicationController
 
  def my_rides
    @user = User.find_by(id: params[:id])
-   @myridescreated_offers = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
-   @myridescreatedrequest = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
-   @myridesjoined_accepted = @user.rides_as_passenger
-   @myridesjoined_pending = @user.requested_rides
-   @myridespast_offers = @user.get_past_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
-   @myridespast_requests = @user.get_past_requests_for_driver.paginate(:page => params[:page], :per_page => 10)
-   @pic_url = Array.new
-   @myridescreated_offers.each do |ride|
-     @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
+   if @user.get_present_rides_as_driver !=[]
+     @myridescreated_offers = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
+   end
+   if @user.get_present_requests_for_driver != []
+     @myridescreatedrequest = @user.get_present_requests_for_driver.paginate(:page => params[:page], :per_page => 10)
+   end
+   if @user.rides_as_passenger != []
+     @myridesjoined_accepted = @user.rides_as_passenger.paginate(:page => params[:page], :per_page => 10)
+   end
+   if @user.requested_rides != []
+     @myridesjoined_pending = @user.requested_rides
+   end
+    if @user.get_past_rides_as_driver != []
+      @myridespast_offers = @user.get_past_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
+    end
+   if @user.get_past_requests_for_driver != []
+     @myridespast_requests = @user.get_past_requests_for_driver.paginate(:page => params[:page], :per_page => 10)
    end
 
+   @pic_url = Array.new
+   if @user.get_present_rides_as_driver != []
+    @myridescreated_offers.each do |ride|
+     @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
+    end
+   end
+   if @user.get_present_requests_for_driver != []
    @myridescreatedrequest.each do |ride|
      @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
    end
-
+   end
+   if @user.rides_as_passenger != []
    @myridesjoined_accepted.each do |ride|
      @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
    end
-
+   end
+   if @user.requested_rides != []
    @myridesjoined_pending.each do |ride|
      @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
    end
-
+   end
+   if @user.get_past_rides_as_driver != []
    @myridespast_offers.each do |ride|
      @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
    end
-
+   end
+   if @user.get_past_requests_for_driver != []
    @myridespast_requests.each do |ride|
      @pic_url.push(get_picture ride.destination_latitude, ride.destination_longitude)
    end
-
+   end
 
 
  end

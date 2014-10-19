@@ -27,12 +27,12 @@
     <img src="<%= asset_path "driver_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
     <h4 style="margin-top:15px;"><%= t("static.offers") %></h4>
   </div>
-  <% if @myridescreated_offers.count ==  0 %>
+  <% if @user.get_present_rides_as_driver == [] %>
       <div class="col-md-12">
         <p> Currently no rides Available </p>
       </div>
 
-  <% elsif @myridescreated_offers.count > 0 %>
+  <% elsif @user.get_present_rides_as_driver != [] %>
 
   <% @myridescreated_offers.each_with_index do |ride1, index| %>
 
@@ -89,12 +89,12 @@
     <h4 style="margin-top:15px;"><%= t("static.requests") %></h4>
   </div>
 
-  <% if @myridescreatedrequest.count ==  0 %>
+  <% if @user.get_present_requests_for_driver == [] %>
       <div class="col-md-12">
         <p> Currently no rides Available </p>
       </div>
 
-  <% elsif @myridescreatedrequest.count > 0 %>
+  <% elsif @user.get_present_requests_for_driver != [] %>
 
   <% @myridescreatedrequest.each_with_index do |ride1, index| %>
       <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
@@ -152,12 +152,13 @@
     <img src="<%= asset_path "passenger_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
     <h4 style="margin-top:15px;"><%= t("static.accepted") %></h4>
   </div>
-  <% if @myridesjoined_accepted.count ==  0 %>
+  <% if @user.rides_as_passenger == [] %>
       <div class="col-md-12">
         <p> Currently no rides Available </p>
       </div>
 
-  <% elsif @myridesjoined_accepted.count > 0 %>
+  <% elsif @user.rides_as_passenger != [] %>
+
   <% @myridesjoined_accepted.each_with_index do |ride1, index| %>
       <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
         <div class="col-md-1">
@@ -198,12 +199,12 @@
     <img src="<%= asset_path "passenger_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
     <h4 style="margin-top:15px;"><%= t("static.pending") %></h4>
   </div>
-  <% if @myridesjoined_pending.count ==  0 %>
+  <% if @user.requested_rides == [] %>
       <div class="col-md-12">
         <p> Currently no rides Available </p>
       </div>
 
-  <% elsif @myridesjoined_pending.count > 0 %>
+  <% elsif @user.requested_rides != [] %>
   <% @myridesjoined_pending.each_with_index do |ride1, index| %>
       <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
         <div class="col-md-1">
@@ -259,12 +260,12 @@
     <h4 style="margin-top:15px;"><%= t("static.offers") %></h4>
   </div>
 
-  <% if @myridespast_offers.count ==  0 %>
+  <% if @user.get_past_rides_as_driver == [] %>
       <div class="col-md-12">
         <p> Currently no rides Available </p>
       </div>
 
-  <% elsif @myridespast_offers.count > 0 %>
+  <% elsif @user.get_past_rides_as_driver != [] %>
 
   <% @myridespast_offers.each_with_index do |ride1, index| %>
       <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
@@ -317,13 +318,13 @@
     <img src="<%= asset_path "passenger_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
     <h4 style="margin-top:15px;"><%= t("static.requests") %></h4>
   </div>
-      <% if @myridespast_requests.count ==  0 %>
-          <div class="col-md-12">
-            <p> Currently no rides Available </p>
-          </div>
 
-      <% elsif @myridespast_requests.count > 0 %>
+  <% if @user.get_past_requests_for_driver == [] %>
+      <div class="col-md-12">
+        <p> Currently no rides Available </p>
+      </div>
 
+  <% elsif @user.get_past_requests_for_driver != [] %>
   <% @myridespast_requests.each_with_index do |ride1, index| %>
       <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
         <div class="col-md-1">
