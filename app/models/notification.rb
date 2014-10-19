@@ -227,8 +227,34 @@ class Notification < ActiveRecord::Base
 
     default_language = I18n.locale
 
+    #Changed started
+    modified_departure = ''
+
+
+    #TOD):rescue
+    begin
+      departure_array = departure.split(',')
+      if(departure_array.count == 3)
+          modified_departure = departure_array[0] + ',' + departure_array[1]
+      else
+        modified_departure = departure
+      end
+    rescue Exception => e
+      puts ("TUMitfahrer => Excetion -> " + e.to_s)
+
+      modified_departure = departure
+    end
+
+    puts("Departure Place -> " + modified_departure)
+
+    #Change end
+
     I18n.locale = language
-    message = I18n.t(:driver_pickup_alert, time: time, departure: departure)
+    message = I18n.t(:driver_pickup_alert, time: I18n.l(time, :format => '%H:%M'), departure: modified_departure)
+    #message = I18n.l(:driver_pickup_alert, time: time, departure: departure)
+
+    puts("Printing the message with locale =>" + message.to_s)
+    #puts("Printing the message with translate => " + message1.to_s)
     #message = "TUMitFahrer: Alert (Reminder for Pickup) Time: #{time} Location: #{departure}"
 
     I18n.locale = default_language

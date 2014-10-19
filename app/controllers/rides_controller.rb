@@ -70,10 +70,10 @@ class RidesController < ApplicationController
     @yours = Ride.where("user_id = ?",current_user).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
 
     @t=Time.now.strftime("%Y-%m-%d")
-    @today_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
+    @today_rides = Ride.where("departure_time::text  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
 
     @t=Time.now.tomorrow.strftime("%Y-%m-%d")
-    @tomorrow_rides = Ride.where("departure_time  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
+    @tomorrow_rides = Ride.where("departure_time::text  like  '%#{@t}%'" ).limit(2).order("departure_time asc")
 
     @t2=5.hours.from_now.strftime("%Y-%m-%d %H:%M:%S")
     @t1=Time.now.strftime("%Y-%m-%d %H:%M:%S")
@@ -97,7 +97,7 @@ class RidesController < ApplicationController
     @campus_rides = Ride.where("departure_time > ? AND ride_type = ?", Time.now,0).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
     @t2=5.hours.from_now.strftime("%Y-%m-%d %H:%M:%S")
     @t1=Time.now.strftime("%Y-%m-%d %H:%M:%S")
-    @lastminute_campusrides = Ride.where("departure_time  >  to_timestamp('#{@t1}','YYYY-MM-DD HH24:MI:SS') and
+    @lastminute_rides = Ride.where("departure_time  >  to_timestamp('#{@t1}','YYYY-MM-DD HH24:MI:SS') and
                           departure_time < to_timestamp('#{@t2}','YYYY-MM-DD HH24:MI:SS') AND ride_type = 0"  ).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
     @pic_url = Array.new
     @campus_rides.each do |ride|
@@ -112,7 +112,7 @@ class RidesController < ApplicationController
 
     @t2=5.hours.from_now.strftime("%Y-%m-%d %H:%M:%S")
     @t1=Time.now.strftime("%Y-%m-%d %H:%M:%S")
-    @lastminute_activityrides = Ride.where("departure_time  >  to_timestamp('#{@t1}','YYYY-MM-DD HH24:MI:SS') and
+    @lastminute_rides = Ride.where("departure_time  >  to_timestamp('#{@t1}','YYYY-MM-DD HH24:MI:SS') and
                           departure_time < to_timestamp('#{@t2}','YYYY-MM-DD HH24:MI:SS') AND ride_type = 1"  ).order("departure_time asc").paginate(:page => params[:page], :per_page => 10)
 
     @pic_url = Array.new
