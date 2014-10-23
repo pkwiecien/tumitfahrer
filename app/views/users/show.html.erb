@@ -81,7 +81,7 @@
                   </div>
                   <div class="col-xs-4" style="color: #beddf1;">
                     <div style="float: right"><p style="margin: 0"><img style="height: 17px; margin-right: 6px;" src='<%= asset_path "StarIcon.png" %>'>
-                    <%= @user.rating_avg %></p></div>
+                    <%= @user.rating_avg == -1 ? 0:@user.rating_avg %></p></div>
                   </div>
                 </div>
               </div>
