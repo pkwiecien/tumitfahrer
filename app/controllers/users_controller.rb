@@ -69,22 +69,22 @@ class UsersController < ApplicationController
  def my_rides
    @user = User.find_by(id: params[:id])
    if @user.get_present_rides_as_driver !=[]
-     @myridescreated_offers = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
+     @myridescreated_offers = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 3)
    end
    if @user.get_present_requests_for_driver != []
-     @myridescreatedrequest = @user.get_present_requests_for_driver.paginate(:page => params[:page], :per_page => 10)
+     @myridescreatedrequest = @user.get_present_requests_for_driver.paginate(:page => params[:page], :per_page => 3)
    end
    if @user.rides_as_passenger != []
-     @myridesjoined_accepted = @user.rides_as_passenger.paginate(:page => params[:page], :per_page => 10)
+     @myridesjoined_accepted = @user.rides_as_passenger.paginate(:page => params[:page], :per_page => 3)
    end
    if @user.requested_rides != []
      @myridesjoined_pending = @user.requested_rides
    end
     if @user.get_past_rides_as_driver != []
-      @myridespast_offers = @user.get_past_rides_as_driver.paginate(:page => params[:page], :per_page => 10)
+      @myridespast_offers = @user.get_past_rides_as_driver.paginate(:page => params[:page], :per_page => 3)
     end
    if @user.get_past_requests_for_driver != []
-     @myridespast_requests = @user.get_past_requests_for_driver.paginate(:page => params[:page], :per_page => 10)
+     @myridespast_requests = @user.get_past_requests_for_driver.paginate(:page => params[:page], :per_page => 3)
    end
 
    @pic_url = Array.new
