@@ -42,20 +42,20 @@
               <p><%= image_tag("campus_rides.png", class: "head-button" )%><%= link_to t("static.campus"), "/campus", style: "color: #beddf1" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #005c91; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("activity_icon.png", class: "head-button" )%><%= link_to t("static.activity"), "/activities", style: "color: #beddf1" %></p>
+              <p><%= image_tag("activity_icon.png", class: "head-button" )%><%= link_to t("static.activity"), "/activities", style: "color: #beddf1; margin-right: 5px;" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #0076b3; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("create_ride_image.png", class: "head-button" )%><%= link_to t("static.Create"), new_ride_path, style: "color: #beddf1" %></p>
+              <p><%= image_tag("create_ride_image.png", class: "head-button" )%><%= link_to t("static.Create"), new_ride_path, style: "color: #beddf1; margin-right: 10px;" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #0076b3; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("SearchIcon.png", class: "head-button" )%><%= link_to t("static.Search"), "/search_rides", style: "color: #beddf1" %></p>
+              <p><%= image_tag("SearchIcon.png", class: "head-button" )%><%= link_to t("static.Search"), "/search_rides", style: "color: #beddf1; margin-right: 7px;" %></p>
             </div>
             <div class="col-md-1 col-centered" style="background: #53A2d0; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
               <p><%= image_tag("my_rides.png", class: "head-button" )%><%= link_to t("static.My_rides"), "/my_rides/#{current_user.id}", style: "color: #beddf1" %></p>
 
             </div>
             <div class="col-md-1 col-centered" style="background: #53A2d0; width: 14%; min-width: 100px; color: #beddf1; text-align: center;">
-              <p><%= image_tag("ProfileIcon.png", class: "head-button" )%><%= link_to t("static.Profile"), "/users/#{current_user.id}", style: "color: #beddf1" %></p>
+              <p><%= image_tag("ProfileIcon.png", class: "head-button" )%><%= link_to t("static.Profile"), "/users/#{current_user.id}", style: "color: #beddf1; margin-right: 12px;" %></p>
             </div>
           </div>
         </div>
