@@ -286,7 +286,7 @@
                     <img src="<%= asset_path "info_icon.png" %>" style="height: 46px; margin-top:10px; float:left; background-color: #0F3750; padding: 8px">
                   </div>
                   <div class="col-md-10">
-                    <h4 style="margin-top: 10px;color: #0076b3"> &nbsp;<%= raw rss1.title.first(20) %></h4>
+                    <h4 style="margin-top: 10px;color: #0076b3"> &nbsp;<%= raw rss1.title.first(20).force_encoding("UTF-8") %></h4>
                     <p style="margin-top: -4px;"> &nbsp;
 
                       <img src="<%= asset_path "TimeIconBlack.png" %> " style="height: 14px;"> &nbsp; <%= rss1.pubDate.strftime("%d-%m-%Y") %> &nbsp;
