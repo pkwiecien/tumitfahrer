@@ -94,7 +94,7 @@
                           <%= @ride.ride_owner.first_name %> <%= @ride.ride_owner.last_name %>
                         </h4>
                         <img src='<%= asset_path "StarIcon.png"%>' class="ride_new_icons" style="height: 25px; float: left;">
-                        <label style="font-size: 20px;"><%= @ride.ride_owner.rating_avg%>%</label>
+                        <label style="font-size: 20px;"><%= @ride.ride_owner.rating_avg == -1 ? 0:@user.ride_owner.rating_avg%>%</label>
                       </div>
                   </div>
                   <div style="clear: both"></div>
@@ -148,7 +148,7 @@
                             <%= ride_passenger.first_name %> <%= ride_passenger.last_name %>
                           </h4>
                           <img src='<%= asset_path "StarIcon.png"%>' class="ride_new_icons" style="height: 25px; float: left; margin-right: 2px;">
-                          <label style="font-size: 20px;"><%= ride_passenger.rating_avg %>%</label>
+                          <label style="font-size: 20px;"><%= ride_passenger.rating_avg == -1 ? 0 : ride_passenger.rating_avg %>%</label>
                         </div>
                         <div style="clear: both"></div>
                       </div>
@@ -191,7 +191,7 @@
                             <%= request_user.first_name %> <%= request_user.last_name %>
                           </h4>
                           <img src='<%= asset_path "StarIcon.png"%>' class="ride_new_icons" style="height: 25px; float: left; margin-right: 2px;">
-                          <label style="font-size: 20px;"><%= request_user.rating_avg %>%</label>
+                          <label style="font-size: 20px;"><%= request_user.rating_avg == -1 ? 0 : request_user.rating_avg %>%</label>
                         </div>
                         <div style="clear: both"></div>
                       </div>
