@@ -52,8 +52,8 @@ class RidesController < ApplicationController
       flash[:success] = "Ride was added!"
       if !@ride.nil?
         final_ride = @ride
-      else
-        final_ride = @ride.first
+      elsif !@rides.nil? && !@rides.empty?
+        final_ride = @rides.first
       end
 
       redirect_to final_ride
