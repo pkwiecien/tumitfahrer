@@ -2,8 +2,8 @@ require 'digest/sha2'
 require 'message_sender'
 
 class UsersController < ApplicationController
-  before_action :signed_in_user, only: [:edit, :update, :show]
-  before_action :right_user, only: [:edit, :update]
+  before_action :signed_in_user, only: [:edit, :update, :show, :my_rides]
+  before_action :right_user, only: [:edit, :update, :my_rides]
 
   def check_email
     @user = User.find_by_email(params[:user][:email])
