@@ -57,7 +57,8 @@ class MessageSender
 
   #This function sends push notificaiton to android devices. It takes the token of android device and notification message as output.
   def self.send_android_notification(token, message)
-    gcm = GCM.new('AIzaSyDNjxSCSc_zRBlC8jHpqxWgP1crx41B0IA') #TODO Initialize it only one time at app start
+    gcm = GCM.new('AIzaSyDWlXqA4Za7V627_bdR_0U-PuPG7n8T1uw') #TODO Initialize it only one time at app start
+    #AIzaSyDNjxSCSc_zRBlC8jHpqxWgP1crx41B0IA
     registration_id = [token]
     options = {
         'data' => {
