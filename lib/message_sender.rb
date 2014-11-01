@@ -50,7 +50,7 @@ class MessageSender
           end
         end
       rescue Exception => e
-        puts("ERROR: While sending push notification: "+ notification.notification_id.to_s + " == Exception => " + e.to_s)
+        puts("ERROR: While sending push notification: "+ notification.notification_id.to_s + " == Exception => " + e.inspect)
       end
     end
   end
