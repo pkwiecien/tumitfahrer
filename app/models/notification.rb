@@ -227,30 +227,8 @@ class Notification < ActiveRecord::Base
 
     default_language = I18n.locale
 
-    #Changed started
-    modified_departure = ''
-
-
-    #TOD):rescue
-    begin
-      departure_array = departure.split(',')
-      if(departure_array.count == 3)
-          modified_departure = departure_array[0] + ',' + departure_array[1]
-      else
-        modified_departure = departure
-      end
-    rescue Exception => e
-      puts ("TUMitfahrer => Excetion -> " + e.to_s)
-
-      modified_departure = departure
-    end
-
-    puts("Departure Place -> " + modified_departure)
-
-    #Change end
-
     I18n.locale = language
-    message = I18n.t(:driver_pickup_alert, time: I18n.l(time, :format => '%H:%M'), departure: modified_departure)
+    message = I18n.t(:driver_pickup_alert, time: I18n.l(time, :format => '%H:%M'), departure: self.edit_departure_place(departure))
     #message = I18n.l(:driver_pickup_alert, time: time, departure: departure)
 
     puts("Printing the message with locale =>" + message.to_s)
@@ -282,7 +260,7 @@ class Notification < ActiveRecord::Base
 
     default_language = I18n.locale
     I18n.locale = language
-    message = I18n.t(:passenger_ride_alert, time: time, departure: departure, result: driver)
+    message = I18n.t(:passenger_ride_alert, time: I18n.l(time, :format => '%H:%M'), departure: self.edit_departure_place(departure), result: driver)
     I18n.locale = default_language
     #message = "TUMitFahrer: Alert (Passenger Ride Alert) Time: #{time} Location: #{departure} Driver: #{driver}"
 
@@ -315,7 +293,7 @@ class Notification < ActiveRecord::Base
 
     default_language = I18n.locale
     I18n.locale = language
-    message = I18n.t(:cancel_ride_alert, driver: driver, time: time, departure: departure)
+    message = I18n.t(:cancel_ride_alert, driver: driver, time: time.to_s(:short), departure: self.edit_departure_place(departure))
     I18n.locale = default_language
 
     #message = "TUMitFahrer: Alert (Ride Cancelled) Driver #{driver}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
@@ -343,7 +321,7 @@ class Notification < ActiveRecord::Base
 
     default_language = I18n.locale
     I18n.locale = language
-    message = I18n.t(:reservation_cancelled_passenger_alert, passenger_name: passenger_name, time: time, departure: departure)
+    message = I18n.t(:reservation_cancelled_passenger_alert, passenger_name: passenger_name, time: time.to_s(:short), departure: self.edit_departure_place(departure))
     I18n.locale = default_language
 
     #message = "TUMitFahrer: Alert (Reservation Cancelled) Passenger #{username}, had cancelled the ride. Time: #{time} Location: #{departure} Reason: Due to an unexpected event."
@@ -430,5 +408,22 @@ class Notification < ActiveRecord::Base
   def self.get_driver_name(ride)
     user_driver = ride.driver
     user_driver.last_name + "," + user_driver.first_name
+  end
+
+  def self.edit_departure_place(departure)
+    begin
+      departure_array = departure.split(',')
+      if(departure_array.count == 3)
+        modified_departure = departure_array[0] + ',' + departure_array[1]
+      else
+        modified_departure = departure
+      end
+    rescue Exception => e
+      puts ("TUMitfahrer => Excetion -> " + e.to_s)
+
+      modified_departure = departure
+    end
+
+    modified_departure
   end
 end

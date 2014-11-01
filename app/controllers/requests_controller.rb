@@ -46,11 +46,18 @@ class RequestsController < ApplicationController
     ride = Ride.find_by(id: params[:ride_id])
     passenger = User.find_by(id: params[:passenger_id])
 
-    ride.accept_ride_request ride.ride_owner.id, passenger.id, params[:confirmed].to_i
+    if params[:confirmed] == "1"
+      #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - Start
+      Notification.accept_request(passenger.id, ride.id, ride[:departure_time])
+      #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - End
+    elsif params[:confirmed] == "0"
+      #Changed by Behroz - When request is declined by driver. We need to insert the notification. Start 18-06-2014
+      request_notif = Request.find_by(id: params[:id])
+      Notification.decline_request(request_notif.ride_id, request_notif.passenger_id)
+      #Changed by Behroz - When request is declined by driver. We need to insert the notifacation. End 18-06-2014
+    end
 
-    #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - Start
-    Notification.accept_request(passenger.id, ride.id, ride[:departure_time])
-    #Added by Behroz - Send notification to passenger since driver has accepted the ride - 16-06-2014 - End
+    ride.accept_ride_request ride.ride_owner.id, passenger.id, params[:confirmed].to_i
 
     redirect_to request.referer
   end
