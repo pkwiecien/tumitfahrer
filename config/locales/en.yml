@@ -29,7 +29,7 @@ en:
   decline_request_alert: "TUMitFahrer: Request Declined > Driver %{driver}, has declined your request to join the ride."
   user_join_alert: "TUMitFahrer: User Join Request > A Passenger wants to join your ride."
   welcome:
-      pic_heading: "Enjoy fun while driving"
+      pic_heading: "Have fun while driving"
       pic_paragraph: "Create, share and invite"
   ride:
       details: "Details"
