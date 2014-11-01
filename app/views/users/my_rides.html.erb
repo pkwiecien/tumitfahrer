@@ -23,9 +23,11 @@
 
 <div id="Created_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
 
-  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
-    <img src="<%= asset_path "driver_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
-    <h4 style="margin-top:15px;"><%= t("static.offers") %></h4>
+  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
+    <p> <img src="<%= asset_path "driver_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
+    <h3 style="margin-top: 10px;text-align: left"><%= t("static.offers") %></h3>
+    </p>
+
   </div>
   <% if @user.get_present_rides_as_driver == [] %>
       <div class="col-md-12">
@@ -83,10 +85,11 @@
 
   <%end %>
 
+  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
+    <p> <img src="<%= asset_path "passenger_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
+    <h3 style="margin-top: 10px;text-align: left"><%= t("static.requests") %></h3>
+    </p>
 
-  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
-    <img src="<%= asset_path "passenger_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
-    <h4 style="margin-top:15px;"><%= t("static.requests") %></h4>
   </div>
 
   <% if @user.get_present_requests_for_driver == [] %>
@@ -148,9 +151,11 @@
 
 <div id="Joined_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
 
-  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
-    <img src="<%= asset_path "passenger_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
-    <h4 style="margin-top:15px;"><%= t("static.accepted") %></h4>
+  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
+    <p> <img src="<%= asset_path "passenger_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
+    <h3 style="margin-top: 10px;text-align: left"><%= t("static.accepted") %></h3>
+    </p>
+
   </div>
   <% if @user.rides_as_passenger == [] %>
       <div class="col-md-12">
@@ -195,9 +200,11 @@
 <% end %>
 
 
-  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
-    <img src="<%= asset_path "passenger_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
-    <h4 style="margin-top:15px;"><%= t("static.pending") %></h4>
+  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
+    <p> <img src="<%= asset_path "passenger_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
+    <h3 style="margin-top: 10px;text-align: left"><%= t("static.pending") %></h3>
+    </p>
+
   </div>
   <% if @user.requested_rides == [] %>
       <div class="col-md-12">
@@ -254,11 +261,13 @@
 
 </div>
 <div id="Past_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
+  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
+    <p> <img src="<%= asset_path "driver_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
+    <h3 style="margin-top: 10px;text-align: left"><%= t("static.offers") %></h3>
+    </p>
 
-  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
-    <img src="<%= asset_path "driver_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
-    <h4 style="margin-top:15px;"><%= t("static.offers") %></h4>
   </div>
+
 
   <% if @user.get_past_rides_as_driver == [] %>
       <div class="col-md-12">
@@ -314,9 +323,11 @@
       <%= will_paginate @myridespast_offers %>
 <% end %>
 
-  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;">
-    <img src="<%= asset_path "passenger_icon.png" %>" style="height: 36px; margin-top:5px; float:left; background-color: #53A2d0; padding: 8px">
-    <h4 style="margin-top:15px;"><%= t("static.requests") %></h4>
+  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
+    <p> <img src="<%= asset_path "passenger_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
+    <h3 style="margin-top: 10px;text-align: left"><%= t("static.requests") %></h3>
+    </p>
+
   </div>
 
   <% if @user.get_past_requests_for_driver == [] %>
