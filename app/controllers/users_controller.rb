@@ -78,7 +78,7 @@ class UsersController < ApplicationController
      @myridesjoined_accepted = @user.rides_as_passenger.paginate(:page => params[:page], :per_page => 3)
    end
    if @user.requested_rides != []
-     @myridesjoined_pending = @user.requested_rides
+     @myridesjoined_pending = @user.requested_rides.paginate(:page => params[:page], :per_page => 3)
    end
     if @user.get_past_rides_as_driver != []
       @myridespast_offers = @user.get_past_rides_as_driver.paginate(:page => params[:page], :per_page => 3)
