@@ -59,23 +59,17 @@
         </div>
 
         <div class="col-md-5">
+          <div style="float: right">
             <% if ride1.requests.size > 0 %>
-          <div class="col-md-1"style="width:10%;margin-right:35px;margin-left:130px;">
-            <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
-          </div>
-
-
-          <div class="col-md-1"style="width: 10%;padding-left:5px;padding-right:35px;">
-            <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
-          </div>
+              <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
+              <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
             <% end %>
 
-          <div class="col-md-3" style="padding-bottom:30px;margin-right:-350px;">
-            <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;margin-right: -350px;background-color:#53A2d0;color: #beddf1; "} do %>
+            <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;margin-top: 15px; height: 46px; padding: 11px; background-color:#53A2d0;color: #beddf1; "} do %>
                 View Ride <span class="glyphicon glyphicon-chevron-right"></span>
             <% end %>
           </div>
-
+          <div style="clear: both"></div>
         </div>
       </div>
 
