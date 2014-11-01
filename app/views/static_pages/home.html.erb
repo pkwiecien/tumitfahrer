@@ -44,8 +44,8 @@
 <div class="jumbotron container_main container main_page_image">
   <div class="row">
       <div class="col-md-12">
-      <div style="position: relative; width: 100%;"><img src="<%= asset_path "TUM_Visio.jpg"%>" class="container_main_child" style="height: 500px;"></div>
-      <div class="container container_main_child main_page_image_heading">
+      <div style="position: relative; width: 100%;"><img src="<%= asset_path "big.jpg"%>" class="container_main_child" style="height: 580px;"></div>
+      <div class="container container_main_child main_page_image_heading" style="z-index: 0">
         <h1 style="color: #c8c8c8; margin-top: 4%;"><%= t 'welcome.pic_heading' %></h1>
         <p style="color: #c8c8c8"><%= t 'welcome.pic_paragraph' %></p>
       </div>
@@ -53,7 +53,7 @@
   </div>
 </div>
 <div style="clear: both"></div>
-<div class="container jumbotron container_main main_page_section" style="padding-top: 22px; background-color: black">
+<div class="container jumbotron container_main main_page_section" style="padding-top: 22px; background-color: black; z-index: 10">
   <div class="row" style="margin:0 auto">
     <div class="col-md-2" style="text-align: center">
         <p style="margin-top: 0px; color: #c8c8c8">Find a ride</p>
@@ -74,34 +74,34 @@
   </div>
 </div>
 
-<div class="container jumbotron container_main main_page_section" style="background-color: #53A2d0;">
+<div class="container jumbotron container_main main_page_section" style="background-color: #53A2d0; padding-top: 10px;">
   <div class="row" style="margin:0 auto">
     <div class="col-md-2">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" style="padding-top: 20px">
       <h3 class="light_blue">Need Ride to Uni</h3>
-      <p class="main_page_uc_description">Search for a ride to ypur campus and join fellow students going to uni by car.</p>
+      <p class="main_page_uc_description">Search for a ride to your campus and join fellow students going to uni by car.</p>
     </div>
     <div class="col-md-2">
     </div>
     <div class="col-md-4" >
-      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+      <img src="<%= asset_path "nadine.png" %>" style="height: 200px">
     </div>
     <div class="col-md-1">
     </div>
   </div>
 </div>
 
-<div class="container jumbotron container_main" style="padding-bottom: 0px; margin-bottom: 0px; color: white; background-color: #0076b3;">
+<div class="container jumbotron container_main" style="padding-bottom: 0px; margin-bottom: 0px; color: white; background-color: #0076b3; padding-top: 10px">
   <div class="row" style="margin:0 auto">
     <div class="col-md-2">
     </div>
     <div class="col-md-4" >
-      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+      <img src="<%= asset_path "juan.png" %>" style="height: 200px">
     </div>
     <div class="col-md-1">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" style="padding-top: 20px">
       <h3 class="light_blue">Looking for weekend ideas?</h3>
       <p class="main_page_uc_description">Join activity rides and wnjoy cool trip to IKEA, near by lake or a hicking trip.</p>
     </div>
@@ -109,18 +109,18 @@
   </div>
 </div>
 
-<div class="container jumbotron container_main" style="padding-bottom: 0px; margin-bottom: 0px; color: white; background-color: #005c91;">
+<div class="container jumbotron container_main" style="padding-bottom: 0px; margin-bottom: 0px; color: white; background-color: #005c91; padding-top: 20px">
   <div class="row" style="margin:0 auto">
     <div class="col-md-2">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" style="padding-top: 20px">
       <h3 class="light_blue">Don't have a car</h3>
       <p class="main_page_uc_description">Request a ride offer. Fellow students will pick you up. Enjoy the car ride..</p>
     </div>
     <div class="col-md-2">
     </div>
     <div class="col-md-4" >
-      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+      <img src="<%= asset_path "group.png" %>" style="height: 200px">
     </div>
     <div class="col-md-1">
     </div>
@@ -140,17 +140,18 @@
   </div>
 </div>
 
-<div class="container jumbotron container_main" style=" margin-bottom: 0px; color: white;" >
+<div class="container jumbotron container_main" style=" margin-bottom: 0px; background-color: #383838;" >
   <div class="row" style="margin:0 auto">
     <div class="col-md-3">
     </div>
     <div class="col-md-3" >
-      <img src="<%= asset_path "watersplash.png" %>" style="height: 200px">
+      <img src="<%= asset_path "mobile.png" %>" style="height: 200px">
+      <img src="<%= asset_path "google-play.png" %>" style="height: 100px">
     </div>
     <div class="col-md-1">
     </div>
     <div class="col-md-3">
-      <img src="<%= asset_path "google-play.png" %>" style="height: 100px">
+      <img src="<%= asset_path "mobile3.png" %>" style="height: 200px">
       <img src="<%= asset_path "apple-app-store.png" %>" style="height: 100px">
     </div>
     <div class="col-md-2"></div>

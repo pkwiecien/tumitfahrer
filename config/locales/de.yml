@@ -29,7 +29,7 @@ de:
   decline_request_alert: "TUMitfahrer: Antrag abgelehnt > Fahrer %{driver} hat deine Anfrage für die Fahrt  abgelehnt."
   user_join_alert: "TUMitfahrer: Mitfahr-Anfrage > Jemand möchte an Ihrer Fahrt teilnehmen."
   welcome:
-      pic_heading: "Enjoy fun while driving"
+      pic_heading: "Have fun while driving"
       pic_paragraph: "Create, share and invite"
   ride:
       details: "Details"
