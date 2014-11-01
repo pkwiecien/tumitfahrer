@@ -86,7 +86,7 @@ class MessageSender
 
   #This function sends push notificaiton to iPhone devices. It takes the token of android device and notification message as output.
   def self.send_iphone_notification(token,message)
-    pusher = Grocer.pusher(certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", passphrase: "", gateway: "gateway.sandbox.push.apple.com", port: 2195, retries: 3)
+    pusher = Grocer.pusher(certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", passphrase: "", gateway: "feedback.sandbox.push.apple.com", port: 2196, retries: 3)
     puts(Rails.root.to_s + "/config/certificate/cert_apple_development.pem")
     #working device id pawel: f4f382b537d663af6256649e412fc19110cbbdc3d80c04373c090a623810127e
     #260359d0e9baf2ed4065c9876c985c8e636ee8c8
