@@ -11,10 +11,13 @@
 class Device < ActiveRecord::Base
   belongs_to :user
 
+  before_save :default_values
+
   private
 
   def default_values
     self.language ||= "en"
+    self.enabled  ||= false
     nil
   end
 

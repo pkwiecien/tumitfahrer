@@ -23,27 +23,30 @@ class MessageSender
     notificationDataList.each do |notification|
       begin
         if(notification.device_type.downcase == 'android')
-          result = MessageSender.send_android_notification(notification.device_id, notification.message)
+          puts "-------------- Sending Android Push Notification--------------------- "
 
-	  #puts "Sending Android Push Notification " + result
+          result = MessageSender.send_android_notification(notification.device_id, notification.message)
 
           if (result == 1)
             #Update the database
             Notification.update_status(notification.notification_id, notification.message)
           end
         elsif(notification.device_type.downcase == 'ios')
+          puts("----- Sending IOS Push notification ---------")
                 MessageSender.send_iphone_notification(notification.device_id, notification.message) #TODO: Check message succesfully sent
                 Notification.update_status(notification.notification_id, notification.message)
+
+          puts("-------END IPHONE-------------")
         elsif(notification.device_type.downcase == 'visiom')
                #Send a post request to the VisioM server. Url is of the format 'http://thewebsite.net'
                #device_id should be the URL of the car
-          puts("In VisioM => " + notification.notification_id.to_s)
+          puts("------------- In VisioM => " + notification.notification_id.to_s)
           #Only send notifications to VisioM if the message type is either Driver pick up alert or User join request
           notifObj = Notification.find(notification.notification_id)
           if(notifObj.message_type == '1' || notifObj.message_type == '7')
-            puts("IN FOR LOOP")
+
             MessageSender.send_visiom_notification(notification.device_id, notification.message, notification.notification_id, notifObj)
-            puts("BEFORE UPDATE")
+
             Notification.update_status(notification.notification_id, notification.message)
           else
             puts("UPDATE: VisoM => Ignoring message type -->" + notifObj.message_type.to_s)
@@ -87,7 +90,7 @@ class MessageSender
 
   #This function sends push notificaiton to iPhone devices. It takes the token of android device and notification message as output.
   def self.send_iphone_notification(token,message)
-    pusher = Grocer.pusher(certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", passphrase: "simina", gateway: "feedback.sandbox.push.apple.com", port: 2196, retries: 3)
+    pusher = Grocer.pusher(certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", passphrase: "simina", gateway: "feedback.push.apple.com", port: 2196, retries: 3)
     puts(Rails.root.to_s + "/config/certificate/cert_apple_development.pem")
     #working device id pawel: f4f382b537d663af6256649e412fc19110cbbdc3d80c04373c090a623810127e
     #260359d0e9baf2ed4065c9876c985c8e636ee8c8
@@ -95,8 +98,9 @@ class MessageSender
     notification = Grocer::Notification.new(device_token:token, alert: message, badge: 42, content_available: true, sound: "siren.aiff", expiry: Time.now + 60*60, identifier: 1234)
 
     response = pusher.push(notification)
+    puts("Notification APPLE=>" + response.inspect)
     if(response < 11 && response > 0) #TODO: Handle response
-      puts("ERROR: While sending iOS push notification"+response)
+      puts("ERROR: While sending iOS push notification"+response.inspect)
     end
   end
 

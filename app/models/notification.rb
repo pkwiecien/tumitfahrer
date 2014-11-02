@@ -162,7 +162,7 @@ class Notification < ActiveRecord::Base
 
   #This function gets the list of notifications that the cron job has to send in next 5 mins.
   def self.get_notification_list
-    startTime = Time.zone.now
+    startTime = Time.zone.now - 1*60 #start 1 min less than the current time to include any notification that is on exact time
     endTime = Time.zone.now + 5*60  #next 5 mins
     notifications = Notification.where(:status => 'not sent').where(:date_time => startTime...endTime)
     #notifications = Notification.where(:status=>'not sent') #TODO: revert it back to 5 min thing
@@ -174,20 +174,21 @@ class Notification < ActiveRecord::Base
       devices_list = notification.user.devices
 
       devices_list.each do |device|
-        platform = device.platform  #get platform and device id
-        device_id = device.token
-        language = device.language
+        if device.enabled == true
+          platform = device.platform  #get platform and device id
+          device_id = device.token
+          language = device.language
 
-        if(language == nil)
-          language = "en"
+          if(language == nil)
+            language = "en"
+          end
+
+          #Each device can have different language. So, we have to construct the message again in the loop
+          message = Notification.get_message(notification, language)  #get the constructed message based on message type
+          data = NotificationData.new(notification.id,message,device_id,platform) #initialize a custom object
+
+          result << data  #append the object in array and return the array
         end
-
-        #Each device can have different language. So, we have to construct the message again in the loop
-        message = Notification.get_message(notification, language)  #get the constructed message based on message type
-
-        data = NotificationData.new(notification.id,message,device_id,platform) #initialize a custom object
-
-        result << data  #append the object in array and return the array
       end
     end #Loop through notifications
 
