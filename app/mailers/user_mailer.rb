@@ -18,6 +18,6 @@ class UserMailer < ActionMailer::Base
     @name = name
     @title = title
     @message = message
-    mail(from: @email, to: "tumitfahrer.beta@gmail.com", subject: 'TUMitfahrer: Feedback')
+    mail(from: @email, to: ENV["EMAIL"], subject: 'TUMitfahrer: Feedback')
   end
 end
