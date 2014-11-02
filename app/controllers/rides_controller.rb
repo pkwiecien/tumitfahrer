@@ -2,7 +2,7 @@ require 'geocoder'
 require 'net/http'
 
 class RidesController < ApplicationController
-  before_action :signed_in_user, only: [:new, :destroy, :update, :create]
+  before_action :signed_in_user, only: [:new, :destroy, :update, :create, :timeline, :campus, :activities]
 
   URL = 'http://www.panoramio.com/map/get_panoramas.php'
   DEFAULT_OPTIONS = {
