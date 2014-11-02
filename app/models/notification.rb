@@ -101,6 +101,11 @@ class Notification < ActiveRecord::Base
     ride.id = ride_id
     passenger_list = ride.passengers
 
+    #Also send notifications to people who have sent a join request
+    ride.requests.each do |request|
+      passenger_list.append ( User.find( request.passenger_id ) )
+    end
+
     #loop through all the passengers and insert notification for each passenger in notification table
     passenger_list.each do |passenger|
       devices_list = passenger.devices  #Get list of devices for each passenger
