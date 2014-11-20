@@ -68,6 +68,12 @@ class UsersController < ApplicationController
 
  def my_rides
    @user = User.find_by(id: params[:id])
+
+   if params.has_key?(:selected_div)
+     @selected_div = params[:selected_div]
+   else
+     @selected_div = "created"
+   end
    if @user.get_present_rides_as_driver !=[]
      @myridescreated_offers = @user.get_present_rides_as_driver.paginate(:page => params[:page], :per_page => 3)
    end

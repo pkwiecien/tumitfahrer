@@ -36,46 +36,48 @@
 
   <% elsif @user.get_present_rides_as_driver != [] %>
 
-  <% @myridescreated_offers.each_with_index do |ride1, index| %>
+      <% @myridescreated_offers.each_with_index do |ride1, index| %>
 
-      <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
-        <div class="col-md-1">
-          <% if ride1.ride_type == 0%>
-              <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
-          <% else %>
-              <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
-          <% end %>
+          <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
+            <div class="col-md-1">
+              <% if ride1.ride_type == 0%>
+                  <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+              <% else %>
+                  <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+              <% end %>
 
-        </div>
+            </div>
 
-        <div class="col-md-6">
-          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
-            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
-          <p style="margin-top: -2px;"> &nbsp;
-            <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <img src="<%= asset_path "TimeIconBlack.pnhrg" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+            <div class="col-md-6">
+              <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
+              <p style="margin-top: -2px;"> &nbsp;
+                <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img src="<%= asset_path "TimeIconBlack.pnhrg" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
 
-          </p>
-        </div>
+              </p>
+            </div>
 
-        <div class="col-md-5">
-          <div style="float: right">
-            <% if ride1.requests.size > 0 %>
-              <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
-              <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
-            <% end %>
+            <div class="col-md-5">
 
-            <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;margin-top: 15px; height: 46px; padding: 11px; background-color:#53A2d0;color: #beddf1; "} do %>
-                View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-            <% end %>
+                  <p>
+                    <% if ride1.requests.size > 0 %>
+
+                  <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
+                  <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
+                  <% end %>
+                  <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0;color: #beddf1; "} do %>
+                        View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+                  <% end %>
+
+                  </p>
+
+            </div>
           </div>
-          <div style="clear: both"></div>
-        </div>
-      </div>
 
           <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
-          <% end %>
-      <%= will_paginate @myridescreated_offers %>
+      <% end %>
+      <%= will_paginate @myridescreated_offers, :params => {selected_div: "Created"} %>
 
   <%end %>
 
@@ -93,54 +95,48 @@
 
   <% elsif @user.get_present_requests_for_driver != [] %>
 
-  <% @myridescreatedrequest.each_with_index do |ride1, index| %>
-      <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
-        <div class="col-md-1">
-          <% if ride1.ride_type == 0%>
-              <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
-          <% else %>
-              <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
-          <% end %>
+      <% @myridescreatedrequest.each_with_index do |ride1, index| %>
+          <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
+            <div class="col-md-1">
+              <% if ride1.ride_type == 0%>
+                  <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+              <% else %>
+                  <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+              <% end %>
 
-        </div>
+            </div>
 
-        <div class="col-md-6">
-          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
-            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
-          <p style="margin-top: -2px;"> &nbsp;
-            <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+            <div class="col-md-6">
+              <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
+              <p style="margin-top: -2px;"> &nbsp;
+                <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
 
-          </p>
-        </div>
+              </p>
+            </div>
 
-        <div class="col-md-5">
+              <div class="col-md-5">
 
-          <% if ride1.requests.size > 0 %>
-              <div class="col-md-1"style="width:10%;margin-right:35px;margin-left:130px;">
-                <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
-              </div>
+                <p>
+                  <% if ride1.requests.size > 0 %>
 
+                      <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
+                      <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
+                  <% end %>
+                  <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0;color: #beddf1; "} do %>
+                      View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+                  <% end %>
 
-              <div class="col-md-1"style="width: 10%;padding-left:5px;padding-right:35px;">
-                <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
-              </div>
-          <% end %>
-
-          <div class="col-md-3" style="padding-bottom:30px;margin-right:-350px;">
-            <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;margin-right: -350px;background-color:#53A2d0;color: #beddf1; "} do %>
-                View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-            <% end %>
+                </p>
+            </div>
           </div>
-
-        </div>
-      </div>
 
           <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
 
-<% end %>
-      <%= will_paginate @myridescreatedrequest %>
-<% end %>
+      <% end %>
+      <%= will_paginate @myridescreatedrequest, :params => {selected_div: "Created"} %>
+  <% end %>
 </div>
 
 <div id="Joined_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
@@ -158,40 +154,40 @@
 
   <% elsif @user.rides_as_passenger != [] %>
 
-  <% @myridesjoined_accepted.each_with_index do |ride1, index| %>
-      <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
-        <div class="col-md-1">
-          <% if ride1.ride_type == 0%>
-              <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
-          <% else %>
-              <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
-          <% end %>
+      <% @myridesjoined_accepted.each_with_index do |ride1, index| %>
+          <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
+            <div class="col-md-1">
+              <% if ride1.ride_type == 0%>
+                  <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+              <% else %>
+                  <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+              <% end %>
 
-        </div>
+            </div>
 
-        <div class="col-md-9">
-          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
-            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
-          <p style="margin-top: -2px;"> &nbsp;
-            <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+            <div class="col-md-9">
+              <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
+              <p style="margin-top: -2px;"> &nbsp;
+                <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
 
-          </p>
-        </div>
+              </p>
+            </div>
 
 
-        <div class="col-md-3" style="float:right;">
-          <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0;color: #beddf1; "} do %>
-              View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-          <% end %>
-        </div>
+            <div class="col-md-3" style="float:right;">
+              <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0;color: #beddf1; "} do %>
+                  View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+              <% end %>
+            </div>
 
-      </div>
+          </div>
 
           <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
-<% end %>
-      <%= will_paginate @myridesjoined_accepted %>
-<% end %>
+      <% end %>
+      <%= will_paginate @myridesjoined_accepted,  :params => {selected_div: "Joined"} %>
+  <% end %>
 
 
   <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
@@ -206,56 +202,48 @@
       </div>
 
   <% elsif @user.requested_rides != [] %>
-  <% @myridesjoined_pending.each_with_index do |ride1, index| %>
-      <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
-        <div class="col-md-1">
-          <% if ride1.ride_type == 0%>
-              <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
-          <% else %>
-              <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
-          <% end %>
+      <% @myridesjoined_pending.each_with_index do |ride1, index| %>
+          <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
+            <div class="col-md-1">
+              <% if ride1.ride_type == 0%>
+                  <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+              <% else %>
+                  <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+              <% end %>
 
-        </div>
+            </div>
 
-        <div class="col-md-6">
-          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
-            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
-          <p style="margin-top: -2px;"> &nbsp;
-            <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+            <div class="col-md-6">
+              <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
+              <p style="margin-top: -2px;"> &nbsp;
+                <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
 
-          </p>
-        </div>
+              </p>
+            </div>
 
-        <div class="col-md-5">
+            <div class="col-md-5">
 
-          <div class="col-md-1"style="width:10%;margin-right:35px;margin-left:130px;">
-            <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
+           <p>
+             <img src="<%= asset_path "passenger_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #48a748; padding: 8px">
+             <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
+             <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0;color: #beddf1; "} do %>
+                 View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+             <% end %>
+           </p>
+
+            </div>
           </div>
-
-
-          <div class="col-md-1"style="width: 10%;padding-left:5px;padding-right:35px;">
-            <img src="<%= asset_path "cancel_icon.png" %>" style="height: 46px; margin-top:15px;  background-color: #b43030; padding: 8px">
-          </div>
-
-
-          <div class="col-md-3" style="margin-left:70px;padding-left:120px;padding-bottom:30px;margin-right:-80px;">
-            <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0;color: #beddf1; "} do %>
-                View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-            <% end %>
-          </div>
-
-        </div>
-      </div>
 
           <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
-<% end %>
-      <%= will_paginate @myridesjoined_pending %>
+      <% end %>
+      <%= will_paginate @myridesjoined_pending,  :params => {selected_div: "Joined"} %>
   <%end %>
 
 </div>
 <div id="Past_div" class="well col-md-12" style="margin-right: 0px; margin-top: 0px;border:none;border-radius:0px;">
-  <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
+  <div id="Past_Offers" class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
     <p> <img src="<%= asset_path "driver_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
     <h3 style="margin-top: 10px;text-align: left"><%= t("static.offers") %></h3>
     </p>
@@ -270,52 +258,46 @@
 
   <% elsif @user.get_past_rides_as_driver != [] %>
 
-  <% @myridespast_offers.each_with_index do |ride1, index| %>
-      <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
-        <div class="col-md-1">
-          <% if ride1.ride_type == 0%>
-              <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
-          <% else %>
-              <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
-          <% end %>
+      <% @myridespast_offers.each_with_index do |ride1, index| %>
+          <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
+            <div class="col-md-1">
+              <% if ride1.ride_type == 0%>
+                  <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+              <% else %>
+                  <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+              <% end %>
 
-        </div>
+            </div>
 
-        <div class="col-md-8">
-          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
-            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
-          <p style="margin-top: -2px;"> &nbsp;
-            <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+            <div class="col-md-8">
+              <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
+              <p style="margin-top: -2px;"> &nbsp;
+                <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
 
-          </p>
-        </div>
+              </p>
+            </div>
 
-        <div class="col-md-3">
+            <div class="col-md-3">
+<p>
+  <img src="<%= asset_path "rating.png" %>" style="height: 46px; margin-top:15px;  background-color: #5386b4; padding: 8px">
+  <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0; color: #beddf1; "} do %>
+      View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+  <% end %>
+
+</p>
+
+            </div>
 
 
-
-          <div class="col-md-1"style="width: 10%;padding-left:5px;padding-right:35px;">
-            <img src="<%= asset_path "rating.png" %>" style="height: 46px; margin-top:15px;  background-color: #5386b4; padding: 8px">
           </div>
-
-
-          <div class="col-md-2" style="float:right;">
-            <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0; color: #beddf1; "} do %>
-                View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-            <% end %>
-          </div>
-
-        </div>
-
-
-      </div>
           <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
 
 
-  <%end %>
-      <%= will_paginate @myridespast_offers %>
-<% end %>
+      <%end %>
+      <%= will_paginate @myridespast_offers, :params => {selected_div: "Past"} %>
+  <% end %>
 
   <div class="col-md-12" style="background: #53A2d0; width: 100%; min-width: 100px; color: #beddf1; text-align: left;height: 50px;">
     <p> <img src="<%= asset_path "passenger_icon.png" %>" style="height: 30px;float:left; background-color: #53A2d0; padding: 5px">
@@ -330,53 +312,51 @@
       </div>
 
   <% elsif @user.get_past_requests_for_driver != [] %>
-  <% @myridespast_requests.each_with_index do |ride1, index| %>
-      <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
-        <div class="col-md-1">
-          <% if ride1.ride_type == 0%>
-              <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
-          <% else %>
-              <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
-          <% end %>
+      <% @myridespast_requests.each_with_index do |ride1, index| %>
+          <div class="row" style="padding-bottom: -8px;padding-top: 8px;">
+            <div class="col-md-1">
+              <% if ride1.ride_type == 0%>
+                  <img src="<%= asset_path "MainCampus@2x.png" %>" style="height: 46px; width:77px; margin-top:15px; float: left">
+              <% else %>
+                  <img class="img-responsive" id="destination_image" src='<%= @pic_url[index] %>' style="height: 46px; width:74px; margin-top:15px; float: left">
+              <% end %>
 
-        </div>
+            </div>
 
-        <div class="col-md-8">
-          <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
-            <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
-          <p style="margin-top: -2px;"> &nbsp;
-            <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
+            <div class="col-md-8">
+              <h4 style="margin-top:12px;color: #0076b3"> &nbsp;<%= ride1.departure_place %>
+                <img src="<%= asset_path "arrow_left.png" %>" style="height: 14px;">  <%= ride1.destination %></h4>
+              <p style="margin-top: -2px;"> &nbsp;
+                <img src="<%= asset_path "CalendarIconBlack@2x.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%d-%m-%Y") %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img src="<%= asset_path "TimeIconBlack.png" %>" style="height: 14px;"> &nbsp; <%= ride1.departure_time.strftime("%I:%M %P") %> &nbsp;
 
-          </p>
-        </div>
+              </p>
+            </div>
 
-        <div class="col-md-3">
+            <div class="col-md-3">
 
 
 
-          <div class="col-md-1"style="width: 10%;padding-left:5px;padding-right:35px;">
-            <img src="<%= asset_path "rating.png" %>" style="height: 46px; margin-top:15px;  background-color: #5386b4; padding: 8px">
+              <p>
+                <img src="<%= asset_path "rating.png" %>" style="height: 46px; margin-top:15px;  background-color: #5386b4; padding: 8px">
+                <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0; color: #beddf1; "} do %>
+                    View Ride <span class="glyphicon glyphicon-chevron-right"></span>
+                <% end %>
+
+              </p>
+
+            </div>
           </div>
-
-
-          <div class="col-md-2" style="float:right;">
-            <%= link_to "/rides/#{ride1.id}", {method: :get, class: "btn", style: "border-radius: 0px;float: right; margin-top: 15px; height: 52px; padding: 15px;background-color:#53A2d0;color: #beddf1; "} do %>
-                View Ride <span class="glyphicon glyphicon-chevron-right"></span>
-            <% end %>
-          </div>
-
-        </div>
-      </div>
 
 
           <hr size="2" style="margin-top:5px;height:1px;border:none;color:#333;background-color:#333;">
 
 
 
+      <%end %>
+      <%= will_paginate @myridespast_requests,  :params => {selected_div: "Past"} %>
   <%end %>
-  <%= will_paginate @myridespast_requests %>
-<%end %>
+  <input type="label" id="selected_div" value="<%= @selected_div%>" style="display: none">
 </div>
 
 </div>
@@ -418,12 +398,14 @@
         $("#Joined").css('background-color','#2B2B2B').css('color','#F2F2F2');
         $("#Past").css('background-color','#2B2B2B').css('color','#F2F2F2');
 
+        var select_div = $("#selected_div").val();
+        $("#"+select_div).click();
+
     });
 
     $("#ride_destination").geocomplete({
         details: ".details",
         detailsAttribute: "data-geo"
     });
-
 
 </script>
