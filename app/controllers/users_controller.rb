@@ -56,10 +56,11 @@ class UsersController < ApplicationController
 
 
     if @user.save
-      sign_in @user
+      #sign_in @user
       flash[:success] = "Welcome to TUMitfahrer! Your Password has been sent to " + user_params[:email]
       UserMailer.welcome_email(@user,new_password).deliver
-      redirect_to @user
+      #redirect_to @user
+      redirect_to root_path
     else
       render 'new'
     end
