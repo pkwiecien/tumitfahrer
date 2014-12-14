@@ -90,12 +90,24 @@ class MessageSender
 
   #This function sends push notificaiton to iPhone devices. It takes the token of android device and notification message as output.
   def self.send_iphone_notification(token,message)
-    pusher = Grocer.pusher(certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", passphrase: "simina", gateway: "feedback.push.apple.com", port: 2196, retries: 3)
+    pusher = Grocer.pusher(certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", passphrase: "simina")   
+
+    feedback = Grocer.feedback( certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", 
+                                  passphrase:  "simina",                        
+                                  gateway:     "feedback.push.apple.com", 
+                                  port:        2196,                     
+                                  retries:     3)
+ #pusher = Grocer.pusher(certificate: Rails.root.to_s + "/config/certificate/cert_apple_development.pem", passphrase: "simina", gateway: "gateway.push.apple.com", port: 2195, retries: 3)
     puts(Rails.root.to_s + "/config/certificate/cert_apple_development.pem")
     #working device id pawel: f4f382b537d663af6256649e412fc19110cbbdc3d80c04373c090a623810127e
     #260359d0e9baf2ed4065c9876c985c8e636ee8c8
     #Michel: 7dea4155e62e5a4bddc1fe62fb0ad28ab90f0d36d05313ebed626b42e4019c3e
     notification = Grocer::Notification.new(device_token:token, alert: message, badge: 42, content_available: true, sound: "siren.aiff", expiry: Time.now + 60*60, identifier: 1234)
+
+
+    feedback.each do |attempt|
+  	 puts "Device #{attempt.device_token} failed at #{attempt.timestamp}"
+    end
 
     response = pusher.push(notification)
     puts("Notification APPLE=>" + response.inspect)
