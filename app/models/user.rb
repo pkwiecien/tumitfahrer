@@ -67,7 +67,8 @@ class User < ActiveRecord::Base
   # validators
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}, :on => :create
   validates :last_name, presence: true, length: {minimum: 2, maximum: 20}, :on => :create
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  #VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  VALID_EMAIL_REGEX = /\b[A-Z0-9._%a-z\-@]+tum\.de\z/
   validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}, :on => :create
   has_secure_password
   validates :password, length: {minimum: 6}, :on => :create
