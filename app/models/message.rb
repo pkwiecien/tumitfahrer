@@ -10,8 +10,7 @@
 class Message < ActiveRecord::Base
 
   # Active Record relationships
-  belongs_to :sender, class_name: "User"
-  belongs_to :receiver, class_name: "User"
+  belongs_to :conversation
 
   # filters
   before_save :default_values
@@ -26,4 +25,5 @@ class Message < ActiveRecord::Base
     self.is_seen ||= false
     nil
   end
+
 end

@@ -25,9 +25,11 @@ class UsersController < ApplicationController
 
   def create
 
-    # todo: add salt to config
-    params[:user][:password] = Digest::SHA512.hexdigest(params[:user][:password]+'toj369sbz1f316sx')
+    params[:user][:password] = Digest::SHA512.hexdigest(params[:user][:password]+Tumitfahrer::Application::SALT)
     params[:user][:password_confirmation] = params[:user][:password]
+
+    logger.debug "Env variable is: "
+    logger.debug "here: #{ENV['S3_BUCKET_NAME']}"
 
     @user = User.new(user_params)
     if @user.save
@@ -37,10 +39,11 @@ class UsersController < ApplicationController
     else
       render 'new'
     end
+
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
     @rides = @user.rides.paginate(page: params[:page])
   end
 
@@ -61,7 +64,8 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :department, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :last_name, :email, :department,
+                                 :password, :password_confirmation, :avatar)
   end
 
   def right_user
