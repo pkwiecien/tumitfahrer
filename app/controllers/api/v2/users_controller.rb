@@ -1,13 +1,16 @@
 class Api::V2::UsersController < ApiController
   respond_to :xml, :json
 
-  # GET /api/v1/users/
+  # GET /api/v2/users/
   def index
+    user_from_api_key = User.find_by(api_key: request.headers[:apiKey])
+    return render json: {users: [], message: "Access denied"}, status: :unauthorized if user_from_api_key.nil?
+
     @users = User.all
     respond_with @users, status: :ok
   end
 
-  # GET /api/v1/users/:id
+  # GET /api/v2/users/:id
   def show
     # check if there an authentication header, if so consume it and return more
     if !request.headers[:Authorization].nil?
@@ -20,8 +23,7 @@ class Api::V2::UsersController < ApiController
       @user = User.find_by(email: email)
     end
 
-    if @user && !email.nil? && !hashed_password.nil? && @user.authenticate(hashed_password)
-
+    if @user # && !email.nil?  && !hashed_password.nil? && @user.authenticate(hashed_password)
       respond_with @user, status: :ok
     else
       respond_with status: :bad_request, message: "Could not retrieve the user"
@@ -51,6 +53,27 @@ class Api::V2::UsersController < ApiController
     end
   end
 
+  # PUT /api/v2/users/:id
+  def update
+    if !request.headers[:Authorization].nil?
+      email, hashed_password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
+    end
+
+    @user = User.find_by(id: params[:id])
+
+    if hashed_password.nil? || !@user.authenticate(hashed_password)
+      return respond_with status: :bad_request, message: "Could not retrieve the user" if @user.nil?
+    end
+
+    begin
+      @user.update_attributes!(update_params)
+      respond_with @user, status: :ok
+    rescue
+      respond_with status: :bad_request, message: "Could not retrieve the user"
+    end
+
+  end
+
   private
 
   # TODO: introduce authentication by api key
@@ -64,6 +87,11 @@ class Api::V2::UsersController < ApiController
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :department, :is_student)
+  end
+
+  def update_params
+    params.require(:user).permit(:first_name, :last_name, :phone_number,
+                                 :car, :department, :password, :password_confirmation)
   end
 
 end
