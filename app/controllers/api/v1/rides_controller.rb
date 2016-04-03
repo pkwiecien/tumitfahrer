@@ -115,7 +115,7 @@ class Api::V1::RidesController < ApiController
   end
 
   def ride_params
-    params.require(:ride).permit(:departure_place, :destination, :price, :free_seats, :meeting_point, :departure_time)
+    params.require(:ride).permit(:departure_place, :destination, :price, :free_seats, :meeting_point, :departure_time, :car)
   end
 
   def update_ride_params

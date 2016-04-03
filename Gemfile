@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 
 # gem for the development and production environment.
-gem 'rails', '~> 4.0.4'
+gem 'rails', '~> 4.1'
 # contains custom css elements
 gem "bootstrap-sass", "~> 3.1.0.2"
 # used to encrypt passwords
@@ -11,20 +11,22 @@ gem 'bcrypt-ruby', '~> 3.1.2'
 gem "will_paginate", "~> 3.0.5"
 # paginates large results with bootstrap style
 gem "bootstrap-will_paginate", "~> 0.0.10"
-# gem for push notificaitons to Android devices
+# gem for push notifications to Android devices
 gem 'push-gcm'
-# gem for push notificaitons to Android devices
+# gem for push notifications to Android devices
 gem 'gcm', :require => "gcm"
-# gem for push notificaitons to iOS devices
+# gem for push notifications to iOS devices
 gem 'grocer'
-# gem for push notificaitons to iOS devices
+# gem for push notifications to iOS devices
 gem 'houston', '~> 2.0.2', :require => 'houston'
 # used for parsing xml requests
 gem 'actionpack-xml_parser'
-#gem "paperclip", "~> 4.1"
-gem "httparty", "~> 0.13.0"
+# gem for making easier hhtp requests
+gem "httparty", "~> 0.13"
 # for application monitoring
 gem 'newrelic_rpm'
+# for getting location
+gem "geocoder"
 
 group :development, :production do
   # postgres database
@@ -65,7 +67,6 @@ gem 'therubyracer', :platforms => :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
-gem 'therubyracer'
 #gem 'angularjs-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -80,6 +81,8 @@ group :doc do
 end
 
 gem 'active_model_serializers'
+# S3 contains user images
+gem 'aws-sdk'
 
 # Use unicorn as the app server
 # gem 'unicorn'

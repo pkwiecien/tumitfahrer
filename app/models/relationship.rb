@@ -2,9 +2,8 @@
 # Table name: relationships
 #  id                      :integer          not null, primary key
 #  user_id                 :integer
-#  ride_is                 :integer
+#  ride_id                 :integer
 #  is_driving              :boolean         # TODO: check if necessary having driver_id
-#  driver_ride_id          :integer         # TODO: potentially rename to simply driver_id
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 
